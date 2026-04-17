@@ -168,7 +168,7 @@ function landingHtml(): string {
       </div>
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">remove dandruff forever</p>
-        <button type="button" class="btn-pill" id="cta-shop">Shop</button>
+        <button type="button" class="btn-pill" id="cta-now">Now</button>
       </div>
     </section>
   `;
@@ -181,7 +181,7 @@ function productHtml(): string {
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       </button>
 
-      <main class="product-main">
+      <main class="product-layout">
         <figure class="product-shot">
           <img
             src="${BASE_HREF}hero-lineup.png"
@@ -192,24 +192,28 @@ function productHtml(): string {
           />
         </figure>
 
-        <div class="product-panel">
-          <button type="button" class="btn-buy" id="buy-btn">Buy</button>
-          <button type="button" class="btn-secondary" id="btn-analyze">Hair analysis</button>
-          <p class="refund-note">We refund if it’s not your hair type.</p>
-        </div>
+        <aside class="product-side" aria-label="Product details">
+          <div class="product-panel">
+            <button type="button" class="btn-buy" id="buy-btn">Buy</button>
+            <p class="refund-note">We refund if it’s not your hair type.</p>
 
-        <section id="hair-analysis" class="product-upload" aria-labelledby="analysis-heading">
-          <h2 class="product-upload__label" id="analysis-heading">Hair analysis</h2>
-          <button type="button" class="dropzone dropzone--compact" id="dz" aria-label="Upload scalp photo">
-            <svg viewBox="0 0 48 48" aria-hidden="true">
-              <path d="M8 32V38C8 39.1046 8.89543 40 10 40H38C39.1046 40 40 39.1046 40 38V32" />
-              <path d="M24 8V30M24 8L17 15M24 8L31 15" />
-            </svg>
-          </button>
-          <input type="file" id="file" class="visually-hidden" accept="image/*" />
-          <p class="hint" id="hint"></p>
-          <div id="out"></div>
-        </section>
+            <div class="product-expert" id="hair-analysis">
+              <p class="product-expert__label">Expert scalp check</p>
+              <p class="product-expert__hint">Upload a clear photo — our experts review your scalp type.</p>
+              <button
+                type="button"
+                class="btn-upload-expert"
+                id="dz"
+                aria-label="Upload a photo for expert scalp check"
+              >
+                Upload photo
+              </button>
+              <input type="file" id="file" class="visually-hidden" accept="image/*" />
+              <p class="hint" id="hint"></p>
+              <div id="out"></div>
+            </div>
+          </div>
+        </aside>
       </main>
     </div>
   `;
@@ -226,7 +230,7 @@ function render(): void {
 }
 
 function bindLanding(): void {
-  document.querySelector("#cta-shop")?.addEventListener("click", () => {
+  document.querySelector("#cta-now")?.addEventListener("click", () => {
     goProduct();
   });
 }
@@ -240,12 +244,6 @@ function bindProduct(): void {
     /* Stripe Checkout will plug in here */
   });
 
-  document.querySelector("#btn-analyze")?.addEventListener("click", () => {
-    document
-      .querySelector("#hair-analysis")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-
   const dzEl = document.querySelector<HTMLButtonElement>("#dz");
   const fileInput = document.querySelector<HTMLInputElement>("#file");
   const hintEl = document.querySelector<HTMLParagraphElement>("#hint");
@@ -257,7 +255,7 @@ function bindProduct(): void {
   const outBox = outEl;
 
   function setLoading(loading: boolean): void {
-    uploadBtn.classList.toggle("loading", loading);
+    uploadBtn.classList.toggle("is-loading", loading);
     uploadBtn.disabled = loading;
   }
 
@@ -313,34 +311,15 @@ function bindProduct(): void {
     }
   }
 
-  uploadBtn.addEventListener("click", () => fileInput.click());
+  uploadBtn.addEventListener("click", () => {
+    if (!uploadBtn.disabled) fileInput.click();
+  });
 
   uploadBtn.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      fileInput.click();
+      if (!uploadBtn.disabled) fileInput.click();
     }
-  });
-
-  ["dragenter", "dragover"].forEach((ev) => {
-    uploadBtn.addEventListener(ev, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadBtn.classList.add("dragover");
-    });
-  });
-
-  ["dragleave", "drop"].forEach((ev) => {
-    uploadBtn.addEventListener(ev, (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadBtn.classList.remove("dragover");
-    });
-  });
-
-  uploadBtn.addEventListener("drop", (e) => {
-    const f = e.dataTransfer?.files?.[0];
-    if (f && f.type.startsWith("image/")) void analyzeFile(f);
   });
 
   fileInput.addEventListener("change", () => {
