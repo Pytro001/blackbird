@@ -17,10 +17,10 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-type View = "landing" | "product" | "email" | "thanks" | "admin";
+type View = "landing" | "product" | "thanks" | "admin";
 
-/** Chosen photo file until submitted on /email */
-let pendingUploadFile: File | null = null;
+const DEFAULT_WA_MESSAGE =
+  "Hello blackbird® — I'd like a free expert scalp check. My scalp photo is attached.";
 
 function escapeHtml(s: string): string {
   return s
@@ -30,15 +30,19 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function pathToView(): View {
+function getAppPath(): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
   let path = location.pathname.replace(/\/$/, "") || "/";
   if (base && path.startsWith(base)) {
     path = path.slice(base.length) || "/";
   }
   if (!path.startsWith("/")) path = `/${path}`;
+  return path;
+}
+
+function pathToView(): View {
+  const path = getAppPath();
   if (path === "/product") return "product";
-  if (path === "/email") return "email";
   if (path === "/thanks") return "thanks";
   if (path === "/admin" || path.startsWith("/admin/")) return "admin";
   return "landing";
@@ -54,16 +58,6 @@ function scrollToProduct(behavior: ScrollBehavior): void {
   requestAnimationFrame(() => {
     document.getElementById("product")?.scrollIntoView({ behavior, block: "start" });
   });
-}
-
-function goEmail(): void {
-  history.pushState(null, "", `${BASE_HREF}email`);
-  render();
-}
-
-function goThanks(): void {
-  history.replaceState(null, "", `${BASE_HREF}thanks`);
-  render();
 }
 
 function homeHtml(): string {
@@ -121,21 +115,23 @@ function homeHtml(): string {
           <div class="product-panel product-panel--buy">
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
+            <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
           </div>
 
           <div class="product-panel product-panel--upload">
             <div class="product-expert" id="hair-analysis">
               <p class="product-expert__label">Expert scalp check</p>
-              <p class="product-expert__hint">Upload a picture of your head with dandruff visible, and we will tell you what dandruff type you have.</p>
+              <p class="product-expert__hint">Choose a clear photo of your scalp with dandruff visible. We open WhatsApp with your message ready — on your phone you can send the picture in one step.</p>
               <button
                 type="button"
                 class="btn-upload-expert"
                 id="pick-photo"
-                aria-label="Choose a photo to upload"
+                aria-label="Choose a photo for WhatsApp"
               >
                 Upload picture
               </button>
               <input type="file" id="file" class="visually-hidden" accept="image/*" />
+              <p class="product-inline-msg" id="upload-wa-hint" hidden></p>
             </div>
           </div>
         </aside>
@@ -145,30 +141,12 @@ function homeHtml(): string {
   `;
 }
 
-function emailHtml(): string {
-  return `
-    <div class="page-step page-email">
-      <main class="step-main">
-        <h2 class="step-title">Your email</h2>
-        <p class="step-lede">We’ll send your scalp check result to this email.</p>
-        <div class="email-preview" id="email-preview"></div>
-        <form class="email-form" id="email-form" novalidate>
-          <label class="field-label" for="email-input">Email</label>
-          <input type="email" class="field-input" id="email-input" name="email" required autocomplete="email" placeholder="you@example.com" />
-          <p class="form-error" id="email-error" hidden></p>
-          <button type="submit" class="btn-buy" id="email-submit">Send</button>
-        </form>
-      </main>
-    </div>
-  `;
-}
-
 function thanksHtml(): string {
   return `
     <div class="page-step page-thanks">
       <main class="step-main">
-        <h2 class="step-title">You’re on the list</h2>
-        <p class="step-lede">We’ll email your result as soon as it’s ready.</p>
+        <h2 class="step-title">Thank you</h2>
+        <p class="step-lede">Your order is confirmed.</p>
         <button type="button" class="btn-pill" id="thanks-home">Home</button>
       </main>
     </div>
@@ -188,11 +166,11 @@ function adminHtml(): string {
 }
 
 function render(): void {
-  let view = pathToView();
-  if (view === "email" && !pendingUploadFile) {
+  if (getAppPath() === "/email") {
     history.replaceState(null, "", `${BASE_HREF}#product`);
-    view = "landing";
   }
+
+  const view = pathToView();
 
   if (view === "landing" || view === "product") {
     root.innerHTML = homeHtml();
@@ -203,12 +181,10 @@ function render(): void {
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     }
-  } else if (view === "email") root.innerHTML = emailHtml();
-  else if (view === "thanks") root.innerHTML = thanksHtml();
+  } else if (view === "thanks") root.innerHTML = thanksHtml();
   else root.innerHTML = adminHtml();
 
-  if (view === "email") bindEmail();
-  else if (view === "thanks") bindThanks();
+  if (view === "thanks") bindThanks();
   else if (view === "admin") bindAdmin();
 }
 
@@ -228,17 +204,65 @@ function bindProduct(): void {
   const fileInput = document.querySelector<HTMLInputElement>("#file");
   if (!pick || !fileInput) return;
 
-  pick.addEventListener("click", () => fileInput.click());
+  pick.addEventListener("click", () => {
+    setUploadWaHint("", false);
+    fileInput.click();
+  });
 
   fileInput.addEventListener("change", () => {
     const f = fileInput.files?.[0];
     fileInput.value = "";
     if (!f || !f.type.startsWith("image/")) return;
-    pendingUploadFile = f;
-    goEmail();
+    void sendPhotoViaWhatsApp(f);
   });
 
   bindProductShotsCarousel();
+}
+
+function setUploadWaHint(msg: string, isError: boolean): void {
+  const el = document.querySelector<HTMLParagraphElement>("#upload-wa-hint");
+  if (!el) return;
+  el.textContent = msg;
+  el.hidden = !msg;
+  el.classList.toggle("product-inline-msg--error", isError);
+}
+
+function whatsappDigits(): string {
+  return (import.meta.env.VITE_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+}
+
+/** Opens WhatsApp with a prefilled message; shares the file when the device supports it (no browser alert). */
+async function sendPhotoViaWhatsApp(file: File): Promise<void> {
+  setUploadWaHint("", false);
+
+  const digits = whatsappDigits();
+  if (!digits) {
+    setUploadWaHint(
+      "Add VITE_WHATSAPP_NUMBER to your environment (country code + number, digits only).",
+      true,
+    );
+    return;
+  }
+
+  const text = (import.meta.env.VITE_WHATSAPP_MESSAGE?.trim() || DEFAULT_WA_MESSAGE).trim();
+
+  try {
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        text,
+        title: "blackbird®",
+      });
+      return;
+    }
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") return;
+  }
+
+  const followUp =
+    `${text}\n\n` +
+    "Please attach your scalp photo using the paperclip in WhatsApp before sending.";
+  window.location.assign(`https://wa.me/${digits}?text=${encodeURIComponent(followUp)}`);
 }
 
 function bindProductShotsCarousel(): void {
@@ -283,13 +307,21 @@ function bindProductShotsCarousel(): void {
 
 async function startStripeCheckout(): Promise<void> {
   const btn = document.querySelector<HTMLButtonElement>("#buy-btn");
+  const errEl = document.querySelector<HTMLParagraphElement>("#buy-error");
   const fallback = import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim();
+
+  const setBuyError = (msg: string): void => {
+    if (!errEl) return;
+    errEl.textContent = msg;
+    errEl.hidden = !msg;
+  };
 
   const setBusy = (busy: boolean): void => {
     btn?.toggleAttribute("disabled", busy);
     btn?.classList.toggle("is-loading", busy);
   };
 
+  setBuyError("");
   setBusy(true);
   try {
     const url = `${BASE_HREF}api/create-checkout-session`;
@@ -303,84 +335,16 @@ async function startStripeCheckout(): Promise<void> {
       window.location.href = fallback;
       return;
     }
-    const msg = data?.error ?? `Checkout failed (${res.status})`;
-    window.alert(msg);
+    setBuyError(data?.error ?? `Checkout failed (${res.status}).`);
   } catch {
     if (fallback) {
       window.location.href = fallback;
       return;
     }
-    window.alert("Could not reach checkout. Run `vercel dev` locally or deploy with Stripe env vars.");
+    setBuyError("Could not reach checkout. Check deployment and Stripe env vars.");
   } finally {
     setBusy(false);
   }
-}
-
-function bindEmail(): void {
-  const preview = document.querySelector<HTMLDivElement>("#email-preview");
-  const form = document.querySelector<HTMLFormElement>("#email-form");
-  const input = document.querySelector<HTMLInputElement>("#email-input");
-  const err = document.querySelector<HTMLParagraphElement>("#email-error");
-  if (!preview || !form || !input || !err || !pendingUploadFile) return;
-
-  const url = URL.createObjectURL(pendingUploadFile);
-  preview.innerHTML = `<img src="${url}" alt="" class="email-preview__img" />`;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    err.hidden = true;
-    err.textContent = "";
-
-    const email = input.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      err.textContent = "Enter a valid email.";
-      err.hidden = false;
-      return;
-    }
-
-    if (!supabase) {
-      err.textContent = "Submission is not configured. Add Supabase keys in .env.";
-      err.hidden = false;
-      return;
-    }
-
-    const file = pendingUploadFile;
-    if (!file) return;
-
-    const submitBtn = document.querySelector<HTMLButtonElement>("#email-submit");
-    submitBtn?.setAttribute("disabled", "true");
-
-    try {
-      const id = crypto.randomUUID();
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-      const safeExt = ext.match(/^(jpe?g|png|webp|heic)$/) ? ext : "jpg";
-      const path = `${id}.${safeExt}`;
-
-      const { error: upErr } = await supabase.storage.from("scalp-uploads").upload(path, file, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-      if (upErr) throw upErr;
-
-      const { error: insErr } = await supabase.from("scalp_submissions").insert({
-        id,
-        email: email.toLowerCase(),
-        image_path: path,
-        scalp_result: "pending",
-      });
-      if (insErr) throw insErr;
-
-      URL.revokeObjectURL(url);
-      pendingUploadFile = null;
-      goThanks();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      err.textContent = msg;
-      err.hidden = false;
-    } finally {
-      submitBtn?.removeAttribute("disabled");
-    }
-  });
 }
 
 function bindThanks(): void {
