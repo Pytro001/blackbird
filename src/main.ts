@@ -1,134 +1,19 @@
+import { publicImageUrl, supabase } from "./supabase";
+
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
   if (!(el instanceof HTMLDivElement)) throw new Error("#app missing");
   return el;
 })();
 
-const API_URL = (import.meta.env.VITE_SCALP_CHECK_URL ?? "").trim();
-const FIELD_NAME = (import.meta.env.VITE_SCALP_FIELD_NAME ?? "image").trim() || "image";
-
 const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
-type ParsedScalp = {
-  scalpType: "dry" | "oily" | "unknown";
-  suitableForSet: boolean | null;
-};
+type View = "landing" | "product" | "email" | "thanks" | "admin";
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null && !Array.isArray(v);
-}
-
-function stringFromUnknown(v: unknown): string | null {
-  if (typeof v === "string") return v;
-  if (typeof v === "number" || typeof v === "boolean") return String(v);
-  return null;
-}
-
-function inferScalpType(obj: Record<string, unknown>): "dry" | "oily" | "unknown" {
-  const keys = [
-    "scalpType",
-    "type",
-    "dandruffType",
-    "classification",
-    "result",
-    "label",
-  ] as const;
-  for (const k of keys) {
-    const s = stringFromUnknown(obj[k]);
-    if (s) {
-      const low = s.toLowerCase();
-      if (low.includes("dry")) return "dry";
-      if (low.includes("oily")) return "oily";
-    }
-  }
-  const nested = obj.data ?? obj.result;
-  if (isRecord(nested)) return inferScalpType(nested);
-  return "unknown";
-}
-
-function inferSuitable(obj: Record<string, unknown>): boolean | null {
-  if ("suitableForSet" in obj) {
-    const v = obj.suitableForSet;
-    if (typeof v === "boolean") return v;
-  }
-  if ("suitable" in obj) {
-    const v = obj.suitable;
-    if (typeof v === "boolean") return v;
-  }
-  const st = inferScalpType(obj);
-  if (st === "dry") return true;
-  if (st === "oily") return false;
-  return null;
-}
-
-function parseApiPayload(data: unknown): ParsedScalp {
-  if (!isRecord(data)) {
-    return { scalpType: "unknown", suitableForSet: null };
-  }
-  return {
-    scalpType: inferScalpType(data),
-    suitableForSet: inferSuitable(data),
-  };
-}
-
-function checkIcon(ok: boolean): string {
-  if (ok) {
-    return `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>`;
-  }
-  return `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`;
-}
-
-function scalpDots(active: "dry" | "oily" | "unknown"): string {
-  const dryOn = active === "dry";
-  const oilyOn = active === "oily";
-  return `
-    <div class="scalp-indicator" aria-hidden="true">
-      <span class="scalp-dot dry ${dryOn ? "active dry" : ""}"></span>
-      <span class="scalp-dot oily ${oilyOn ? "active oily" : ""}"></span>
-    </div>
-  `;
-}
-
-function renderResult(payload: {
-  parsed: ParsedScalp;
-  rawJson: string | null;
-  showRaw: boolean;
-}): string {
-  const { parsed, rawJson, showRaw } = payload;
-  const suitable = parsed.suitableForSet;
-  const showCheck = suitable === true || suitable === false;
-  const color =
-    suitable === true
-      ? "var(--result-yes)"
-      : suitable === false
-        ? "var(--result-no)"
-        : "var(--muted)";
-
-  let visual = "";
-  if (showCheck) {
-    visual = `
-      <div class="result-visual" style="color: ${color}">
-        ${checkIcon(suitable === true)}
-      </div>
-    `;
-  } else if (parsed.scalpType !== "unknown") {
-    visual = scalpDots(parsed.scalpType);
-  }
-
-  const rawBlock =
-    showRaw && rawJson
-      ? `<pre class="result-raw" role="status">${escapeHtml(rawJson)}</pre>`
-      : "";
-
-  return `
-    <div class="result">
-      ${visual}
-      ${rawBlock}
-    </div>
-  `;
-}
+/** Holds the image chosen on /product until submitted on /email */
+let pendingUploadFile: File | null = null;
 
 function escapeHtml(s: string): string {
   return s
@@ -138,14 +23,18 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function pathToView(): "landing" | "product" {
+function pathToView(): View {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
   let path = location.pathname.replace(/\/$/, "") || "/";
   if (base && path.startsWith(base)) {
     path = path.slice(base.length) || "/";
   }
   if (!path.startsWith("/")) path = `/${path}`;
-  return path === "/product" ? "product" : "landing";
+  if (path === "/product") return "product";
+  if (path === "/email") return "email";
+  if (path === "/thanks") return "thanks";
+  if (path === "/admin" || path.startsWith("/admin/")) return "admin";
+  return "landing";
 }
 
 function goLanding(): void {
@@ -158,10 +47,19 @@ function goProduct(): void {
   render();
 }
 
+function goEmail(): void {
+  history.pushState(null, "", `${BASE_HREF}email`);
+  render();
+}
+
+function goThanks(): void {
+  history.replaceState(null, "", `${BASE_HREF}thanks`);
+  render();
+}
+
 function landingHtml(): string {
-  const heroBg = `url('${BASE_HREF}hero-bg.png')`;
   return `
-    <section class="hero-editorial" style="--hero-bg: ${heroBg}">
+    <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
         <h1 class="hero-editorial__title">
           blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
@@ -203,14 +101,12 @@ function productHtml(): string {
               <button
                 type="button"
                 class="btn-upload-expert"
-                id="dz"
-                aria-label="Upload a photo for expert scalp check"
+                id="pick-photo"
+                aria-label="Choose a photo to upload"
               >
                 Upload photo
               </button>
               <input type="file" id="file" class="visually-hidden" accept="image/*" />
-              <p class="hint" id="hint"></p>
-              <div id="out"></div>
             </div>
           </div>
         </aside>
@@ -219,14 +115,69 @@ function productHtml(): string {
   `;
 }
 
+function emailHtml(): string {
+  return `
+    <div class="page-step page-email">
+      <button type="button" class="back-btn back-btn--solo" id="email-back" aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      </button>
+      <main class="step-main">
+        <h2 class="step-title">Your email</h2>
+        <p class="step-lede">We’ll send your scalp check result to this address.</p>
+        <div class="email-preview" id="email-preview"></div>
+        <form class="email-form" id="email-form" novalidate>
+          <label class="field-label" for="email-input">Email</label>
+          <input type="email" class="field-input" id="email-input" name="email" required autocomplete="email" placeholder="you@example.com" />
+          <p class="form-error" id="email-error" hidden></p>
+          <button type="submit" class="btn-buy" id="email-submit">Send</button>
+        </form>
+      </main>
+    </div>
+  `;
+}
+
+function thanksHtml(): string {
+  return `
+    <div class="page-step page-thanks">
+      <main class="step-main">
+        <h2 class="step-title">You’re on the list</h2>
+        <p class="step-lede">We’ll email your result as soon as it’s ready.</p>
+        <button type="button" class="btn-pill" id="thanks-home">Home</button>
+      </main>
+    </div>
+  `;
+}
+
+function adminHtml(): string {
+  return `
+    <div class="page-admin">
+      <header class="admin-header">
+        <h1 class="admin-title">Admin</h1>
+        <div class="admin-auth" id="admin-auth-mount"></div>
+      </header>
+      <div class="admin-body" id="admin-body"></div>
+    </div>
+  `;
+}
+
 function render(): void {
-  const view = pathToView();
-  root.innerHTML = view === "landing" ? landingHtml() : productHtml();
-  if (view === "landing") {
-    bindLanding();
-  } else {
-    bindProduct();
+  let view = pathToView();
+  if (view === "email" && !pendingUploadFile) {
+    history.replaceState(null, "", `${BASE_HREF}product`);
+    view = "product";
   }
+
+  if (view === "landing") root.innerHTML = landingHtml();
+  else if (view === "product") root.innerHTML = productHtml();
+  else if (view === "email") root.innerHTML = emailHtml();
+  else if (view === "thanks") root.innerHTML = thanksHtml();
+  else root.innerHTML = adminHtml();
+
+  if (view === "landing") bindLanding();
+  else if (view === "product") bindProduct();
+  else if (view === "email") bindEmail();
+  else if (view === "thanks") bindThanks();
+  else bindAdmin();
 }
 
 function bindLanding(): void {
@@ -241,92 +192,232 @@ function bindProduct(): void {
   });
 
   document.querySelector("#buy-btn")?.addEventListener("click", () => {
-    /* Stripe Checkout will plug in here */
+    /* Stripe Checkout later */
   });
 
-  const dzEl = document.querySelector<HTMLButtonElement>("#dz");
+  const pick = document.querySelector<HTMLButtonElement>("#pick-photo");
   const fileInput = document.querySelector<HTMLInputElement>("#file");
-  const hintEl = document.querySelector<HTMLParagraphElement>("#hint");
-  const outEl = document.querySelector<HTMLDivElement>("#out");
-  if (!dzEl || !fileInput || !hintEl || !outEl) return;
+  if (!pick || !fileInput) return;
 
-  const uploadBtn = dzEl;
-  const hintP = hintEl;
-  const outBox = outEl;
-
-  function setLoading(loading: boolean): void {
-    uploadBtn.classList.toggle("is-loading", loading);
-    uploadBtn.disabled = loading;
-  }
-
-  function setHint(text: string): void {
-    hintP.textContent = text;
-    hintP.hidden = !text;
-  }
-
-  async function analyzeFile(file: File): Promise<void> {
-    outBox.innerHTML = "";
-    if (!API_URL) {
-      setHint("");
-      return;
-    }
-
-    setLoading(true);
-    setHint("");
-
-    try {
-      const body = new FormData();
-      body.append(FIELD_NAME, file);
-
-      const res = await fetch(API_URL, {
-        method: "POST",
-        body,
-      });
-
-      const text = await res.text();
-      let data: unknown = text;
-      try {
-        data = text ? JSON.parse(text) : null;
-      } catch {
-        data = { raw: text };
-      }
-
-      const parsed = parseApiPayload(data);
-      const pretty = JSON.stringify(data, null, 2);
-      const showRaw =
-        !res.ok ||
-        parsed.scalpType === "unknown" ||
-        parsed.suitableForSet === null;
-
-      outBox.innerHTML = renderResult({
-        parsed,
-        rawJson: pretty,
-        showRaw,
-      });
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      outBox.innerHTML = `<pre class="result-raw" role="alert">${escapeHtml(msg)}</pre>`;
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  uploadBtn.addEventListener("click", () => {
-    if (!uploadBtn.disabled) fileInput.click();
-  });
-
-  uploadBtn.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      if (!uploadBtn.disabled) fileInput.click();
-    }
-  });
+  pick.addEventListener("click", () => fileInput.click());
 
   fileInput.addEventListener("change", () => {
     const f = fileInput.files?.[0];
-    if (f) void analyzeFile(f);
     fileInput.value = "";
+    if (!f || !f.type.startsWith("image/")) return;
+    pendingUploadFile = f;
+    goEmail();
   });
+}
+
+function bindEmail(): void {
+  document.querySelector("#email-back")?.addEventListener("click", () => {
+    pendingUploadFile = null;
+    history.replaceState(null, "", `${BASE_HREF}product`);
+    render();
+  });
+
+  const preview = document.querySelector<HTMLDivElement>("#email-preview");
+  const form = document.querySelector<HTMLFormElement>("#email-form");
+  const input = document.querySelector<HTMLInputElement>("#email-input");
+  const err = document.querySelector<HTMLParagraphElement>("#email-error");
+  if (!preview || !form || !input || !err || !pendingUploadFile) return;
+
+  const url = URL.createObjectURL(pendingUploadFile);
+  preview.innerHTML = `<img src="${url}" alt="" class="email-preview__img" />`;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    err.hidden = true;
+    err.textContent = "";
+
+    const email = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      err.textContent = "Enter a valid email.";
+      err.hidden = false;
+      return;
+    }
+
+    if (!supabase) {
+      err.textContent = "Submission is not configured. Add Supabase keys in .env.";
+      err.hidden = false;
+      return;
+    }
+
+    const file = pendingUploadFile;
+    if (!file) return;
+
+    const submitBtn = document.querySelector<HTMLButtonElement>("#email-submit");
+    submitBtn?.setAttribute("disabled", "true");
+
+    try {
+      const id = crypto.randomUUID();
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const safeExt = ext.match(/^(jpe?g|png|webp|heic)$/) ? ext : "jpg";
+      const path = `${id}.${safeExt}`;
+
+      const { error: upErr } = await supabase.storage.from("scalp-uploads").upload(path, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (upErr) throw upErr;
+
+      const { error: insErr } = await supabase.from("scalp_submissions").insert({
+        id,
+        email: email.toLowerCase(),
+        image_path: path,
+        scalp_result: "pending",
+      });
+      if (insErr) throw insErr;
+
+      URL.revokeObjectURL(url);
+      pendingUploadFile = null;
+      goThanks();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      err.textContent = msg;
+      err.hidden = false;
+    } finally {
+      submitBtn?.removeAttribute("disabled");
+    }
+  });
+}
+
+function bindThanks(): void {
+  document.querySelector("#thanks-home")?.addEventListener("click", () => {
+    goLanding();
+  });
+}
+
+type SubmissionRow = {
+  id: string;
+  email: string;
+  image_path: string;
+  scalp_result: string;
+  created_at: string;
+};
+
+async function renderAdminDashboard(container: HTMLElement): Promise<void> {
+  if (!supabase) {
+    container.innerHTML = `<p class="admin-msg">Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env</p>`;
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("scalp_submissions")
+    .select("id, email, image_path, scalp_result, created_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.innerHTML = `<p class="admin-msg">${escapeHtml(error.message)}</p>`;
+    return;
+  }
+
+  const rows = (data ?? []) as SubmissionRow[];
+  if (rows.length === 0) {
+    container.innerHTML = `<p class="admin-msg">No submissions yet.</p>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="admin-grid">
+      ${rows
+        .map((r) => {
+          const imgUrl = publicImageUrl(r.image_path);
+          const status = escapeHtml(r.scalp_result);
+          const em = escapeHtml(r.email);
+          const when = escapeHtml(new Date(r.created_at).toLocaleString());
+          return `
+        <article class="admin-card" data-id="${escapeHtml(r.id)}">
+          <div class="admin-card__img-wrap">
+            <img class="admin-card__img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" />
+          </div>
+          <div class="admin-card__meta">
+            <p class="admin-card__email">${em}</p>
+            <p class="admin-card__date">${when}</p>
+            <p class="admin-card__status">Status: <strong>${status}</strong></p>
+            <div class="admin-card__actions">
+              <button type="button" class="btn-admin oily" data-action="oily">Oily</button>
+              <button type="button" class="btn-admin dry" data-action="dry">Not oily</button>
+            </div>
+          </div>
+        </article>`;
+        })
+        .join("")}
+    </div>
+  `;
+
+  container.querySelectorAll<HTMLButtonElement>(".btn-admin").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const card = btn.closest<HTMLElement>(".admin-card");
+      const id = card?.dataset.id;
+      const action = btn.dataset.action as "oily" | "dry" | undefined;
+      if (!id || !action || !supabase) return;
+
+      const scalp = action === "oily" ? "oily" : "dry";
+      btn.disabled = true;
+      const { error } = await supabase.from("scalp_submissions").update({ scalp_result: scalp }).eq("id", id);
+      btn.disabled = false;
+      if (error) {
+        alert(error.message);
+        return;
+      }
+      await renderAdminDashboard(container);
+    });
+  });
+}
+
+function bindAdmin(): void {
+  const mount = document.querySelector<HTMLDivElement>("#admin-auth-mount");
+  const body = document.querySelector<HTMLDivElement>("#admin-body");
+  if (!mount || !body) return;
+
+  if (!supabase) {
+    mount.innerHTML = "";
+    body.innerHTML = `<p class="admin-msg">Configure Supabase in .env to use the dashboard.</p>`;
+    return;
+  }
+
+  const sb = supabase;
+
+  const renderAuth = async (): Promise<void> => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      mount.innerHTML = `
+        <span class="admin-user">${escapeHtml(session.user.email ?? "")}</span>
+        <button type="button" class="btn-secondary btn-admin-logout" id="admin-logout">Sign out</button>
+      `;
+      mount.querySelector("#admin-logout")?.addEventListener("click", async () => {
+        await sb.auth.signOut();
+        render();
+      });
+      body.innerHTML = `<div class="admin-loading" id="admin-list">Loading…</div>`;
+      const listEl = document.querySelector<HTMLDivElement>("#admin-list");
+      if (listEl) await renderAdminDashboard(listEl);
+    } else {
+      mount.innerHTML = `
+        <form class="admin-login-form" id="admin-login-form">
+          <input class="field-input" type="email" id="adm-email" required placeholder="Admin email" autocomplete="username" />
+          <input class="field-input" type="password" id="adm-pass" required placeholder="Password" autocomplete="current-password" />
+          <button type="submit" class="btn-buy">Sign in</button>
+        </form>
+      `;
+      body.innerHTML = `<p class="admin-msg">Sign in to review uploads.</p>`;
+      document.querySelector("#admin-login-form")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const em = (document.querySelector("#adm-email") as HTMLInputElement).value.trim();
+        const pw = (document.querySelector("#adm-pass") as HTMLInputElement).value;
+        const { error } = await sb.auth.signInWithPassword({ email: em, password: pw });
+        if (error) {
+          alert(error.message);
+          return;
+        }
+        render();
+      });
+    }
+  };
+
+  void renderAuth();
 }
 
 window.addEventListener("popstate", () => {

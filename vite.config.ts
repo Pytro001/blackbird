@@ -12,7 +12,16 @@ function spaFallback(): {
     configureServer(server) {
       server.middlewares.use((req, _res, next) => {
         const url = req.url?.split("?")[0] ?? "";
-        if (url === "/product" || url.startsWith("/product/")) {
+        const spa =
+          url === "/product" ||
+          url.startsWith("/product/") ||
+          url === "/email" ||
+          url.startsWith("/email/") ||
+          url === "/thanks" ||
+          url.startsWith("/thanks/") ||
+          url === "/admin" ||
+          url.startsWith("/admin/");
+        if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;
         }
@@ -22,7 +31,16 @@ function spaFallback(): {
     configurePreviewServer(server) {
       server.middlewares.use((req, _res, next) => {
         const url = req.url?.split("?")[0] ?? "";
-        if (url === "/product" || url.startsWith("/product/")) {
+        const spa =
+          url === "/product" ||
+          url.startsWith("/product/") ||
+          url === "/email" ||
+          url.startsWith("/email/") ||
+          url === "/thanks" ||
+          url.startsWith("/thanks/") ||
+          url === "/admin" ||
+          url.startsWith("/admin/");
+        if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;
         }
