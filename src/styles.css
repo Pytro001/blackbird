@@ -172,26 +172,18 @@ body {
   padding: 0 clamp(0.25rem, 1vw, 0.5rem);
 }
 
-.product-intro__p {
-  margin: 0 0 0.65rem;
-  font-size: 0.84rem;
-  font-weight: 500;
-  line-height: 1.55;
-  color: var(--gray-500);
-}
-
-.product-intro__p:last-child {
-  margin-bottom: 0;
-}
-
-.product-intro__p strong {
-  color: rgba(245, 245, 245, 0.9);
+.product-intro__lead {
+  margin: 0;
+  font-size: clamp(1.08rem, 3.4vw, 1.35rem);
   font-weight: 600;
+  line-height: 1.35;
+  color: rgba(245, 245, 245, 0.92);
+  text-align: center;
 }
 
-.product-intro__p--muted {
-  font-size: 0.8rem;
-  color: rgba(138, 138, 138, 0.95);
+.product-intro__lead strong {
+  font-weight: 700;
+  color: var(--white);
 }
 
 .product-intro__here {
@@ -346,26 +338,26 @@ body {
   color: #e07a7a;
 }
 
-.product-expert__label {
-  margin: 0 0 0.4rem;
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.42);
+.product-expert__headline {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: var(--white);
 }
 
 .product-expert__hint {
-  margin: 0 0 0.85rem;
-  font-size: 0.8rem;
+  margin: 0 0 1rem;
+  font-size: clamp(0.95rem, 2.6vw, 1.05rem);
   font-weight: 500;
   line-height: 1.45;
   color: var(--gray-500);
 }
 
 .product-expert__hint strong {
-  color: rgba(245, 245, 245, 0.88);
-  font-weight: 600;
+  color: rgba(245, 245, 245, 0.92);
+  font-weight: 700;
 }
 
 .btn-whatsapp {
@@ -373,17 +365,17 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 50px;
-  padding: 0.6rem 1rem;
+  min-height: 54px;
+  padding: 0.65rem 1rem;
   margin-bottom: 0.25rem;
   border-radius: 999px;
   border: none;
   background: #25d366;
   color: #fff;
   font-family: var(--font);
-  font-size: 0.74rem;
+  font-size: clamp(0.88rem, 2.4vw, 1rem);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
@@ -429,11 +421,11 @@ body {
 
 .product-wa-qr__label {
   margin: 0 0 0.55rem;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.4);
+  color: rgba(245, 245, 245, 0.55);
 }
 
 .product-wa-qr__img {

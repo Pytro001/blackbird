@@ -18,7 +18,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 type View = "landing" | "product" | "thanks";
 
 const DEFAULT_WA_MESSAGE =
-  "Hello blackbird® — I'd like help finding whether my dandruff is oily or dry. I'll send 3 photos from my phone (front, top, back of my head) so you can recommend the right product for me.";
+  "Hi blackbird® — sending 3 scalp photos (front, top, back). Oily or dry?";
 
 function escapeHtml(s: string): string {
   return s
@@ -46,24 +46,25 @@ function whatsappChatUrl(): string | null {
 function scalpCheckPanelHtml(): string {
   const url = whatsappChatUrl();
   const cta = url
-    ? `<a class="btn-whatsapp" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a>`
-    : `<p class="product-inline-msg product-inline-msg--error" id="wa-config-msg">Add <code class="product-code">VITE_WHATSAPP_NUMBER</code> in your environment (country code + number, digits only).</p>
-              <span class="btn-whatsapp btn-whatsapp--disabled">Message us on WhatsApp</span>`;
+    ? `<a class="btn-whatsapp" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`
+    : `<p class="product-inline-msg product-inline-msg--error" id="wa-config-msg">Set <code class="product-code">VITE_WHATSAPP_NUMBER</code></p>
+              <span class="btn-whatsapp btn-whatsapp--disabled">WhatsApp</span>`;
 
   return `
             <div class="product-expert" id="hair-analysis">
-              <p class="product-expert__label">Send 3 photos on WhatsApp</p>
+              <p class="product-expert__headline">3 photos · WhatsApp</p>
               <p class="product-expert__hint">
-                Dandruff is either <strong>oily</strong> or <strong>dry</strong> — we help you tell which. Open WhatsApp below, then use the <strong>camera</strong> in the chat to take <strong>three</strong> photos: <strong>front</strong>, <strong>top</strong>, and <strong>back</strong> of your head, and send them in this chat.
+                <strong>Oily</strong> or <strong>dry</strong> — we tell you which.<br />
+                Camera in chat: <strong>front</strong>, <strong>top</strong>, <strong>back</strong>.
               </p>
               ${cta}
               <div class="product-wa-qr">
-                <p class="product-wa-qr__label">Or scan with your phone</p>
+                <p class="product-wa-qr__label">Scan</p>
                 <img
                   src="${BASE_HREF}whatsapp-qr.jpg"
                   width="1024"
                   height="1024"
-                  alt="QR code: open WhatsApp to send your scalp photos"
+                  alt="WhatsApp QR"
                   decoding="async"
                   loading="lazy"
                   class="product-wa-qr__img"
@@ -118,14 +119,8 @@ function homeHtml(): string {
 
     <div class="page-product" id="product">
       <div class="product-intro">
-        <p class="product-intro__p">
-          There are two types of dandruff: <strong>oily</strong> and <strong>dry</strong>.
-          Not sure what you have? <a href="#hair-analysis" class="product-intro__here">Find out here</a>
-          — we’ll help from your scalp photos.
-        </p>
-        <p class="product-intro__p product-intro__p--muted">
-          So our product works for you, we check your dandruff type first, then recommend the version that fits you.
-          Let us help you get the <strong>correct product</strong> — that’s what we’re here for.
+        <p class="product-intro__lead">
+          <strong>Oily</strong> or <strong>dry</strong>? <a href="#hair-analysis" class="product-intro__here">WhatsApp</a> — 3 photos.
         </p>
       </div>
       <main class="product-layout">
