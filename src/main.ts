@@ -18,7 +18,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 type View = "landing" | "product" | "thanks";
 
 const DEFAULT_WA_MESSAGE =
-  "Hello blackbird® — I'd like a free expert scalp check. I'll send 2–3 photos in this chat: front, top, and back of my head (dandruff visible).";
+  "Hello blackbird® — I'd like help finding whether my dandruff is oily or dry. I'll send 2-3 photos (front, top, back of my head) so you can recommend the right product for me.";
 
 function escapeHtml(s: string): string {
   return s
@@ -73,6 +73,17 @@ function homeHtml(): string {
     </section>
 
     <div class="page-product" id="product">
+      <div class="product-intro">
+        <p class="product-intro__p">
+          There are two types of dandruff: <strong>oily</strong> and <strong>dry</strong>.
+          Not sure what you have? <a href="#hair-analysis" class="product-intro__here">Find out here</a>
+          — we’ll help from your scalp photos.
+        </p>
+        <p class="product-intro__p product-intro__p--muted">
+          So our product works for you, we check your dandruff type first, then recommend the version that fits you.
+          Let us help you get the <strong>correct product</strong> — that’s what we’re here for.
+        </p>
+      </div>
       <main class="product-layout">
         <div class="product-shots-wrap">
           <div
@@ -117,8 +128,8 @@ function homeHtml(): string {
 
           <div class="product-panel product-panel--upload">
             <div class="product-expert" id="hair-analysis">
-              <p class="product-expert__label">Expert scalp check</p>
-              <p class="product-expert__hint">Send <strong>2–3 photos</strong> in the WhatsApp chat: your head from the <strong>front</strong>, <strong>top</strong>, and <strong>back</strong>, with dandruff visible where possible. Tap below to open WhatsApp — you can attach more pictures there with the paperclip.</p>
+              <p class="product-expert__label">Oily or dry? We’ll tell you</p>
+              <p class="product-expert__hint">Send <strong>2–3 photos</strong> in WhatsApp — <strong>front</strong>, <strong>top</strong>, and <strong>back</strong> of your head, with dandruff visible if you can. Open the chat below and use the paperclip to add each photo.</p>
               <button
                 type="button"
                 class="btn-upload-expert"
@@ -247,7 +258,7 @@ async function sendPhotoViaWhatsApp(file: File): Promise<void> {
 
   const followUp =
     `${text}\n\n` +
-    "In this chat, please send 2–3 photos (front, top, back of head) using the paperclip for each.";
+    "In this chat, send 2-3 photos (front, top, back of head) with the paperclip so we can see if your dandruff is oily or dry and recommend the right product.";
   window.location.assign(`https://wa.me/${digits}?text=${encodeURIComponent(followUp)}`);
 }
 
