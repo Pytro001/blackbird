@@ -10,6 +10,13 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+/** Shown next to Buy; keep in sync with your Stripe Price amount. */
+const PRODUCT_PRICE_EUR = 69.99;
+const productPriceDisplay = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+}).format(PRODUCT_PRICE_EUR);
+
 type View = "landing" | "product" | "email" | "thanks" | "admin";
 
 /** Chosen photo file until submitted on /email */
@@ -111,9 +118,12 @@ function homeHtml(): string {
         </div>
 
         <aside class="product-side" aria-label="Product details">
-          <div class="product-panel">
-            <button type="button" class="btn-buy" id="buy-btn">Buy</button>
+          <div class="product-panel product-panel--buy">
+            <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
+            <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
+          </div>
 
+          <div class="product-panel product-panel--upload">
             <div class="product-expert" id="hair-analysis">
               <p class="product-expert__label">Expert scalp check</p>
               <p class="product-expert__hint">Upload a picture of your head with dandruff visible, and we will tell you what dandruff type you have.</p>
@@ -123,7 +133,7 @@ function homeHtml(): string {
                 id="pick-photo"
                 aria-label="Choose a photo to upload"
               >
-                Upload photo
+                Upload picture
               </button>
               <input type="file" id="file" class="visually-hidden" accept="image/*" />
             </div>
