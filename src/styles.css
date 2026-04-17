@@ -50,7 +50,12 @@ body {
   min-height: 100%;
 }
 
-/* —— Editorial hero (gradient only, matches product page) —— */
+.home-shell {
+  min-height: 100%;
+  background: var(--site-bg);
+}
+
+/* —— Editorial hero —— */
 .hero-editorial {
   position: relative;
   min-height: 100vh;
@@ -58,7 +63,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: clamp(1rem, 3vw, 1.75rem);
-  background: var(--site-bg);
+  background: transparent;
 }
 
 .hero-editorial__title-wrap {
@@ -149,7 +154,7 @@ body {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
-/* —— Product page (matches first-page grays; image left, info right) —— */
+/* —— Product (image left, info right); background from .home-shell —— */
 .page-product {
   min-height: 100vh;
   min-height: 100dvh;
@@ -157,7 +162,7 @@ body {
   flex-direction: column;
   align-items: stretch;
   padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
-  background: var(--site-bg);
+  background: transparent;
 }
 
 .product-layout {

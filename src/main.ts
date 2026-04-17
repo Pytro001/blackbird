@@ -61,6 +61,7 @@ function goThanks(): void {
 
 function homeHtml(): string {
   return `
+    <div class="home-shell">
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
         <h1 class="hero-editorial__title">
@@ -105,6 +106,7 @@ function homeHtml(): string {
           </div>
         </aside>
       </main>
+    </div>
     </div>
   `;
 }
