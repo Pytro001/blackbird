@@ -1,8 +1,11 @@
 import Stripe from "stripe";
 
+/** One-time checkout amount: 69.99 EUR (Stripe uses minor units, e.g. cents). */
+const CHECKOUT_UNIT_AMOUNT_EUR = 6999;
+
 /**
  * Vercel serverless: POST → { url } for Stripe Checkout redirect.
- * Env: STRIPE_SECRET_KEY, STRIPE_PRICE_ID (Dashboard → Products → Price ID)
+ * Env: STRIPE_SECRET_KEY only (amount is fixed in code).
  */
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -11,9 +14,8 @@ export default async function handler(req, res) {
   }
 
   const secret = process.env.STRIPE_SECRET_KEY;
-  const priceId = process.env.STRIPE_PRICE_ID;
-  if (!secret || !priceId) {
-    return res.status(500).json({ error: "Stripe is not configured (STRIPE_SECRET_KEY, STRIPE_PRICE_ID)" });
+  if (!secret) {
+    return res.status(500).json({ error: "Stripe is not configured (STRIPE_SECRET_KEY)" });
   }
 
   const stripe = new Stripe(secret);
@@ -28,7 +30,19 @@ export default async function handler(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "eur",
+            unit_amount: CHECKOUT_UNIT_AMOUNT_EUR,
+            product_data: {
+              name: "blackbird®",
+              description: "Anti-dandruff care set",
+            },
+          },
+        },
+      ],
       success_url: `${origin}/thanks?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/#product`,
       billing_address_collection: "auto",
