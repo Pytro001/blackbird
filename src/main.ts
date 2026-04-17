@@ -17,8 +17,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 
 type View = "landing" | "product" | "thanks";
 
-const DEFAULT_WA_MESSAGE =
-  "Hi blackbird® — sending 3 scalp photos (front, top, back). Oily or dry?";
+const DEFAULT_WA_MESSAGE = "Hi";
 
 function escapeHtml(s: string): string {
   return s
@@ -43,28 +42,21 @@ function whatsappChatUrl(): string | null {
   return `https://wa.me/${digits}?text=${encodeURIComponent(whatsappPrefillText())}`;
 }
 
-function scalpCheckPanelHtml(): string {
+function whatsAppBlockHtml(): string {
   const url = whatsappChatUrl();
   const cta = url
-    ? `<a class="btn-whatsapp" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`
-    : `<p class="product-inline-msg product-inline-msg--error" id="wa-config-msg">Set <code class="product-code">VITE_WHATSAPP_NUMBER</code></p>
-              <span class="btn-whatsapp btn-whatsapp--disabled">WhatsApp</span>`;
+    ? `<a class="product-wa-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`
+    : `<span class="product-wa-link product-wa-link--disabled">WhatsApp</span>`;
 
   return `
-            <div class="product-expert" id="hair-analysis">
-              <p class="product-expert__headline">3 photos · WhatsApp</p>
-              <p class="product-expert__hint">
-                <strong>Oily</strong> or <strong>dry</strong> — we tell you which.<br />
-                Camera in chat: <strong>front</strong>, <strong>top</strong>, <strong>back</strong>.
-              </p>
-              ${cta}
+            <div class="product-wa" id="hair-analysis">
+              <p class="product-wa-line">${cta}</p>
               <div class="product-wa-qr">
-                <p class="product-wa-qr__label">Scan</p>
                 <img
                   src="${BASE_HREF}whatsapp-qr.jpg"
                   width="1024"
                   height="1024"
-                  alt="WhatsApp QR"
+                  alt=""
                   decoding="async"
                   loading="lazy"
                   class="product-wa-qr__img"
@@ -118,11 +110,6 @@ function homeHtml(): string {
     </section>
 
     <div class="page-product" id="product">
-      <div class="product-intro">
-        <p class="product-intro__lead">
-          <strong>Oily</strong> or <strong>dry</strong>? <a href="#hair-analysis" class="product-intro__here">WhatsApp</a> — 3 photos.
-        </p>
-      </div>
       <main class="product-layout">
         <div class="product-shots-wrap">
           <div
@@ -163,10 +150,7 @@ function homeHtml(): string {
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
             <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
-          </div>
-
-          <div class="product-panel product-panel--upload">
-            ${scalpCheckPanelHtml()}
+            ${whatsAppBlockHtml()}
           </div>
         </aside>
       </main>
