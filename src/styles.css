@@ -10,8 +10,6 @@
   --white: #f5f5f5;
   --white-dim: rgba(245, 245, 245, 0.82);
   --orange: #e58e35;
-  --orange-hot: #ff9330;
-  --orange-glow: rgba(255, 147, 48, 0.45);
   --orange-soft: rgba(229, 142, 53, 0.22);
   --orange-muted: #c97a2e;
   --site-bg: radial-gradient(
@@ -52,15 +50,31 @@ body {
   min-height: 100%;
 }
 
-/* —— Editorial hero (no photo; gradient only) —— */
+/* —— Editorial hero (collage background + readability overlay) —— */
 .hero-editorial {
   position: relative;
+  isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   padding: clamp(1rem, 3vw, 1.75rem);
-  background: var(--site-bg);
+  background-color: var(--black);
+  background-image: linear-gradient(
+      180deg,
+      rgba(8, 8, 8, 0.78) 0%,
+      rgba(8, 8, 8, 0.45) 42%,
+      rgba(8, 8, 8, 0.72) 100%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 50% 45%,
+      rgba(0, 0, 0, 0.35) 0%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    var(--hero-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-editorial__title-wrap {
@@ -83,7 +97,7 @@ body {
   text-transform: lowercase;
   color: var(--white);
   text-align: center;
-  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.75), 0 0 2px rgba(0, 0, 0, 0.9);
 }
 
 .hero-editorial__reg {
@@ -99,22 +113,26 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-end;
   gap: clamp(1rem, 2.5vw, 1.35rem);
-  padding-bottom: clamp(1.25rem, 4vh, 2.5rem);
-  padding-left: clamp(0.25rem, 2vw, 0.5rem);
-  max-width: 22rem;
+  width: 100%;
+  padding: 0 clamp(0.75rem, 3vw, 1.5rem) clamp(1.5rem, 4vh, 2.75rem);
+  text-align: center;
 }
 
 .hero-editorial__script {
   margin: 0;
   font-family: var(--font-script);
-  font-size: clamp(1.65rem, 4.5vw, 2.35rem);
+  font-size: clamp(1.15rem, 4.2vw, 2.35rem);
   font-weight: 500;
-  line-height: 1.15;
-  color: var(--orange-hot);
+  line-height: 1.2;
+  color: var(--white-dim);
   letter-spacing: 0.01em;
-  text-shadow: 0 0 36px var(--orange-glow), 0 2px 20px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  white-space: nowrap;
+  max-width: 100%;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.7), 0 0 1px rgba(0, 0, 0, 0.85);
 }
 
 .btn-pill {
@@ -318,15 +336,6 @@ body {
   transform: scale(0.99);
 }
 
-.refund-note {
-  margin: 0;
-  font-size: 0.78rem;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--gray-500);
-  text-align: left;
-}
-
 .back-btn {
   display: inline-flex;
   align-items: center;
@@ -444,8 +453,9 @@ body {
   border: 0;
 }
 
-@media (min-width: 768px) {
-  .hero-editorial__bottom {
-    padding-left: clamp(1rem, 4vw, 2.5rem);
+@media (max-width: 360px) {
+  .hero-editorial__script {
+    white-space: normal;
+    font-size: clamp(1rem, 5vw, 1.25rem);
   }
 }

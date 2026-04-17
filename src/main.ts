@@ -159,8 +159,9 @@ function goProduct(): void {
 }
 
 function landingHtml(): string {
+  const heroBg = `url('${BASE_HREF}hero-bg.png')`;
   return `
-    <section class="hero-editorial">
+    <section class="hero-editorial" style="--hero-bg: ${heroBg}">
       <div class="hero-editorial__title-wrap">
         <h1 class="hero-editorial__title">
           blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
@@ -195,11 +196,10 @@ function productHtml(): string {
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel">
             <button type="button" class="btn-buy" id="buy-btn">Buy</button>
-            <p class="refund-note">We refund if it’s not your hair type.</p>
 
             <div class="product-expert" id="hair-analysis">
               <p class="product-expert__label">Expert scalp check</p>
-              <p class="product-expert__hint">Upload a clear photo — our experts review your scalp type.</p>
+              <p class="product-expert__hint">Upload a picture of your head with dandruff visible, and we will tell you what dandruff type you have.</p>
               <button
                 type="button"
                 class="btn-upload-expert"
@@ -267,7 +267,7 @@ function bindProduct(): void {
   async function analyzeFile(file: File): Promise<void> {
     outBox.innerHTML = "";
     if (!API_URL) {
-      setHint("Set VITE_SCALP_CHECK_URL in .env");
+      setHint("");
       return;
     }
 
@@ -327,10 +327,6 @@ function bindProduct(): void {
     if (f) void analyzeFile(f);
     fileInput.value = "";
   });
-
-  if (!API_URL) {
-    setHint("Set VITE_SCALP_CHECK_URL in .env");
-  }
 }
 
 window.addEventListener("popstate", () => {
