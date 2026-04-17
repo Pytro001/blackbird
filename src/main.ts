@@ -138,6 +138,18 @@ function homeHtml(): string {
               >
                 Open WhatsApp
               </button>
+              <div class="product-wa-qr">
+                <p class="product-wa-qr__label">Or scan to message us on WhatsApp</p>
+                <img
+                  src="${BASE_HREF}whatsapp-qr.jpg"
+                  width="1024"
+                  height="1024"
+                  alt="QR code: open WhatsApp to send your scalp photos"
+                  decoding="async"
+                  loading="lazy"
+                  class="product-wa-qr__img"
+                />
+              </div>
               <input type="file" id="file" class="visually-hidden" accept="image/*" />
               <p class="product-inline-msg" id="upload-wa-hint" hidden></p>
             </div>

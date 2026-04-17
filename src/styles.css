@@ -417,6 +417,33 @@ body {
   animation: shimmer 1.1s ease-in-out infinite;
 }
 
+.product-wa-qr {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.product-wa-qr__label {
+  margin: 0 0 0.55rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.4);
+}
+
+.product-wa-qr__img {
+  display: block;
+  width: min(168px, 52vw);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--white);
+}
+
 .btn-buy {
   min-height: 52px;
   border: none;
