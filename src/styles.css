@@ -575,15 +575,9 @@ body {
 }
 
 .admin-card__date {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.72rem;
   color: var(--gray-500);
-}
-
-.admin-card__status {
-  margin: 0;
-  font-size: 0.78rem;
-  color: var(--gray-400);
 }
 
 .visually-hidden {

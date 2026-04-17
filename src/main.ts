@@ -293,7 +293,6 @@ type SubmissionRow = {
   id: string;
   email: string;
   image_path: string;
-  scalp_result: string;
   created_at: string;
 };
 
@@ -305,7 +304,7 @@ async function renderAdminDashboard(container: HTMLElement): Promise<void> {
 
   const { data, error } = await supabase
     .from("scalp_submissions")
-    .select("id, email, image_path, scalp_result, created_at")
+    .select("id, email, image_path, created_at")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -324,7 +323,6 @@ async function renderAdminDashboard(container: HTMLElement): Promise<void> {
       ${rows
         .map((r) => {
           const imgUrl = publicImageUrl(r.image_path);
-          const status = escapeHtml(r.scalp_result);
           const em = escapeHtml(r.email);
           const when = escapeHtml(new Date(r.created_at).toLocaleString());
           return `
@@ -335,7 +333,6 @@ async function renderAdminDashboard(container: HTMLElement): Promise<void> {
           <div class="admin-card__meta">
             <p class="admin-card__email">${em}</p>
             <p class="admin-card__date">${when}</p>
-            <p class="admin-card__status">Status: <strong>${status}</strong></p>
           </div>
         </article>`;
         })
