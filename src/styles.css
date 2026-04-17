@@ -317,6 +317,11 @@ body {
   color: var(--gray-500);
 }
 
+.product-expert__hint strong {
+  color: rgba(245, 245, 245, 0.88);
+  font-weight: 600;
+}
+
 .btn-upload-expert {
   position: relative;
   display: flex;
