@@ -18,7 +18,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 type View = "landing" | "product" | "thanks";
 
 const DEFAULT_WA_MESSAGE =
-  "Hello blackbird® — I'd like a free expert scalp check. My scalp photo is attached.";
+  "Hello blackbird® — I'd like a free expert scalp check. I'll send 2–3 photos in this chat: front, top, and back of my head (dandruff visible).";
 
 function escapeHtml(s: string): string {
   return s
@@ -118,14 +118,14 @@ function homeHtml(): string {
           <div class="product-panel product-panel--upload">
             <div class="product-expert" id="hair-analysis">
               <p class="product-expert__label">Expert scalp check</p>
-              <p class="product-expert__hint">Choose a clear photo of your scalp with dandruff visible. We open WhatsApp with your message ready — on your phone you can send the picture in one step.</p>
+              <p class="product-expert__hint">Send <strong>2–3 photos</strong> in the WhatsApp chat: your head from the <strong>front</strong>, <strong>top</strong>, and <strong>back</strong>, with dandruff visible where possible. Tap below to open WhatsApp — you can attach more pictures there with the paperclip.</p>
               <button
                 type="button"
                 class="btn-upload-expert"
                 id="pick-photo"
-                aria-label="Choose a photo for WhatsApp"
+                aria-label="Open WhatsApp for scalp photos"
               >
-                Upload picture
+                Open WhatsApp
               </button>
               <input type="file" id="file" class="visually-hidden" accept="image/*" />
               <p class="product-inline-msg" id="upload-wa-hint" hidden></p>
@@ -247,7 +247,7 @@ async function sendPhotoViaWhatsApp(file: File): Promise<void> {
 
   const followUp =
     `${text}\n\n` +
-    "Please attach your scalp photo using the paperclip in WhatsApp before sending.";
+    "In this chat, please send 2–3 photos (front, top, back of head) using the paperclip for each.";
   window.location.assign(`https://wa.me/${digits}?text=${encodeURIComponent(followUp)}`);
 }
 
