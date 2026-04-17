@@ -18,7 +18,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 type View = "landing" | "product" | "thanks";
 
 const DEFAULT_WA_MESSAGE =
-  "Hello blackbird® — I'd like help finding whether my dandruff is oily or dry. I'll send 2-3 photos (front, top, back of my head) so you can recommend the right product for me.";
+  "Hello blackbird® — I'd like help finding whether my dandruff is oily or dry. I'll send 3 photos from my phone (front, top, back of my head) so you can recommend the right product for me.";
 
 function escapeHtml(s: string): string {
   return s
@@ -26,6 +26,50 @@ function escapeHtml(s: string): string {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function whatsappPrefillText(): string {
+  return (import.meta.env.VITE_WHATSAPP_MESSAGE?.trim() || DEFAULT_WA_MESSAGE).trim();
+}
+
+function whatsappDigits(): string {
+  return (import.meta.env.VITE_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+}
+
+/** Full wa.me URL, or null if the number is not configured. */
+function whatsappChatUrl(): string | null {
+  const digits = whatsappDigits();
+  if (!digits) return null;
+  return `https://wa.me/${digits}?text=${encodeURIComponent(whatsappPrefillText())}`;
+}
+
+function scalpCheckPanelHtml(): string {
+  const url = whatsappChatUrl();
+  const cta = url
+    ? `<a class="btn-whatsapp" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a>`
+    : `<p class="product-inline-msg product-inline-msg--error" id="wa-config-msg">Add <code class="product-code">VITE_WHATSAPP_NUMBER</code> in your environment (country code + number, digits only).</p>
+              <span class="btn-whatsapp btn-whatsapp--disabled">Message us on WhatsApp</span>`;
+
+  return `
+            <div class="product-expert" id="hair-analysis">
+              <p class="product-expert__label">Send 3 photos on WhatsApp</p>
+              <p class="product-expert__hint">
+                Dandruff is either <strong>oily</strong> or <strong>dry</strong> — we help you tell which. Open WhatsApp below, then use the <strong>camera</strong> in the chat to take <strong>three</strong> photos: <strong>front</strong>, <strong>top</strong>, and <strong>back</strong> of your head, and send them in this chat.
+              </p>
+              ${cta}
+              <div class="product-wa-qr">
+                <p class="product-wa-qr__label">Or scan with your phone</p>
+                <img
+                  src="${BASE_HREF}whatsapp-qr.jpg"
+                  width="1024"
+                  height="1024"
+                  alt="QR code: open WhatsApp to send your scalp photos"
+                  decoding="async"
+                  loading="lazy"
+                  class="product-wa-qr__img"
+                />
+              </div>
+            </div>`;
 }
 
 function getAppPath(): string {
@@ -127,32 +171,7 @@ function homeHtml(): string {
           </div>
 
           <div class="product-panel product-panel--upload">
-            <div class="product-expert" id="hair-analysis">
-              <p class="product-expert__label">Oily or dry? We’ll tell you</p>
-              <p class="product-expert__hint">Send <strong>2–3 photos</strong> in WhatsApp — <strong>front</strong>, <strong>top</strong>, and <strong>back</strong> of your head, with dandruff visible if you can. Open the chat below and use the paperclip to add each photo.</p>
-              <button
-                type="button"
-                class="btn-upload-expert"
-                id="pick-photo"
-                aria-label="Open WhatsApp for scalp photos"
-              >
-                Open WhatsApp
-              </button>
-              <div class="product-wa-qr">
-                <p class="product-wa-qr__label">Or scan to message us on WhatsApp</p>
-                <img
-                  src="${BASE_HREF}whatsapp-qr.jpg"
-                  width="1024"
-                  height="1024"
-                  alt="QR code: open WhatsApp to send your scalp photos"
-                  decoding="async"
-                  loading="lazy"
-                  class="product-wa-qr__img"
-                />
-              </div>
-              <input type="file" id="file" class="visually-hidden" accept="image/*" />
-              <p class="product-inline-msg" id="upload-wa-hint" hidden></p>
-            </div>
+            ${scalpCheckPanelHtml()}
           </div>
         </aside>
       </main>
@@ -209,69 +228,7 @@ function bindProduct(): void {
     void startStripeCheckout();
   });
 
-  const pick = document.querySelector<HTMLButtonElement>("#pick-photo");
-  const fileInput = document.querySelector<HTMLInputElement>("#file");
-  if (!pick || !fileInput) return;
-
-  pick.addEventListener("click", () => {
-    setUploadWaHint("", false);
-    fileInput.click();
-  });
-
-  fileInput.addEventListener("change", () => {
-    const f = fileInput.files?.[0];
-    fileInput.value = "";
-    if (!f || !f.type.startsWith("image/")) return;
-    void sendPhotoViaWhatsApp(f);
-  });
-
   bindProductShotsCarousel();
-}
-
-function setUploadWaHint(msg: string, isError: boolean): void {
-  const el = document.querySelector<HTMLParagraphElement>("#upload-wa-hint");
-  if (!el) return;
-  el.textContent = msg;
-  el.hidden = !msg;
-  el.classList.toggle("product-inline-msg--error", isError);
-}
-
-function whatsappDigits(): string {
-  return (import.meta.env.VITE_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
-}
-
-/** Opens WhatsApp with a prefilled message; shares the file when the device supports it (no browser alert). */
-async function sendPhotoViaWhatsApp(file: File): Promise<void> {
-  setUploadWaHint("", false);
-
-  const digits = whatsappDigits();
-  if (!digits) {
-    setUploadWaHint(
-      "Add VITE_WHATSAPP_NUMBER to your environment (country code + number, digits only).",
-      true,
-    );
-    return;
-  }
-
-  const text = (import.meta.env.VITE_WHATSAPP_MESSAGE?.trim() || DEFAULT_WA_MESSAGE).trim();
-
-  try {
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        text,
-        title: "blackbird®",
-      });
-      return;
-    }
-  } catch (e) {
-    if (e instanceof Error && e.name === "AbortError") return;
-  }
-
-  const followUp =
-    `${text}\n\n` +
-    "In this chat, send 2-3 photos (front, top, back of head) with the paperclip so we can see if your dandruff is oily or dry and recommend the right product.";
-  window.location.assign(`https://wa.me/${digits}?text=${encodeURIComponent(followUp)}`);
 }
 
 function bindProductShotsCarousel(): void {
