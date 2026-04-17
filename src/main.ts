@@ -336,35 +336,12 @@ async function renderAdminDashboard(container: HTMLElement): Promise<void> {
             <p class="admin-card__email">${em}</p>
             <p class="admin-card__date">${when}</p>
             <p class="admin-card__status">Status: <strong>${status}</strong></p>
-            <div class="admin-card__actions">
-              <button type="button" class="btn-admin oily" data-action="oily">Oily</button>
-              <button type="button" class="btn-admin dry" data-action="dry">Not oily</button>
-            </div>
           </div>
         </article>`;
         })
         .join("")}
     </div>
   `;
-
-  container.querySelectorAll<HTMLButtonElement>(".btn-admin").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const card = btn.closest<HTMLElement>(".admin-card");
-      const id = card?.dataset.id;
-      const action = btn.dataset.action as "oily" | "dry" | undefined;
-      if (!id || !action || !supabase) return;
-
-      const scalp = action === "oily" ? "oily" : "dry";
-      btn.disabled = true;
-      const { error } = await supabase.from("scalp_submissions").update({ scalp_result: scalp }).eq("id", id);
-      btn.disabled = false;
-      if (error) {
-        alert(error.message);
-        return;
-      }
-      await renderAdminDashboard(container);
-    });
-  });
 }
 
 function bindAdmin(): void {
