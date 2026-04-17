@@ -87,9 +87,11 @@ body {
 .hero-editorial__reg {
   font-size: 0.22em;
   font-weight: 600;
-  vertical-align: baseline;
+  line-height: 0;
+  vertical-align: super;
   position: relative;
-  top: -1.05em;
+  /* `em` is this element’s font size; extra negative = higher above “blackbird” */
+  top: -0.65em;
   margin-left: 0.06em;
   opacity: 0.9;
 }
