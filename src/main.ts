@@ -42,9 +42,11 @@ function goLanding(): void {
   render();
 }
 
-function goProduct(): void {
-  history.pushState(null, "", `${BASE_HREF}product`);
-  render();
+/** Same document as home; scroll product block into view */
+function scrollToProduct(behavior: ScrollBehavior): void {
+  requestAnimationFrame(() => {
+    document.getElementById("product")?.scrollIntoView({ behavior, block: "start" });
+  });
 }
 
 function goEmail(): void {
@@ -57,7 +59,7 @@ function goThanks(): void {
   render();
 }
 
-function landingHtml(): string {
+function homeHtml(): string {
   return `
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
@@ -70,13 +72,9 @@ function landingHtml(): string {
         <button type="button" class="btn-pill" id="cta-now">Now</button>
       </div>
     </section>
-  `;
-}
 
-function productHtml(): string {
-  return `
-    <div class="page-product">
-      <button type="button" class="back-btn back-btn--solo" id="back-btn" aria-label="Back to home">
+    <div class="page-product" id="product">
+      <button type="button" class="back-btn back-btn--solo" id="back-btn" aria-label="Back to top">
         <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       </button>
 
@@ -163,32 +161,39 @@ function adminHtml(): string {
 function render(): void {
   let view = pathToView();
   if (view === "email" && !pendingUploadFile) {
-    history.replaceState(null, "", `${BASE_HREF}product`);
-    view = "product";
+    history.replaceState(null, "", `${BASE_HREF}#product`);
+    view = "landing";
   }
 
-  if (view === "landing") root.innerHTML = landingHtml();
-  else if (view === "product") root.innerHTML = productHtml();
-  else if (view === "email") root.innerHTML = emailHtml();
+  if (view === "landing" || view === "product") {
+    root.innerHTML = homeHtml();
+    bindLanding();
+    bindProduct();
+    const scrollProduct =
+      view === "product" || (view === "landing" && location.hash === "#product");
+    if (scrollProduct) {
+      scrollToProduct(view === "product" ? "auto" : "smooth");
+    }
+  } else if (view === "email") root.innerHTML = emailHtml();
   else if (view === "thanks") root.innerHTML = thanksHtml();
   else root.innerHTML = adminHtml();
 
-  if (view === "landing") bindLanding();
-  else if (view === "product") bindProduct();
-  else if (view === "email") bindEmail();
+  if (view === "email") bindEmail();
   else if (view === "thanks") bindThanks();
-  else bindAdmin();
+  else if (view === "admin") bindAdmin();
 }
 
 function bindLanding(): void {
   document.querySelector("#cta-now")?.addEventListener("click", () => {
-    goProduct();
+    history.pushState(null, "", `${BASE_HREF}#product`);
+    scrollToProduct("smooth");
   });
 }
 
 function bindProduct(): void {
   document.querySelector("#back-btn")?.addEventListener("click", () => {
-    goLanding();
+    history.replaceState(null, "", BASE_HREF);
+    document.querySelector(".hero-editorial")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 
   document.querySelector("#buy-btn")?.addEventListener("click", () => {
@@ -213,7 +218,7 @@ function bindProduct(): void {
 function bindEmail(): void {
   document.querySelector("#email-back")?.addEventListener("click", () => {
     pendingUploadFile = null;
-    history.replaceState(null, "", `${BASE_HREF}product`);
+    history.replaceState(null, "", `${BASE_HREF}#product`);
     render();
   });
 
