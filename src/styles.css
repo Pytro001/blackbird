@@ -90,7 +90,6 @@ body {
   line-height: 0;
   vertical-align: super;
   position: relative;
-  /* `em` is this element’s font size; extra negative = higher above “blackbird” */
   top: -0.65em;
   margin-left: 0.06em;
   opacity: 0.9;
@@ -159,11 +158,6 @@ body {
   align-items: stretch;
   padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
   background: var(--site-bg);
-}
-
-.back-btn--solo {
-  align-self: flex-start;
-  margin-bottom: 0.65rem;
 }
 
 .product-layout {
@@ -311,6 +305,11 @@ body {
   transform: scale(0.99);
 }
 
+.btn-buy.is-loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
 .btn-secondary {
   min-height: 44px;
   padding: 0.45rem 1.1rem;
@@ -330,29 +329,6 @@ body {
 .btn-secondary:hover,
 .btn-secondary:focus-visible {
   border-color: rgba(229, 142, 53, 0.5);
-  background: var(--orange-soft);
-  outline: none;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--gray-400);
-  cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-}
-
-.back-btn:hover,
-.back-btn:focus-visible {
-  color: var(--white);
-  border-color: rgba(229, 142, 53, 0.45);
   background: var(--orange-soft);
   outline: none;
 }

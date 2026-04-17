@@ -12,7 +12,7 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
 
 type View = "landing" | "product" | "email" | "thanks" | "admin";
 
-/** Holds the image chosen on /product until submitted on /email */
+/** Chosen photo file until submitted on /email */
 let pendingUploadFile: File | null = null;
 
 function escapeHtml(s: string): string {
@@ -74,10 +74,6 @@ function homeHtml(): string {
     </section>
 
     <div class="page-product" id="product">
-      <button type="button" class="back-btn back-btn--solo" id="back-btn" aria-label="Back to top">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      </button>
-
       <main class="product-layout">
         <figure class="product-shot">
           <img
@@ -116,9 +112,6 @@ function homeHtml(): string {
 function emailHtml(): string {
   return `
     <div class="page-step page-email">
-      <button type="button" class="back-btn back-btn--solo" id="email-back" aria-label="Back">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-      </button>
       <main class="step-main">
         <h2 class="step-title">Your email</h2>
         <p class="step-lede">We’ll send your scalp check result to this email.</p>
@@ -191,13 +184,8 @@ function bindLanding(): void {
 }
 
 function bindProduct(): void {
-  document.querySelector("#back-btn")?.addEventListener("click", () => {
-    history.replaceState(null, "", BASE_HREF);
-    document.querySelector(".hero-editorial")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-
   document.querySelector("#buy-btn")?.addEventListener("click", () => {
-    /* Stripe Checkout later */
+    void startStripeCheckout();
   });
 
   const pick = document.querySelector<HTMLButtonElement>("#pick-photo");
@@ -215,13 +203,42 @@ function bindProduct(): void {
   });
 }
 
-function bindEmail(): void {
-  document.querySelector("#email-back")?.addEventListener("click", () => {
-    pendingUploadFile = null;
-    history.replaceState(null, "", `${BASE_HREF}#product`);
-    render();
-  });
+async function startStripeCheckout(): Promise<void> {
+  const btn = document.querySelector<HTMLButtonElement>("#buy-btn");
+  const fallback = import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim();
 
+  const setBusy = (busy: boolean): void => {
+    btn?.toggleAttribute("disabled", busy);
+    btn?.classList.toggle("is-loading", busy);
+  };
+
+  setBusy(true);
+  try {
+    const url = `${BASE_HREF}api/create-checkout-session`;
+    const res = await fetch(url, { method: "POST" });
+    const data = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
+    if (res.ok && data?.url) {
+      window.location.href = data.url;
+      return;
+    }
+    if (fallback) {
+      window.location.href = fallback;
+      return;
+    }
+    const msg = data?.error ?? `Checkout failed (${res.status})`;
+    window.alert(msg);
+  } catch {
+    if (fallback) {
+      window.location.href = fallback;
+      return;
+    }
+    window.alert("Could not reach checkout. Run `vercel dev` locally or deploy with Stripe env vars.");
+  } finally {
+    setBusy(false);
+  }
+}
+
+function bindEmail(): void {
   const preview = document.querySelector<HTMLDivElement>("#email-preview");
   const form = document.querySelector<HTMLFormElement>("#email-form");
   const input = document.querySelector<HTMLInputElement>("#email-input");
