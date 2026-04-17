@@ -87,7 +87,9 @@ body {
 .hero-editorial__reg {
   font-size: 0.22em;
   font-weight: 600;
-  vertical-align: super;
+  vertical-align: baseline;
+  position: relative;
+  top: -1.05em;
   margin-left: 0.06em;
   opacity: 0.9;
 }
