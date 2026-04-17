@@ -1,5 +1,3 @@
-import { publicImageUrl, supabase } from "./supabase";
-
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
   if (!(el instanceof HTMLDivElement)) throw new Error("#app missing");
@@ -17,7 +15,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-type View = "landing" | "product" | "thanks" | "admin";
+type View = "landing" | "product" | "thanks";
 
 const DEFAULT_WA_MESSAGE =
   "Hello blackbird® — I'd like a free expert scalp check. My scalp photo is attached.";
@@ -44,7 +42,6 @@ function pathToView(): View {
   const path = getAppPath();
   if (path === "/product") return "product";
   if (path === "/thanks") return "thanks";
-  if (path === "/admin" || path.startsWith("/admin/")) return "admin";
   return "landing";
 }
 
@@ -153,21 +150,12 @@ function thanksHtml(): string {
   `;
 }
 
-function adminHtml(): string {
-  return `
-    <div class="page-admin">
-      <header class="admin-header">
-        <h1 class="admin-title">Admin</h1>
-        <div class="admin-auth" id="admin-auth-mount"></div>
-      </header>
-      <div class="admin-body" id="admin-body"></div>
-    </div>
-  `;
-}
-
 function render(): void {
-  if (getAppPath() === "/email") {
+  const path = getAppPath();
+  if (path === "/email") {
     history.replaceState(null, "", `${BASE_HREF}#product`);
+  } else if (path === "/admin" || path.startsWith("/admin/")) {
+    history.replaceState(null, "", BASE_HREF);
   }
 
   const view = pathToView();
@@ -182,10 +170,8 @@ function render(): void {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     }
   } else if (view === "thanks") root.innerHTML = thanksHtml();
-  else root.innerHTML = adminHtml();
 
   if (view === "thanks") bindThanks();
-  else if (view === "admin") bindAdmin();
 }
 
 function bindLanding(): void {
@@ -351,111 +337,6 @@ function bindThanks(): void {
   document.querySelector("#thanks-home")?.addEventListener("click", () => {
     goLanding();
   });
-}
-
-type SubmissionRow = {
-  id: string;
-  email: string;
-  image_path: string;
-  created_at: string;
-};
-
-async function renderAdminDashboard(container: HTMLElement): Promise<void> {
-  if (!supabase) {
-    container.innerHTML = `<p class="admin-msg">Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env</p>`;
-    return;
-  }
-
-  const { data, error } = await supabase
-    .from("scalp_submissions")
-    .select("id, email, image_path, created_at")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    container.innerHTML = `<p class="admin-msg">${escapeHtml(error.message)}</p>`;
-    return;
-  }
-
-  const rows = (data ?? []) as SubmissionRow[];
-  if (rows.length === 0) {
-    container.innerHTML = `<p class="admin-msg">No submissions yet.</p>`;
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="admin-grid">
-      ${rows
-        .map((r) => {
-          const imgUrl = publicImageUrl(r.image_path);
-          const em = escapeHtml(r.email);
-          const when = escapeHtml(new Date(r.created_at).toLocaleString());
-          return `
-        <article class="admin-card" data-id="${escapeHtml(r.id)}">
-          <div class="admin-card__img-wrap">
-            <img class="admin-card__img" src="${escapeHtml(imgUrl)}" alt="" loading="lazy" />
-          </div>
-          <div class="admin-card__meta">
-            <p class="admin-card__email">${em}</p>
-            <p class="admin-card__date">${when}</p>
-          </div>
-        </article>`;
-        })
-        .join("")}
-    </div>
-  `;
-}
-
-function bindAdmin(): void {
-  const mount = document.querySelector<HTMLDivElement>("#admin-auth-mount");
-  const body = document.querySelector<HTMLDivElement>("#admin-body");
-  if (!mount || !body) return;
-
-  if (!supabase) {
-    mount.innerHTML = "";
-    body.innerHTML = `<p class="admin-msg">Configure Supabase in .env to use the dashboard.</p>`;
-    return;
-  }
-
-  const sb = supabase;
-
-  const renderAuth = async (): Promise<void> => {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      mount.innerHTML = `
-        <span class="admin-user">${escapeHtml(session.user.email ?? "")}</span>
-        <button type="button" class="btn-secondary btn-admin-logout" id="admin-logout">Sign out</button>
-      `;
-      mount.querySelector("#admin-logout")?.addEventListener("click", async () => {
-        await sb.auth.signOut();
-        render();
-      });
-      body.innerHTML = `<div class="admin-loading" id="admin-list">Loading…</div>`;
-      const listEl = document.querySelector<HTMLDivElement>("#admin-list");
-      if (listEl) await renderAdminDashboard(listEl);
-    } else {
-      mount.innerHTML = `
-        <form class="admin-login-form" id="admin-login-form">
-          <input class="field-input" type="email" id="adm-email" required placeholder="Admin email" autocomplete="username" />
-          <input class="field-input" type="password" id="adm-pass" required placeholder="Password" autocomplete="current-password" />
-          <button type="submit" class="btn-buy">Sign in</button>
-        </form>
-      `;
-      body.innerHTML = `<p class="admin-msg">Sign in to review uploads.</p>`;
-      document.querySelector("#admin-login-form")?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const em = (document.querySelector("#adm-email") as HTMLInputElement).value.trim();
-        const pw = (document.querySelector("#adm-pass") as HTMLInputElement).value;
-        const { error } = await sb.auth.signInWithPassword({ email: em, password: pw });
-        if (error) {
-          alert(error.message);
-          return;
-        }
-        render();
-      });
-    }
-  };
-
-  void renderAuth();
 }
 
 window.addEventListener("popstate", () => {
