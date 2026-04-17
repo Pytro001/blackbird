@@ -123,7 +123,7 @@ function emailHtml(): string {
       </button>
       <main class="step-main">
         <h2 class="step-title">Your email</h2>
-        <p class="step-lede">We’ll send your scalp check result to this address.</p>
+        <p class="step-lede">We’ll send your scalp check result to this email.</p>
         <div class="email-preview" id="email-preview"></div>
         <form class="email-form" id="email-form" novalidate>
           <label class="field-label" for="email-input">Email</label>

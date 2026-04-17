@@ -21,12 +21,13 @@ create table if not exists public.admin_users (
 alter table public.scalp_submissions enable row level security;
 alter table public.admin_users enable row level security;
 
--- Public can insert submissions (anon key from the app)
+-- Anyone can insert submissions (anon visitors OR logged-in users — JWT role must match)
 drop policy if exists "Allow anon insert submissions" on public.scalp_submissions;
-create policy "Allow anon insert submissions"
+drop policy if exists "Allow public insert submissions" on public.scalp_submissions;
+create policy "Allow public insert submissions"
   on public.scalp_submissions
   for insert
-  to anon
+  to anon, authenticated
   with check (true);
 
 -- Authenticated admins can read all
@@ -72,9 +73,10 @@ values ('scalp-uploads', 'scalp-uploads', true)
 on conflict (id) do update set public = excluded.public;
 
 drop policy if exists "Anon upload scalp uploads" on storage.objects;
-create policy "Anon upload scalp uploads"
+drop policy if exists "Public upload scalp uploads" on storage.objects;
+create policy "Public upload scalp uploads"
   on storage.objects for insert
-  to anon
+  to anon, authenticated
   with check (bucket_id = 'scalp-uploads');
 
 drop policy if exists "Public read scalp uploads" on storage.objects;
