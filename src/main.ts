@@ -76,15 +76,26 @@ function homeHtml(): string {
 
     <div class="page-product" id="product">
       <main class="product-layout">
-        <figure class="product-shot">
-          <img
-            src="${BASE_HREF}hero-lineup.png"
-            width="920"
-            height="575"
-            alt=""
-            decoding="async"
-          />
-        </figure>
+        <div class="product-shots">
+          <figure class="product-shot">
+            <img
+              src="${BASE_HREF}product-box-set.jpg"
+              width="819"
+              height="1024"
+              alt="BLACKBIRD gift box with four anti-dandruff products"
+              decoding="async"
+            />
+          </figure>
+          <figure class="product-shot">
+            <img
+              src="${BASE_HREF}hero-lineup.png"
+              width="920"
+              height="575"
+              alt="BLACKBIRD product lineup"
+              decoding="async"
+            />
+          </figure>
+        </div>
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel">
