@@ -76,25 +76,38 @@ function homeHtml(): string {
 
     <div class="page-product" id="product">
       <main class="product-layout">
-        <div class="product-shots">
-          <figure class="product-shot">
-            <img
-              src="${BASE_HREF}product-box-set.jpg"
-              width="819"
-              height="1024"
-              alt="BLACKBIRD gift box with four anti-dandruff products"
-              decoding="async"
-            />
-          </figure>
-          <figure class="product-shot">
-            <img
-              src="${BASE_HREF}hero-lineup.png"
-              width="920"
-              height="575"
-              alt="BLACKBIRD product lineup"
-              decoding="async"
-            />
-          </figure>
+        <div class="product-shots-wrap">
+          <div
+            class="product-shots"
+            id="product-shots"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label="Product photos"
+            tabindex="0"
+          >
+            <figure class="product-shot">
+              <img
+                src="${BASE_HREF}product-box-set.jpg"
+                width="819"
+                height="1024"
+                alt="BLACKBIRD gift box with four anti-dandruff products"
+                decoding="async"
+              />
+            </figure>
+            <figure class="product-shot">
+              <img
+                src="${BASE_HREF}hero-lineup.png"
+                width="920"
+                height="575"
+                alt="BLACKBIRD product lineup"
+                decoding="async"
+              />
+            </figure>
+          </div>
+          <div class="product-shots-dots" id="product-shots-dots" role="tablist" aria-label="Choose photo">
+            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 2" data-slide="0" id="product-dot-0"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 2" data-slide="1" id="product-dot-1"></button>
+          </div>
         </div>
 
         <aside class="product-side" aria-label="Product details">
@@ -213,6 +226,48 @@ function bindProduct(): void {
     if (!f || !f.type.startsWith("image/")) return;
     pendingUploadFile = f;
     goEmail();
+  });
+
+  bindProductShotsCarousel();
+}
+
+function bindProductShotsCarousel(): void {
+  const scroller = document.querySelector<HTMLDivElement>("#product-shots");
+  const dots = document.querySelectorAll<HTMLButtonElement>("#product-shots-dots .product-shots-dot");
+  const slides = scroller?.querySelectorAll<HTMLElement>(".product-shot");
+  if (!scroller || !slides?.length || dots.length !== slides.length) return;
+
+  const syncDots = (): void => {
+    const w = scroller.clientWidth;
+    if (w <= 0) return;
+    const idx = Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
+    dots.forEach((dot, i) => {
+      const on = i === idx;
+      dot.classList.toggle("is-active", on);
+      dot.setAttribute("aria-selected", on ? "true" : "false");
+    });
+  };
+
+  scroller.addEventListener("scroll", syncDots, { passive: true });
+  syncDots();
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      const slide = slides[i];
+      if (!slide) return;
+      scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+    });
+  });
+
+  scroller.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const w = scroller.clientWidth;
+    const idx = Math.round(scroller.scrollLeft / w);
+    const next =
+      e.key === "ArrowRight" ? Math.min(slides.length - 1, idx + 1) : Math.max(0, idx - 1);
+    const slide = slides[next];
+    if (slide) scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
   });
 }
 
