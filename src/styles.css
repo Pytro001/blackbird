@@ -396,6 +396,159 @@ body {
   border: none;
 }
 
+/* —— Scroll FAQ: four-bottle image + hotspots —— */
+.product-faq {
+  padding: clamp(2.5rem, 8vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 10vw, 5rem);
+  overflow-x: clip;
+}
+
+.product-faq__heading {
+  margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
+  max-width: min(920px, 100%);
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.72);
+  text-align: center;
+}
+
+.product-faq__figure {
+  position: relative;
+  max-width: min(920px, 100%);
+  margin: 0 auto;
+  border-radius: var(--radius);
+  overflow: visible;
+}
+
+.product-faq__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+
+.product-faq__spots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.product-faq__spot {
+  position: absolute;
+  top: var(--pin-top);
+  left: var(--pin-left);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.product-faq__spot > * {
+  pointer-events: auto;
+}
+
+.product-faq__pin {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 0.65rem;
+  margin: 0;
+  font: inherit;
+  font-size: clamp(0.68rem, 1.8vw, 0.78rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-align: center;
+  color: rgba(245, 245, 245, 0.95);
+  background: rgba(229, 142, 53, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.product-faq__pin:hover,
+.product-faq__pin:focus-visible {
+  background: var(--orange);
+  transform: scale(1.04);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(229, 142, 53, 0.45);
+}
+
+.product-faq__pin[aria-expanded="true"] {
+  background: rgba(245, 245, 245, 0.95);
+  color: var(--black);
+}
+
+.product-faq__pin-label {
+  display: block;
+  max-width: 7.5rem;
+}
+
+.product-faq__panel {
+  position: absolute;
+  z-index: 3;
+  width: min(280px, calc(100vw - 2rem));
+  max-width: min(280px, calc(100vw - 2rem));
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(26, 26, 26, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+}
+
+.product-faq__panel[hidden] {
+  display: none !important;
+}
+
+.product-faq__answer {
+  margin: 0;
+  font-size: clamp(0.78rem, 2vw, 0.85rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--gray-400);
+}
+
+.product-faq__panel--above {
+  bottom: calc(100% + 0.45rem);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.product-faq__panel--below {
+  top: calc(100% + 0.45rem);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.product-faq__panel--left {
+  right: calc(100% + 0.45rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.product-faq__panel--right {
+  left: calc(100% + 0.45rem);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 600px) {
+  .product-faq__panel--left,
+  .product-faq__panel--right {
+    left: 50%;
+    right: auto;
+    top: calc(100% + 0.45rem);
+    transform: translateX(-50%);
+  }
+}
+
 .product-name {
   margin: 0;
   font-size: clamp(1.05rem, 3vw, 1.28rem);

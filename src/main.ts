@@ -164,6 +164,121 @@ function scrollToProduct(behavior: ScrollBehavior): void {
   });
 }
 
+type ProductFaqPanelPlace = "above" | "below" | "left" | "right";
+
+type ProductFaqItem = {
+  id: string;
+  question: string;
+  pinLabel: string;
+  answer: string;
+  pinTop: string;
+  pinLeft: string;
+  panel: ProductFaqPanelPlace;
+};
+
+const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
+  {
+    id: "two-bottles",
+    question: "Why two Daily Wash bottles?",
+    pinLabel: "Two bottles?",
+    answer:
+      "Two Daily Wash bottles keep your routine consistent—use one at home and keep a spare for travel or backup so you never skip a wash.",
+    pinTop: "46%",
+    pinLeft: "26%",
+    panel: "above",
+  },
+  {
+    id: "why-spray",
+    question: "Why a spray?",
+    pinLabel: "Why spray?",
+    answer:
+      "The After Wash spray spreads a light, even layer without rubbing, so your scalp gets care where it needs it with a clean, dry feel.",
+    pinTop: "40%",
+    pinLeft: "52%",
+    panel: "above",
+  },
+  {
+    id: "what-is",
+    question: "What is this product?",
+    pinLabel: "What is this?",
+    answer:
+      "Daily Wash is your flake-free shampoo step—gentle cleansing formulated to support a healthy scalp routine.",
+    pinTop: "58%",
+    pinLeft: "16%",
+    panel: "right",
+  },
+  {
+    id: "how-long",
+    question: "How long will it last?",
+    pinLabel: "How long?",
+    answer:
+      "Usage varies by hair length and routine; most people plan for several weeks per bottle when used as directed.",
+    pinTop: "44%",
+    pinLeft: "78%",
+    panel: "above",
+  },
+];
+
+function closeAllProductFaqPanels(faq: HTMLElement): void {
+  faq.querySelectorAll<HTMLButtonElement>(".product-faq__pin").forEach((btn) => {
+    btn.setAttribute("aria-expanded", "false");
+    const id = btn.getAttribute("aria-controls");
+    if (id) {
+      const p = document.getElementById(id);
+      if (p) p.hidden = true;
+    }
+  });
+}
+
+function productFaqSectionHtml(): string {
+  const spots = PRODUCT_FAQ_ITEMS.map((item) => {
+    const panelId = `product-faq-panel-${item.id}`;
+    const btnId = `product-faq-btn-${item.id}`;
+    return `
+          <div
+            class="product-faq__spot"
+            style="--pin-top:${item.pinTop};--pin-left:${item.pinLeft};"
+          >
+            <div
+              class="product-faq__panel product-faq__panel--${item.panel}"
+              id="${panelId}"
+              role="region"
+              hidden
+              aria-labelledby="${btnId}"
+            >
+              <p class="product-faq__answer">${escapeHtml(item.answer)}</p>
+            </div>
+            <button
+              type="button"
+              class="product-faq__pin"
+              id="${btnId}"
+              aria-expanded="false"
+              aria-controls="${panelId}"
+              aria-label="${escapeHtml(item.question)}"
+            >
+              <span class="product-faq__pin-label" aria-hidden="true">${escapeHtml(item.pinLabel)}</span>
+            </button>
+          </div>`;
+  }).join("");
+
+  return `
+    <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
+      <h2 id="product-faq-heading" class="product-faq__heading">Product questions</h2>
+      <div class="product-faq__figure">
+        <img
+          class="product-faq__img"
+          src="${BASE_HREF}faq-four-bottles.png"
+          width="1024"
+          height="555"
+          alt="BLACKBIRD set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
+          decoding="async"
+          loading="lazy"
+        />
+        <div class="product-faq__spots">${spots}</div>
+      </div>
+    </section>`;
+}
+
 function homeHtml(): string {
   return `
     <div class="home-shell">
@@ -251,6 +366,7 @@ function homeHtml(): string {
         </aside>
       </main>
     </div>
+    ${productFaqSectionHtml()}
     ${pdfManualModalHtml()}
     </div>
   `;
@@ -449,6 +565,10 @@ function render(): void {
       view === "product" || (view === "landing" && location.hash === "#product");
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
+    } else if (location.hash === "#product-faq") {
+      requestAnimationFrame(() => {
+        document.getElementById("product-faq")?.scrollIntoView({ behavior: "auto", block: "start" });
+      });
     }
   } else if (view === "manual") {
     root.innerHTML = manualHtml();
@@ -479,7 +599,27 @@ function bindProduct(): void {
   });
 
   bindProductShotsCarousel();
+  bindProductFaq();
   updateProductShippingEta();
+}
+
+function bindProductFaq(): void {
+  const faq = document.getElementById("product-faq");
+  if (!faq) return;
+  faq.addEventListener("click", (e: Event) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(".product-faq__pin");
+    if (!btn || !faq.contains(btn)) return;
+    const panelId = btn.getAttribute("aria-controls");
+    if (!panelId) return;
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    const wasOpen = btn.getAttribute("aria-expanded") === "true";
+    closeAllProductFaqPanels(faq);
+    if (!wasOpen) {
+      btn.setAttribute("aria-expanded", "true");
+      panel.hidden = false;
+    }
+  });
 }
 
 function bindProductShotsCarousel(): void {
@@ -588,6 +728,12 @@ window.addEventListener("popstate", () => {
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (e.key !== "Escape") return;
+  const faq = document.getElementById("product-faq");
+  if (faq?.querySelector('.product-faq__pin[aria-expanded="true"]')) {
+    e.preventDefault();
+    closeAllProductFaqPanels(faq);
+    return;
+  }
   const modal = document.getElementById("pdf-manual-modal");
   if (!modal || modal.hidden) return;
   e.preventDefault();
