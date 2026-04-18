@@ -39,11 +39,35 @@ body {
   margin: 0;
 }
 
+/* Avoid horizontal rubber-banding / stray overflow on narrow viewports */
+html {
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+}
+
 /* Full-page vertical sections: swipe / scroll snaps between hero, product, Q&A */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+  }
+}
+
+/* On phones, mandatory snap + stop:always can feel “sticky”; ease vertical scrolling */
+@media (max-width: 768px) {
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-snap-type: y proximity;
+    }
+  }
+
+  .hero-editorial,
+  .page-product,
+  .product-faq {
+    scroll-snap-stop: normal;
   }
 }
 
@@ -75,9 +99,13 @@ body {
   position: relative;
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  padding: clamp(1rem, 3vw, 1.75rem);
+  padding: max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-top))
+    max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-right))
+    max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-left));
   background: transparent;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -150,6 +178,7 @@ body {
   min-height: 48px;
   padding: 0.55rem 2.15rem;
   border-radius: 999px;
+  touch-action: manipulation;
   border: 1.5px solid var(--white);
   background: transparent;
   color: var(--white);
@@ -175,10 +204,14 @@ body {
 .page-product {
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
+  padding: max(clamp(0.75rem, 2.5vw, 1rem), env(safe-area-inset-top))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   background: transparent;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -293,27 +326,53 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+  padding: 0.25rem 0 max(0.25rem, env(safe-area-inset-bottom));
 }
 
+/* 44×44px minimum tap target (WCAG); visible dot stays 8px via ::after */
 .product-shots-dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
+  background: transparent;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  flex: 0 0 auto;
 }
 
-.product-shots-dot:hover,
-.product-shots-dot:focus-visible {
+.product-shots-dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.product-shots-dot:hover::after,
+.product-shots-dot:focus-visible::after {
   background: rgba(255, 255, 255, 0.45);
   outline: none;
 }
 
-.product-shots-dot.is-active {
+.product-shots-dot:focus-visible {
+  outline: 2px solid rgba(229, 142, 53, 0.55);
+  outline-offset: 2px;
+}
+
+.product-shots-dot.is-active::after {
   background: var(--orange);
   transform: scale(1.15);
 }
@@ -385,6 +444,7 @@ body {
   width: 100%;
   margin: 0;
   padding: 0.55rem 0.85rem;
+  min-height: 48px;
   font: inherit;
   font-size: clamp(0.82rem, 2.2vw, 0.9rem);
   font-weight: 600;
@@ -395,6 +455,8 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius);
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-howto:hover {
@@ -439,8 +501,8 @@ body {
   position: relative;
   z-index: 1;
   width: min(96vw, 920px);
-  height: min(90vh, 1200px);
-  max-height: 90vh;
+  height: min(90dvh, 1200px);
+  max-height: min(90dvh, 1200px);
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
@@ -456,7 +518,10 @@ body {
 
 /* —— Scroll FAQ: four-bottle image + hotspots —— */
 .product-faq {
-  padding: clamp(2.5rem, 8vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 10vw, 5rem);
+  padding: max(clamp(2.5rem, 8vw, 4.5rem), env(safe-area-inset-top))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    max(clamp(3rem, 10vw, 5rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -528,6 +593,8 @@ body {
   min-height: 44px;
   padding: 0.4rem 0.65rem;
   margin: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   font: inherit;
   font-size: clamp(0.68rem, 1.8vw, 0.78rem);
   font-weight: 600;
@@ -801,6 +868,8 @@ body {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: filter 0.2s ease, transform 0.15s ease;
 }
 
@@ -822,7 +891,8 @@ body {
 /* —— Site legal footer (landing) —— */
 .site-legal-footer {
   margin: 0 auto;
-  padding: clamp(1.75rem, 4.5vw, 2.75rem) clamp(1rem, 4vw, 2rem) clamp(2.75rem, 7vw, 4rem);
+  padding: clamp(1.75rem, 4.5vw, 2.75rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    max(clamp(2.75rem, 7vw, 4rem), env(safe-area-inset-bottom)) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   max-width: min(720px, 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
@@ -861,14 +931,21 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem 0.45rem;
+  gap: 0.15rem 0.35rem;
+  row-gap: 0.5rem;
 }
 
 .site-legal-footer__nav a {
   color: rgba(185, 185, 185, 0.92);
   text-decoration: none;
   border-bottom: 1px solid rgba(120, 120, 120, 0.35);
-  padding-bottom: 0.08em;
+  padding: 0.45rem 0.35rem 0.35rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
@@ -959,7 +1036,11 @@ body {
 .page-step {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 1.5rem) clamp(2rem, 5vw, 3rem);
+  min-height: 100svh;
+  padding: max(clamp(0.75rem, 2.5vw, 1rem), env(safe-area-inset-top))
+    max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-right))
+    max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-left));
   background: var(--site-bg);
 }
 
@@ -996,7 +1077,11 @@ body {
 .manual-page {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 1.5rem) clamp(2rem, 5vw, 3rem);
+  min-height: 100svh;
+  padding: max(clamp(0.75rem, 2.5vw, 1rem), env(safe-area-inset-top))
+    max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-right))
+    max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 4vw, 1.5rem), env(safe-area-inset-left));
   background: var(--site-bg);
 }
 

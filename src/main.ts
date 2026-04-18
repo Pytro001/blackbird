@@ -185,9 +185,9 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLabel: "What is this?",
     answer:
       "Daily Wash is your flake-free shampoo step: gentle cleansing formulated to support a healthy scalp routine.",
-    pinTop: "20%",
+    pinTop: "28%",
     pinLeft: "44%",
-    panel: "below",
+    panel: "above",
   },
   {
     id: "two-bottles",
@@ -205,7 +205,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLabel: "Why spray?",
     answer:
       "The After Wash spray spreads a light, even layer without rubbing, so your scalp gets care where it needs it with a clean, dry feel.",
-    pinTop: "40%",
+    pinTop: "68%",
     pinLeft: "52%",
     panel: "above",
   },
@@ -935,6 +935,10 @@ function bindProductShotsCarousel(): void {
     dot.addEventListener("click", () => {
       const slide = slides[i];
       if (!slide) return;
+      dots.forEach((d, j) => {
+        d.classList.toggle("is-active", j === i);
+        d.setAttribute("aria-selected", j === i ? "true" : "false");
+      });
       scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
     });
   });
