@@ -178,11 +178,21 @@ type ProductFaqItem = {
 
 const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
   {
+    id: "what-is",
+    question: "What is this product?",
+    pinLabel: "What is this?",
+    answer:
+      "Daily Wash is your flake-free shampoo step: gentle cleansing formulated to support a healthy scalp routine.",
+    pinTop: "28%",
+    pinLeft: "17%",
+    panel: "below",
+  },
+  {
     id: "two-bottles",
     question: "Why two Daily Wash bottles?",
     pinLabel: "Two bottles?",
     answer:
-      "Two Daily Wash bottles keep your routine consistent—use one at home and keep a spare for travel or backup so you never skip a wash.",
+      "Two Daily Wash bottles keep your routine consistent. Use one at home and keep a spare for travel or backup so you never skip a wash.",
     pinTop: "46%",
     pinLeft: "26%",
     panel: "above",
@@ -198,23 +208,13 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     panel: "above",
   },
   {
-    id: "what-is",
-    question: "What is this product?",
-    pinLabel: "What is this?",
-    answer:
-      "Daily Wash is your flake-free shampoo step—gentle cleansing formulated to support a healthy scalp routine.",
-    pinTop: "58%",
-    pinLeft: "16%",
-    panel: "right",
-  },
-  {
     id: "how-long",
     question: "How long will it last?",
     pinLabel: "How long?",
     answer:
       "Usage varies by hair length and routine; most people plan for several weeks per bottle when used as directed.",
-    pinTop: "44%",
-    pinLeft: "78%",
+    pinTop: "46%",
+    pinLeft: "87%",
     panel: "above",
   },
 ];
@@ -263,7 +263,7 @@ function productFaqSectionHtml(): string {
 
   return `
     <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
-      <h2 id="product-faq-heading" class="product-faq__heading">Q&amp;A</h2>
+      <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">Q&amp;A</h2>
       <div class="product-faq__figure">
         <img
           class="product-faq__img"
@@ -277,7 +277,7 @@ function productFaqSectionHtml(): string {
         <div class="product-faq__spots">${spots}</div>
       </div>
       <div class="product-faq__education">
-        <h3 class="product-faq__edu-title">Education</h3>
+        <h3 class="product-faq__edu-title product-faq__edu-title--script">Education</h3>
         <p class="product-faq__edu-lead">
           There are two types of dandruff: oily and dry. You need to find out which one you have to select the right products.
         </p>
@@ -333,7 +333,7 @@ function homeHtml(): string {
                 src="${BASE_HREF}product-slide-01.png"
                 width="1024"
                 height="819"
-                alt="BLACKBIRD — Daily Wash, After Wash, and Before Sleep bottles"
+                alt="BLACKBIRD: Daily Wash, After Wash, and Before Sleep bottles"
                 decoding="async"
               />
             </figure>
@@ -342,7 +342,7 @@ function homeHtml(): string {
                 src="${BASE_HREF}product-slide-02.png"
                 width="1024"
                 height="819"
-                alt="BLACKBIRD After Wash — daily flake-free spray"
+                alt="BLACKBIRD After Wash: daily flake-free spray"
                 decoding="async"
               />
             </figure>
@@ -351,7 +351,7 @@ function homeHtml(): string {
                 src="${BASE_HREF}product-slide-03.png"
                 width="1024"
                 height="819"
-                alt="BLACKBIRD Before Sleep — overnight care spray"
+                alt="BLACKBIRD Before Sleep: overnight care spray"
                 decoding="async"
               />
             </figure>
@@ -360,7 +360,7 @@ function homeHtml(): string {
                 src="${BASE_HREF}product-slide-04.png"
                 width="1024"
                 height="819"
-                alt="BLACKBIRD gift set — four products in presentation box"
+                alt="BLACKBIRD gift set: four products in presentation box"
                 decoding="async"
               />
             </figure>
@@ -432,7 +432,7 @@ function manualHtml(): string {
       </header>
       <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
         <div id="manual-book-host" class="manual-book-host"></div>
-        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use BlackBird — click anywhere to start">
+        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use BlackBird: click anywhere to start">
           <img class="manual-intro__preview" src="${BASE_HREF}manual/page-01.svg?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
           <div class="manual-intro__dim" aria-hidden="true"></div>
           <div class="manual-intro__copy">

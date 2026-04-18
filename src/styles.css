@@ -405,12 +405,26 @@ body {
 .product-faq__heading {
   margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
   max-width: min(920px, 100%);
-  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.72);
   text-align: center;
+}
+
+/* Caveat script, larger than hero tagline for emphasis */
+.product-faq__heading--script {
+  font-family: var(--font-script);
+  font-size: clamp(1.65rem, 6vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--white-dim);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .product-faq__heading--script,
+  .product-faq__edu-title--script {
+    white-space: normal;
+  }
 }
 
 .product-faq__figure {
@@ -560,11 +574,20 @@ body {
 }
 
 .product-faq__edu-title {
-  margin: 0 0 0.85rem;
-  font-size: clamp(1rem, 2.6vw, 1.15rem);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: rgba(245, 245, 245, 0.95);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+/* Same voice as “remove dandruff forever” */
+.product-faq__edu-title--script {
+  font-family: var(--font-script);
+  font-size: clamp(1.15rem, 4.2vw, 2.35rem);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--white-dim);
+  letter-spacing: 0.01em;
+  text-transform: none;
+  white-space: nowrap;
 }
 
 .product-faq__edu-lead {
@@ -572,7 +595,7 @@ body {
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 400;
   line-height: 1.55;
-  color: var(--gray-400);
+  color: rgba(235, 235, 235, 0.92);
 }
 
 .product-faq__edu-grid {
@@ -610,7 +633,7 @@ body {
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.5;
-  color: var(--gray-400);
+  color: rgba(228, 228, 228, 0.94);
 }
 
 .product-faq__edu-stats {
@@ -619,7 +642,7 @@ body {
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.55;
-  color: rgba(176, 176, 176, 0.88);
+  color: rgba(225, 225, 225, 0.92);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
