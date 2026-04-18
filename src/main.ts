@@ -114,7 +114,16 @@ function closePdfManualModal(immediate = false): void {
     if (restoreScroll) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
+          const productEl = document.getElementById("product");
+          if (productEl) {
+            const path = getAppPath();
+            if (path === "/" || path === "/product") {
+              history.replaceState(null, "", `${BASE_HREF}#product`);
+            }
+            productEl.scrollIntoView({ behavior: "auto", block: "start" });
+          } else {
+            window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
+          }
         });
       });
     }
