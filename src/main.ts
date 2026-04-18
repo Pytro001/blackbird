@@ -1032,74 +1032,25 @@ function bindProductShotsCarousel(): void {
   const scroller = document.querySelector<HTMLDivElement>("#product-shots");
   if (!scroller) return;
 
-  const originals = Array.from(scroller.querySelectorAll<HTMLElement>(".product-shot"));
-  if (originals.length < 1) return;
+  /** Only real slides (no infinite-scroll clones) — exactly PRODUCT_CAROUSEL_SLIDES.length. */
+  const slides = Array.from(scroller.querySelectorAll<HTMLElement>(".product-shot"));
+  if (slides.length < 1) return;
 
-  const n = originals.length;
-  const first = originals[0];
-  const last = originals[n - 1];
-  const cloneLast = last.cloneNode(true) as HTMLElement;
-  const cloneFirst = first.cloneNode(true) as HTMLElement;
-  for (const el of [cloneLast, cloneFirst]) {
-    el.classList.add("product-shot--clone");
-    el.setAttribute("aria-hidden", "true");
-    el.querySelectorAll("img").forEach((img) => {
-      img.setAttribute("alt", "");
-      img.setAttribute("aria-hidden", "true");
-    });
-  }
-  scroller.insertBefore(cloneLast, first);
-  scroller.appendChild(cloneFirst);
+  const n = slides.length;
 
-  const slides = scroller.querySelectorAll<HTMLElement>(".product-shot");
-  const lastPhysical = n + 1;
-
-  const physicalFromLogical = (logical: number): number => logical + 1;
-
-  const logicalFromPhysical = (p: number): number => {
-    if (p === 0) return n - 1;
-    if (p === lastPhysical) return 0;
-    return p - 1;
-  };
-
-  let isJumping = false;
-  let scrollSettleTimer = 0;
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const checkInfiniteBoundary = (): void => {
-    if (isJumping) return;
+  const currentIndex = (): number => {
     const w = scroller.clientWidth;
-    if (w <= 0) return;
-    const p = Math.round(scroller.scrollLeft / w);
-    if (p === 0) {
-      isJumping = true;
-      scroller.scrollLeft = slides[n].offsetLeft;
-      requestAnimationFrame(() => {
-        isJumping = false;
-      });
-    } else if (p === lastPhysical) {
-      isJumping = true;
-      scroller.scrollLeft = slides[1].offsetLeft;
-      requestAnimationFrame(() => {
-        isJumping = false;
-      });
-    }
+    if (w <= 0) return 0;
+    return Math.min(Math.max(0, Math.round(scroller.scrollLeft / w)), n - 1);
   };
 
-  const onScroll = (): void => {
-    window.clearTimeout(scrollSettleTimer);
-    scrollSettleTimer = window.setTimeout(() => checkInfiniteBoundary(), 100);
-  };
-
-  scroller.addEventListener("scroll", onScroll, { passive: true });
-  scroller.addEventListener("scrollend", checkInfiniteBoundary);
-
-  const scrollToPhysical = (physical: number, behavior: ScrollBehavior): void => {
-    const slide = slides[physical];
+  const scrollToIndex = (index: number, behavior: ScrollBehavior): void => {
+    const slide = slides[index];
     if (!slide) return;
     scroller.scrollTo({ left: slide.offsetLeft, behavior });
   };
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const startAutoAdvance = (): void => {
     window.clearInterval(productShotsAutoTimer);
@@ -1108,14 +1059,11 @@ function bindProductShotsCarousel(): void {
     if (prefersReducedMotion || document.hidden) return;
     productShotsAutoTimer = window.setInterval(() => {
       if (document.hidden) return;
-      const w = scroller.clientWidth;
-      if (w <= 0) return;
-      const p = Math.round(scroller.scrollLeft / w);
-      const logical = logicalFromPhysical(p);
-      /* From last real slide, scroll to trailing clone (left) so it loops; else next logical slide */
-      const targetPhysical =
-        p === n ? lastPhysical : physicalFromLogical((logical + 1) % n);
-      scrollToPhysical(targetPhysical, "smooth");
+      if (scroller.clientWidth <= 0) return;
+      const p = currentIndex();
+      const next = (p + 1) % n;
+      const wrap = next === 0 && p === n - 1;
+      scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
     }, PRODUCT_SHOTS_AUTO_MS);
   };
 
@@ -1130,20 +1078,13 @@ function bindProductShotsCarousel(): void {
   };
 
   requestAnimationFrame(() => {
-    scroller.scrollLeft = slides[1].offsetLeft;
+    scroller.scrollLeft = slides[0].offsetLeft;
     startAutoAdvance();
   });
 
   const onResize = (): void => {
-    const w = scroller.clientWidth;
-    if (w <= 0) return;
-    const p = Math.round(scroller.scrollLeft / w);
-    const logical = logicalFromPhysical(p);
-    isJumping = true;
-    scroller.scrollLeft = slides[physicalFromLogical(logical)].offsetLeft;
-    requestAnimationFrame(() => {
-      isJumping = false;
-    });
+    if (scroller.clientWidth <= 0) return;
+    scroller.scrollLeft = slides[currentIndex()].offsetLeft;
   };
   window.addEventListener("resize", onResize);
 
@@ -1151,15 +1092,13 @@ function bindProductShotsCarousel(): void {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
     pauseAutoForUser();
-    const w = scroller.clientWidth;
-    if (w <= 0) return;
-    const p = Math.round(scroller.scrollLeft / w);
-    const logical = logicalFromPhysical(p);
-    const next =
-      e.key === "ArrowRight"
-        ? (logical + 1) % n
-        : (logical - 1 + n) % n;
-    scrollToPhysical(physicalFromLogical(next), "smooth");
+    if (scroller.clientWidth <= 0) return;
+    const p = currentIndex();
+    const next = e.key === "ArrowRight" ? (p + 1) % n : (p - 1 + n) % n;
+    const wrap =
+      (e.key === "ArrowRight" && p === n - 1 && next === 0) ||
+      (e.key === "ArrowLeft" && p === 0 && next === n - 1);
+    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
   });
 
   scroller.addEventListener(
@@ -1201,7 +1140,6 @@ function bindProductShotsCarousel(): void {
     scroller.removeEventListener("pointerup", endDrag);
     scroller.removeEventListener("pointercancel", endDrag);
     pauseAutoForUser();
-    window.setTimeout(() => checkInfiniteBoundary(), 120);
   };
 
   scroller.addEventListener("pointerdown", (e: PointerEvent) => {
