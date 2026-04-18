@@ -170,9 +170,31 @@ body {
 }
 
 .product-wa-block {
+  margin-top: 0.15rem;
+}
+
+.product-wa-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.product-wa-text {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+}
+
+.product-wa-qr-column {
+  flex: 0 0 auto;
+  width: clamp(64px, 18vw, 88px);
+  min-width: 56px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
 }
 
 .product-wa-headline {
@@ -315,6 +337,15 @@ body {
   gap: 0.9rem;
 }
 
+.product-name {
+  margin: 0;
+  font-size: clamp(1.05rem, 3vw, 1.28rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: rgba(245, 245, 245, 0.95);
+}
+
 .product-price {
   margin: 0;
   font-size: clamp(1.4rem, 4.2vw, 1.85rem);
@@ -377,19 +408,13 @@ body {
   outline: none;
 }
 
-.product-wa-qr {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  text-align: center;
-}
-
 .product-wa-qr__img {
   display: block;
-  width: min(168px, 52vw);
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center right;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: var(--white);
@@ -460,11 +485,6 @@ body {
 
 .page-thanks .btn-pill {
   margin-top: 1.5rem;
-}
-
-.product-manual-line {
-  margin: 0;
-  font-size: clamp(0.82rem, 2vw, 0.9rem);
 }
 
 /* —— How-to comic (/how-to-use) —— */

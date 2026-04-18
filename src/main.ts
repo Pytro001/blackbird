@@ -62,22 +62,26 @@ function updateProductShippingEta(): void {
 function whatsAppBlockHtml(): string {
   return `
             <div class="product-wa-block" id="hair-analysis">
-              <p class="product-wa-headline">Get a free Dermatologist Check</p>
-              <p class="product-wa-desc">
-                Message us on
-                <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                to start.
-              </p>
-              <div class="product-wa-qr">
-                <img
-                  src="${BASE_HREF}whatsapp-qr.jpg?v=2"
-                  width="1024"
-                  height="1024"
-                  alt=""
-                  decoding="async"
-                  loading="lazy"
-                  class="product-wa-qr__img"
-                />
+              <div class="product-wa-row">
+                <div class="product-wa-text">
+                  <p class="product-wa-headline">Get a free Dermatologist Check</p>
+                  <p class="product-wa-desc">
+                    Message us on
+                    <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    to start.
+                  </p>
+                </div>
+                <div class="product-wa-qr-column" aria-hidden="true">
+                  <img
+                    src="${BASE_HREF}whatsapp-qr.jpg?v=2"
+                    width="1024"
+                    height="1024"
+                    alt=""
+                    decoding="async"
+                    loading="lazy"
+                    class="product-wa-qr__img"
+                  />
+                </div>
               </div>
             </div>`;
 }
@@ -165,20 +169,18 @@ function homeHtml(): string {
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
+            <h2 class="product-name">Blackbird Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
-            <p class="product-flake-note" role="note">
-              These products are for dry-flakes, if you are not sure if you have dry or oily flakes
-              <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
-            </p>
             <div class="product-shipping">
               <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
-            <p class="product-manual-line">
-              <a class="product-wa-link" href="${BASE_HREF}how-to-use">How to use</a>
-            </p>
             <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
             <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
+            <p class="product-flake-note" role="note">
+              These products are for dry-flakes, if you are not sure if you have dry or oily flakes
+              <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
+            </p>
             ${whatsAppBlockHtml()}
           </div>
         </aside>
