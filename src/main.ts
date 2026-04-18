@@ -20,6 +20,26 @@ function publicAssetUrl(path: string): string {
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
+/** Product image carousel: exactly four slides (files in public/). */
+const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
+  {
+    file: "product-slide-01.png",
+    alt: "BLACKBIRD: Daily Wash, After Wash, and Before Sleep bottles",
+  },
+  {
+    file: "product-slide-02.png",
+    alt: "BLACKBIRD After Wash: daily flake-free spray",
+  },
+  {
+    file: "product-slide-03.png",
+    alt: "BLACKBIRD Before Sleep: overnight care spray",
+  },
+  {
+    file: "product-slide-04.png",
+    alt: "BLACKBIRD gift set: four products in presentation box",
+  },
+];
+
 let manualPageFlip: PageFlip | null = null;
 
 /** Product carousel: auto-advance forward (ms). */
@@ -326,6 +346,22 @@ function closeAllProductFaqPanels(faq: HTMLElement): void {
   });
 }
 
+function productCarouselSlidesHtml(): string {
+  return PRODUCT_CAROUSEL_SLIDES.map(
+    (slide) => `
+            <figure class="product-shot">
+              <img
+                draggable="false"
+                src="${publicAssetUrl(slide.file)}"
+                width="1024"
+                height="819"
+                alt="${escapeHtml(slide.alt)}"
+                decoding="async"
+              />
+            </figure>`
+  ).join("");
+}
+
 function productFaqSectionHtml(): string {
   const spots = PRODUCT_FAQ_ITEMS.map((item) => {
     const panelId = `product-faq-panel-${item.id}`;
@@ -434,49 +470,10 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Product photos. Auto-advancing carousel; swipe or use arrow keys."
+            aria-label="Four product photos. Auto-advancing carousel; swipe or use arrow keys."
             tabindex="0"
           >
-            <figure class="product-shot">
-              <img
-                draggable="false"
-                src="${publicAssetUrl("product-slide-01.png")}"
-                width="1024"
-                height="819"
-                alt="BLACKBIRD: Daily Wash, After Wash, and Before Sleep bottles"
-                decoding="async"
-              />
-            </figure>
-            <figure class="product-shot">
-              <img
-                draggable="false"
-                src="${publicAssetUrl("product-slide-02.png")}"
-                width="1024"
-                height="819"
-                alt="BLACKBIRD After Wash: daily flake-free spray"
-                decoding="async"
-              />
-            </figure>
-            <figure class="product-shot">
-              <img
-                draggable="false"
-                src="${publicAssetUrl("product-slide-03.png")}"
-                width="1024"
-                height="819"
-                alt="BLACKBIRD Before Sleep: overnight care spray"
-                decoding="async"
-              />
-            </figure>
-            <figure class="product-shot">
-              <img
-                draggable="false"
-                src="${publicAssetUrl("product-slide-04.png")}"
-                width="1024"
-                height="819"
-                alt="BLACKBIRD gift set: four products in presentation box"
-                decoding="async"
-              />
-            </figure>
+            ${productCarouselSlidesHtml()}
           </div>
         </div>
 
