@@ -357,7 +357,7 @@ function productFaqSectionHtml(): string {
 
   return `
     <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
-      <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">Q&amp;A</h2>
+      <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">FAQ</h2>
       <div class="product-faq__figure">
         <img
           class="product-faq__img"
