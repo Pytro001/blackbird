@@ -45,31 +45,29 @@ function latestDeliveryDate(now: Date = new Date()): Date {
 }
 
 function formatShippingEtaLine(delivery: Date): string {
-  const datePart = new Intl.DateTimeFormat("de-DE", {
+  const datePart = new Intl.DateTimeFormat("en-GB", {
     weekday: "short",
     day: "numeric",
     month: "short",
   }).format(delivery);
-  return `Späteste Ankunft: ${datePart}, 12:45 Uhr`;
+  return `Latest arrival: ${datePart}, 12:45`;
 }
 
 function updateProductShippingEta(): void {
   const eta = formatShippingEtaLine(latestDeliveryDate());
-  const shippingEta = document.querySelector("#product-shipping-eta");
-  const waEta = document.querySelector("#product-wa-shipping-eta");
-  if (shippingEta) shippingEta.textContent = eta;
-  if (waEta) waEta.textContent = eta;
+  const el = document.querySelector("#product-shipping-eta");
+  if (el) el.textContent = eta;
 }
 
 function whatsAppBlockHtml(): string {
-  const cta = `<a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`;
-
   return `
             <div class="product-wa-block" id="hair-analysis">
               <p class="product-wa-headline">Get a free Dermatologist Check</p>
-              <p class="product-wa-desc">Message us on WhatsApp to start.</p>
-              <p class="product-wa-shipping-eta" id="product-wa-shipping-eta" aria-live="polite"></p>
-              <p class="product-wa-line">${cta}</p>
+              <p class="product-wa-desc">
+                Message us on
+                <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                to start.
+              </p>
               <div class="product-wa-qr">
                 <img
                   src="${BASE_HREF}whatsapp-qr.jpg?v=2"
@@ -163,23 +161,17 @@ function homeHtml(): string {
             <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 2" data-slide="0" id="product-dot-0"></button>
             <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 2" data-slide="1" id="product-dot-1"></button>
           </div>
-          <div class="product-shots-note" role="note">
-            <p class="product-shots-note__line">
-              These products are for <strong>dry-flake</strong> dandruff and help reduce dry flakes.
-            </p>
-            <p class="product-shots-note__line">
-              Please be sure whether your flakes are <strong>dry or oily</strong> before you buy. This line is
-              not for oily-flake dandruff and can worsen problems on oily scalps. Not sure?
-              <a href="#hair-analysis" class="product-shots-note__link">WhatsApp</a> us first.
-            </p>
-          </div>
         </div>
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
+            <p class="product-flake-note" role="note">
+              These products are for dry-flakes, if you are not sure if you have dry or oily flakes
+              <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
+            </p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">24h Expressversand</p>
+              <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <p class="product-manual-line">

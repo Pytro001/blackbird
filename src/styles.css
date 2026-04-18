@@ -285,43 +285,12 @@ body {
   transform: scale(1.15);
 }
 
-.product-shots-note {
-  margin: 0.35rem 0 0;
-  padding: 0.65rem 0.7rem 0.7rem;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.22);
-}
-
-.product-shots-note__line {
+.product-flake-note {
   margin: 0;
-  font-size: clamp(0.75rem, 2vw, 0.82rem);
+  font-size: clamp(0.8rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.5;
   color: var(--gray-500);
-}
-
-.product-shots-note__line + .product-shots-note__line {
-  margin-top: 0.5rem;
-}
-
-.product-shots-note__line strong {
-  color: rgba(245, 245, 245, 0.82);
-  font-weight: 600;
-}
-
-.product-shots-note__link {
-  color: var(--gray-400);
-  font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
-  text-decoration-color: rgba(176, 176, 176, 0.45);
-}
-
-.product-shots-note__link:hover,
-.product-shots-note__link:focus-visible {
-  color: var(--gray-500);
-  outline: none;
 }
 
 .product-side {
@@ -380,14 +349,6 @@ body {
   color: var(--gray-500);
 }
 
-.product-wa-shipping-eta {
-  margin: 0;
-  font-size: clamp(0.78rem, 2vw, 0.85rem);
-  font-weight: 400;
-  line-height: 1.45;
-  color: var(--gray-500);
-}
-
 .product-inline-msg {
   margin: 0;
   font-size: 0.72rem;
@@ -397,13 +358,6 @@ body {
 
 .product-inline-msg--error {
   color: #e07a7a;
-}
-
-.product-wa-line {
-  margin: 0.15rem 0 0;
-  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
-  font-weight: 400;
-  line-height: 1.35;
 }
 
 .product-wa-link {
