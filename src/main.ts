@@ -187,6 +187,17 @@ function homeHtml(): string {
             </p>
             ${whatsAppBlockHtml()}
           </div>
+          <div class="product-panel product-panel--howto">
+            <h3 class="product-howto__title">How to use BlackBird</h3>
+            <div class="product-howto__row">
+              <a class="product-howto__link product-howto__link--primary" id="product-howto-guide" href="${BASE_HREF}how-to-use">Flip-through guide</a>
+              <a
+                class="product-howto__link"
+                href="${BASE_HREF}blackbird_user_manual.pdf"
+                download="blackbird_user_manual.pdf"
+              >Download PDF</a>
+            </div>
+          </div>
         </aside>
       </main>
     </div>
@@ -231,12 +242,12 @@ function manualHtml(): string {
       </header>
       <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
         <div id="manual-book-host" class="manual-book-host"></div>
-        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="Start using the product guide">
+        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use BlackBird — click anywhere to start">
           <img class="manual-intro__preview" src="${BASE_HREF}manual/page-01.svg?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
           <div class="manual-intro__dim" aria-hidden="true"></div>
           <div class="manual-intro__copy">
-            <h2 class="manual-intro__title">How to use the product</h2>
-            <p class="manual-intro__hint">Click here to start</p>
+            <h2 class="manual-intro__title">How to use BlackBird</h2>
+            <p class="manual-intro__hint">Click anywhere to start</p>
           </div>
         </div>
         <div class="manual-end" id="manual-end" hidden>
@@ -404,6 +415,14 @@ function bindLanding(): void {
 function bindProduct(): void {
   document.querySelector("#buy-btn")?.addEventListener("click", () => {
     void startStripeCheckout();
+  });
+
+  document.querySelector("#product-howto-guide")?.addEventListener("click", (e: Event) => {
+    const me = e as MouseEvent;
+    if (me.button !== 0 || me.metaKey || me.ctrlKey || me.shiftKey || me.altKey) return;
+    me.preventDefault();
+    history.pushState(null, "", `${BASE_HREF}how-to-use`);
+    render();
   });
 
   bindProductShotsCarousel();

@@ -349,6 +349,58 @@ body {
   gap: 0.9rem;
 }
 
+.product-panel--howto {
+  gap: 0.5rem;
+  padding: 0.65rem 1rem 0.72rem;
+}
+
+.product-howto__title {
+  margin: 0;
+  font-size: clamp(0.88rem, 2.35vw, 0.92rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.78);
+  line-height: 1.25;
+}
+
+.product-howto__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.9rem;
+}
+
+.product-howto__link {
+  font-size: clamp(0.82rem, 2.1vw, 0.88rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--gray-400);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-color: rgba(176, 176, 176, 0.45);
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.product-howto__link:hover,
+.product-howto__link:focus-visible {
+  color: rgba(245, 245, 245, 0.88);
+  text-decoration-color: rgba(245, 245, 245, 0.35);
+  outline: none;
+}
+
+.product-howto__link--primary {
+  color: rgba(245, 245, 245, 0.88);
+  font-weight: 600;
+  text-decoration-color: rgba(229, 142, 53, 0.55);
+}
+
+.product-howto__link--primary:hover,
+.product-howto__link--primary:focus-visible {
+  color: var(--orange);
+  text-decoration-color: rgba(229, 142, 53, 0.75);
+}
+
 .product-name {
   margin: 0;
   font-size: clamp(1.05rem, 3vw, 1.28rem);
