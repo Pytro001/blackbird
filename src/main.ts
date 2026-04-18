@@ -10,6 +10,13 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+/** Root-anchored public/ URL so images load on `/product` and other SPA paths (relative URLs would break). */
+function publicAssetUrl(path: string): string {
+  const p = path.replace(/^\/+/, "");
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
+  return base ? `${base}/${p}`.replace(/([^:]\/)\/+/g, "$1") : `/${p}`;
+}
+
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
@@ -25,6 +32,7 @@ let productShotsAutoResumeTimer: number | undefined;
 
 /** Scroll position before PDF modal body lock; restored on animated close. */
 let pdfModalScrollY = 0;
+let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
 
 /** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
@@ -63,7 +71,7 @@ function escapeHtml(s: string): string {
 function pdfManualModalHtml(): string {
   const pages = Array.from({ length: MANUAL_PAGE_COUNT }, (_, i) => {
     const n = String(i + 1).padStart(2, "0");
-    const src = `${BASE_HREF}manual/page-${n}.svg?v=${MANUAL_PAGE_VER}`;
+    const src = `${publicAssetUrl(`manual/page-${n}.svg`)}?v=${MANUAL_PAGE_VER}`;
     return `
       <div class="pdf-modal__page" role="group" aria-label="Page ${i + 1} of ${MANUAL_PAGE_COUNT}">
         <img
@@ -97,16 +105,41 @@ function pdfManualModalHtml(): string {
     </div>`;
 }
 
+function lockBodyScrollForPdfModal(): void {
+  pdfModalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${pdfModalScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  pdfModalBodyLocked = true;
+}
+
+function unlockBodyScrollAfterPdfModal(): void {
+  if (!pdfModalBodyLocked) {
+    document.body.style.overflow = "";
+    return;
+  }
+  pdfModalBodyLocked = false;
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
+}
+
 function openPdfManualModal(): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
   const strip = document.getElementById("pdf-manual-strip");
   if (!modal || !strip) return;
-  pdfModalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
   strip.scrollLeft = 0;
+  lockBodyScrollForPdfModal();
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
-  document.body.style.overflow = "hidden";
   requestAnimationFrame(() => {
     try {
       strip.focus({ preventScroll: true });
@@ -120,44 +153,32 @@ function closePdfManualModal(immediate = false): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
 
-  const applyClose = (restoreScroll: boolean): void => {
+  const applyClose = (): void => {
     if (modal) {
       modal.hidden = true;
       modal.classList.remove("pdf-modal--open");
     }
-    document.body.style.overflow = "";
-    if (restoreScroll) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const productEl = document.getElementById("product");
-          if (productEl) {
-            productEl.scrollIntoView({ behavior: "auto", block: "start" });
-          } else {
-            window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
-          }
-        });
-      });
-    }
+    unlockBodyScrollAfterPdfModal();
   };
 
   if (!modal) {
-    document.body.style.overflow = "";
+    unlockBodyScrollAfterPdfModal();
     return;
   }
 
   if (immediate) {
-    applyClose(false);
+    applyClose();
     return;
   }
 
   if (!modal.classList.contains("pdf-modal--open")) {
-    applyClose(true);
+    applyClose();
     return;
   }
 
   modal.classList.remove("pdf-modal--open");
   pdfModalCloseTimer = window.setTimeout(() => {
-    applyClose(true);
+    applyClose();
   }, 320);
 }
 
@@ -198,7 +219,7 @@ function whatsAppBlockHtml(): string {
                 </div>
                 <div class="product-wa-qr-column" aria-hidden="true">
                   <img
-                    src="${BASE_HREF}whatsapp-qr.jpg?v=2"
+                    src="${publicAssetUrl("whatsapp-qr.jpg")}?v=2"
                     width="1024"
                     height="1024"
                     alt=""
@@ -361,7 +382,7 @@ function productFaqSectionHtml(): string {
       <div class="product-faq__figure">
         <img
           class="product-faq__img"
-          src="${BASE_HREF}faq-four-bottles.png"
+          src="${publicAssetUrl("faq-four-bottles.png")}"
           width="1024"
           height="576"
           alt="BLACKBIRD set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
@@ -438,7 +459,7 @@ function homeHtml(): string {
             <figure class="product-shot">
               <img
                 draggable="false"
-                src="${BASE_HREF}product-slide-01.png"
+                src="${publicAssetUrl("product-slide-01.png")}"
                 width="1024"
                 height="819"
                 alt="BLACKBIRD: Daily Wash, After Wash, and Before Sleep bottles"
@@ -448,7 +469,7 @@ function homeHtml(): string {
             <figure class="product-shot">
               <img
                 draggable="false"
-                src="${BASE_HREF}product-slide-02.png"
+                src="${publicAssetUrl("product-slide-02.png")}"
                 width="1024"
                 height="819"
                 alt="BLACKBIRD After Wash: daily flake-free spray"
@@ -458,7 +479,7 @@ function homeHtml(): string {
             <figure class="product-shot">
               <img
                 draggable="false"
-                src="${BASE_HREF}product-slide-03.png"
+                src="${publicAssetUrl("product-slide-03.png")}"
                 width="1024"
                 height="819"
                 alt="BLACKBIRD Before Sleep: overnight care spray"
@@ -468,7 +489,7 @@ function homeHtml(): string {
             <figure class="product-shot">
               <img
                 draggable="false"
-                src="${BASE_HREF}product-slide-04.png"
+                src="${publicAssetUrl("product-slide-04.png")}"
                 width="1024"
                 height="819"
                 alt="BLACKBIRD gift set: four products in presentation box"
@@ -746,7 +767,7 @@ Datum
 function manualPageUrls(): string[] {
   return Array.from({ length: MANUAL_PAGE_COUNT }, (_, i) => {
     const n = String(i + 1).padStart(2, "0");
-    return `${BASE_HREF}manual/page-${n}.svg?v=${MANUAL_PAGE_VER}`;
+    return `${publicAssetUrl(`manual/page-${n}.svg`)}?v=${MANUAL_PAGE_VER}`;
   });
 }
 
@@ -769,7 +790,7 @@ function manualHtml(): string {
       <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
         <div id="manual-book-host" class="manual-book-host"></div>
         <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use BlackBird: click anywhere to start">
-          <img class="manual-intro__preview" src="${BASE_HREF}manual/page-01.svg?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
+          <img class="manual-intro__preview" src="${publicAssetUrl("manual/page-01.svg")}?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
           <div class="manual-intro__dim" aria-hidden="true"></div>
           <div class="manual-intro__copy">
             <h2 class="manual-intro__title">How to use BlackBird</h2>
