@@ -50,6 +50,40 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+const PDF_MANUAL_URL = `${BASE_HREF}blackbird_user_manual.pdf#toolbar=0`;
+
+function pdfManualModalHtml(): string {
+  return `
+    <div class="pdf-modal" id="pdf-manual-modal" hidden>
+      <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="Close manual"></button>
+      <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="BlackBird user manual">
+        <iframe
+          class="pdf-modal__iframe"
+          id="pdf-manual-iframe"
+          title="BlackBird user manual"
+          src="about:blank"
+        ></iframe>
+      </div>
+    </div>`;
+}
+
+function openPdfManualModal(): void {
+  const modal = document.getElementById("pdf-manual-modal");
+  const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
+  if (!modal || !iframe) return;
+  if (!iframe.src || iframe.src === "about:blank") {
+    iframe.src = PDF_MANUAL_URL;
+  }
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function closePdfManualModal(): void {
+  document.body.style.overflow = "";
+  const modal = document.getElementById("pdf-manual-modal");
+  if (modal) modal.hidden = true;
+}
+
 /** Next calendar day at 12:45 local (24h express ETA display). */
 function latestDeliveryDate(now: Date = new Date()): Date {
   const d = new Date(now);
@@ -212,19 +246,12 @@ function homeHtml(): string {
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">
-            <h3 class="product-howto__title">How to use BlackBird</h3>
-            <div class="product-howto__row">
-              <a class="product-howto__link product-howto__link--primary" id="product-howto-guide" href="${BASE_HREF}how-to-use">Flip-through guide</a>
-              <a
-                class="product-howto__link"
-                href="${BASE_HREF}blackbird_user_manual.pdf"
-                download="blackbird_user_manual.pdf"
-              >Download PDF</a>
-            </div>
+            <button type="button" class="btn-howto" id="product-howto-open">How to use BlackBird</button>
           </div>
         </aside>
       </main>
     </div>
+    ${pdfManualModalHtml()}
     </div>
   `;
 }
@@ -402,6 +429,7 @@ function bindManual(): void {
 
 function render(): void {
   clearProductShotsAuto();
+  closePdfManualModal();
   destroyManualPageFlip();
   removeManualEndTap();
   const path = getAppPath();
@@ -442,12 +470,12 @@ function bindProduct(): void {
     void startStripeCheckout();
   });
 
-  document.querySelector("#product-howto-guide")?.addEventListener("click", (e: Event) => {
-    const me = e as MouseEvent;
-    if (me.button !== 0 || me.metaKey || me.ctrlKey || me.shiftKey || me.altKey) return;
-    me.preventDefault();
-    history.pushState(null, "", `${BASE_HREF}how-to-use`);
-    render();
+  document.querySelector("#product-howto-open")?.addEventListener("click", () => {
+    openPdfManualModal();
+  });
+
+  document.querySelector("#pdf-manual-backdrop")?.addEventListener("click", () => {
+    closePdfManualModal();
   });
 
   bindProductShotsCarousel();
@@ -556,6 +584,14 @@ function bindThanks(): void {
 
 window.addEventListener("popstate", () => {
   render();
+});
+
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+  if (e.key !== "Escape") return;
+  const modal = document.getElementById("pdf-manual-modal");
+  if (!modal || modal.hidden) return;
+  e.preventDefault();
+  closePdfManualModal();
 });
 
 render();
