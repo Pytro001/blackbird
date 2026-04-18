@@ -15,6 +15,10 @@ const MANUAL_PAGE_VER = "1";
 
 let manualPageFlip: PageFlip | null = null;
 
+/** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
+const DEFAULT_STRIPE_PAYMENT_LINK =
+  "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
+
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
 const PRODUCT_PRICE_EUR = 69.99;
 const productPriceDisplay = new Intl.NumberFormat("de-DE", {
@@ -449,7 +453,8 @@ function bindProductShotsCarousel(): void {
 async function startStripeCheckout(): Promise<void> {
   const btn = document.querySelector<HTMLButtonElement>("#buy-btn");
   const errEl = document.querySelector<HTMLParagraphElement>("#buy-error");
-  const fallback = import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim();
+  const fallback =
+    import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
 
   const setBuyError = (msg: string): void => {
     if (!errEl) return;
