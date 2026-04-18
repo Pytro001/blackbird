@@ -148,26 +148,46 @@ function homeHtml(): string {
           >
             <figure class="product-shot">
               <img
-                src="${BASE_HREF}product-bottles-lineup.png"
+                src="${BASE_HREF}product-slide-01.png"
                 width="1024"
                 height="819"
-                alt="BLACKBIRD Daily Wash, After Wash, and Before Sleep bottles"
+                alt="BLACKBIRD — Daily Wash, After Wash, and Before Sleep bottles"
                 decoding="async"
               />
             </figure>
             <figure class="product-shot">
               <img
-                src="${BASE_HREF}product-box-set.jpg"
-                width="819"
-                height="1024"
-                alt="BLACKBIRD gift box with four anti-dandruff products"
+                src="${BASE_HREF}product-slide-02.png"
+                width="1024"
+                height="819"
+                alt="BLACKBIRD After Wash — daily flake-free spray"
+                decoding="async"
+              />
+            </figure>
+            <figure class="product-shot">
+              <img
+                src="${BASE_HREF}product-slide-03.png"
+                width="1024"
+                height="819"
+                alt="BLACKBIRD Before Sleep — overnight care spray"
+                decoding="async"
+              />
+            </figure>
+            <figure class="product-shot">
+              <img
+                src="${BASE_HREF}product-slide-04.png"
+                width="1024"
+                height="819"
+                alt="BLACKBIRD gift set — four products in presentation box"
                 decoding="async"
               />
             </figure>
           </div>
           <div class="product-shots-dots" id="product-shots-dots" role="tablist" aria-label="Choose photo">
-            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 2" data-slide="0" id="product-dot-0"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 2" data-slide="1" id="product-dot-1"></button>
+            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 4" data-slide="0" id="product-dot-0"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 4" data-slide="1" id="product-dot-1"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 3 of 4" data-slide="2" id="product-dot-2"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 4 of 4" data-slide="3" id="product-dot-3"></button>
           </div>
         </div>
 

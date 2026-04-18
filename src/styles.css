@@ -270,6 +270,8 @@ body {
   flex: 0 0 100%;
   width: 100%;
   min-width: 0;
+  height: min(46vh, 440px);
+  max-height: min(46vh, 440px);
   margin: 0;
   padding: 0;
   scroll-snap-align: start;
@@ -284,7 +286,9 @@ body {
 .product-shot img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .product-shots-dots {
