@@ -479,7 +479,7 @@ function homeHtml(): string {
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
-            <h2 class="product-name">Blackbird Dandruff Set</h2>
+            <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
               <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
