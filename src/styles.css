@@ -436,7 +436,7 @@ body {
   outline-offset: 2px;
 }
 
-/* How-to manual: darkened site, white pages only, horizontal swipe; backdrop tap closes */
+/* How-to manual: darkened site, native PDF in iframe; backdrop tap closes */
 .pdf-modal {
   position: fixed;
   inset: 0;
@@ -481,7 +481,9 @@ body {
   border: none;
   background: transparent;
   box-shadow: none;
-  overflow: visible;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   transform: translateY(14px) scale(0.98);
   opacity: 0;
   transition:
@@ -494,65 +496,14 @@ body {
   opacity: 1;
 }
 
-.pdf-modal__strip {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 0;
-  width: 100%;
-  max-height: min(90dvh, 1200px);
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  outline: none;
-  scrollbar-width: thin;
-}
-
-.pdf-modal__strip:focus:not(:focus-visible) {
-  outline: none;
-}
-
-.pdf-modal__strip:focus-visible {
-  outline: 2px solid rgba(229, 142, 53, 0.45);
-  outline-offset: 3px;
-}
-
-.pdf-modal__strip::-webkit-scrollbar {
-  height: 6px;
-}
-
-.pdf-modal__strip::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 999px;
-}
-
-.pdf-modal__page {
-  flex: 0 0 100%;
-  width: 100%;
-  min-width: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  padding: min(0.5rem, 2vw);
-  background: #fff;
-}
-
-.pdf-modal__page-img {
+.pdf-modal__iframe {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: min(86dvh, 1120px);
-  object-fit: contain;
-  -webkit-user-drag: none;
-  user-select: none;
+  height: min(88dvh, 1100px);
+  min-height: min(60dvh, 640px);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: #fff;
 }
 
 .pdf-modal__close {
@@ -599,10 +550,6 @@ body {
 
   .pdf-modal__sheet {
     transform: none !important;
-  }
-
-  .pdf-modal__strip {
-    scroll-behavior: auto;
   }
 }
 

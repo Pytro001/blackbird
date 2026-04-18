@@ -68,22 +68,10 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Served from public/; opened in modal via iframe (native PDF viewer). */
+const PDF_MANUAL_FILE = "blackbird_user_manual.pdf";
+
 function pdfManualModalHtml(): string {
-  const pages = Array.from({ length: MANUAL_PAGE_COUNT }, (_, i) => {
-    const n = String(i + 1).padStart(2, "0");
-    const src = `${publicAssetUrl(`manual/page-${n}.svg`)}?v=${MANUAL_PAGE_VER}`;
-    return `
-      <div class="pdf-modal__page" role="group" aria-label="Page ${i + 1} of ${MANUAL_PAGE_COUNT}">
-        <img
-          class="pdf-modal__page-img"
-          src="${src}"
-          alt=""
-          width="600"
-          height="800"
-          decoding="async"
-        />
-      </div>`;
-  }).join("");
   return `
     <div class="pdf-modal" id="pdf-manual-modal" hidden>
       <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="Close manual"></button>
@@ -93,14 +81,12 @@ function pdfManualModalHtml(): string {
             <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
           </svg>
         </button>
-        <div
-          class="pdf-modal__strip"
-          id="pdf-manual-strip"
-          tabindex="0"
-          aria-label="How to use: swipe sideways for more pages"
-        >
-          ${pages}
-        </div>
+        <iframe
+          class="pdf-modal__iframe"
+          id="pdf-manual-iframe"
+          title="BlackBird user manual"
+          src="about:blank"
+        ></iframe>
       </div>
     </div>`;
 }
@@ -134,19 +120,13 @@ function unlockBodyScrollAfterPdfModal(): void {
 function openPdfManualModal(): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
-  const strip = document.getElementById("pdf-manual-strip");
-  if (!modal || !strip) return;
-  strip.scrollLeft = 0;
+  const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
+  if (!modal || !iframe) return;
   lockBodyScrollForPdfModal();
+  const pdfSrc = `${publicAssetUrl(PDF_MANUAL_FILE)}#view=FitH&toolbar=1`;
+  iframe.src = pdfSrc;
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
-  requestAnimationFrame(() => {
-    try {
-      strip.focus({ preventScroll: true });
-    } catch {
-      /* focus is optional; must not block opening */
-    }
-  });
 }
 
 function closePdfManualModal(immediate = false): void {
@@ -158,6 +138,7 @@ function closePdfManualModal(immediate = false): void {
       modal.hidden = true;
       modal.classList.remove("pdf-modal--open");
     }
+    document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe")?.setAttribute("src", "about:blank");
     unlockBodyScrollAfterPdfModal();
   };
 
@@ -1290,20 +1271,6 @@ window.addEventListener("hashchange", () => {
 });
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
-  const pdfModal = document.getElementById("pdf-manual-modal");
-  if (pdfModal && !pdfModal.hidden && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
-    const strip = document.getElementById("pdf-manual-strip");
-    if (strip) {
-      const step = strip.clientWidth;
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      strip.scrollBy({
-        left: e.key === "ArrowRight" ? step : -step,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-      e.preventDefault();
-    }
-    return;
-  }
   if (e.key !== "Escape") return;
   const faq = document.getElementById("product-faq");
   if (faq?.querySelector('.product-faq__pin[aria-expanded="true"]')) {
