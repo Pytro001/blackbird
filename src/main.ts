@@ -89,7 +89,7 @@ function escapeHtml(s: string): string {
 }
 
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
-const PDF_MANUAL_FILE = "blackbird_user_manual.pdf";
+const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
 
 function pdfManualAbsoluteUrl(): string {
   const path = publicAssetUrl(PDF_MANUAL_FILE);
