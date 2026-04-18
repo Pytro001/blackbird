@@ -39,6 +39,21 @@ body {
   margin: 0;
 }
 
+/* Full-page vertical sections: swipe / scroll snaps between hero, product, Q&A */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+}
+
 body {
   font-family: var(--font);
   background: var(--black);
@@ -64,6 +79,8 @@ body {
   flex-direction: column;
   padding: clamp(1rem, 3vw, 1.75rem);
   background: transparent;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .hero-editorial__title-wrap {
@@ -163,6 +180,8 @@ body {
   align-items: stretch;
   padding: clamp(0.75rem, 2.5vw, 1rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 3rem);
   background: transparent;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 @media (min-width: 840px) {
@@ -400,6 +419,8 @@ body {
 .product-faq {
   padding: clamp(2.5rem, 8vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 10vw, 5rem);
   overflow-x: clip;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .product-faq__heading {
@@ -566,11 +587,11 @@ body {
 .product-faq__education {
   max-width: min(920px, 100%);
   margin: clamp(2rem, 5vw, 2.75rem) auto 0;
-  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1rem, 2.5vw, 1.35rem) clamp(1.35rem, 3vw, 1.6rem);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(20, 20, 20, 0.45);
-  backdrop-filter: blur(8px);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
 }
 
 .product-faq__edu-title {
@@ -614,10 +635,10 @@ body {
 
 .product-faq__edu-card {
   margin: 0;
-  padding: 1rem 1.05rem 1.1rem;
-  border-radius: var(--radius);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(10, 10, 10, 0.35);
+  padding: 0 0 0.25rem;
+  border: none;
+  border-radius: 0;
+  background: none;
 }
 
 .product-faq__edu-sub {
@@ -638,12 +659,12 @@ body {
 
 .product-faq__edu-stats {
   margin: 0;
-  padding-top: 0.25rem;
+  padding-top: clamp(1rem, 2.5vw, 1.25rem);
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.55;
   color: rgba(225, 225, 225, 0.92);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: none;
 }
 
 .product-name {
