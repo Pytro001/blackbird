@@ -242,9 +242,6 @@ body {
 
 .product-shots-wrap {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
 }
 
 .product-shots {
@@ -286,35 +283,6 @@ body {
   display: block;
   width: 100%;
   height: auto;
-}
-
-.product-shots-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.product-shots-dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.product-shots-dot:hover,
-.product-shots-dot:focus-visible {
-  background: rgba(255, 255, 255, 0.45);
-  outline: none;
-}
-
-.product-shots-dot.is-active {
-  background: var(--orange);
-  transform: scale(1.15);
 }
 
 .product-flake-note {

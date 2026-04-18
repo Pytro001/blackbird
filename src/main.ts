@@ -15,6 +15,16 @@ const MANUAL_PAGE_VER = "1";
 
 let manualPageFlip: PageFlip | null = null;
 
+const PRODUCT_SHOTS_AUTO_MS = 5000;
+let productShotsAutoTimer: ReturnType<typeof setInterval> | null = null;
+
+function clearProductShotsAuto(): void {
+  if (productShotsAutoTimer !== null) {
+    clearInterval(productShotsAutoTimer);
+    productShotsAutoTimer = null;
+  }
+}
+
 /** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
@@ -143,7 +153,7 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Product photos"
+            aria-label="Product photos, auto-advancing. Use arrow keys to move."
             tabindex="0"
           >
             <figure class="product-shot">
@@ -182,12 +192,6 @@ function homeHtml(): string {
                 decoding="async"
               />
             </figure>
-          </div>
-          <div class="product-shots-dots" id="product-shots-dots" role="tablist" aria-label="Choose photo">
-            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 4" data-slide="0" id="product-dot-0"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 4" data-slide="1" id="product-dot-1"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 3 of 4" data-slide="2" id="product-dot-2"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 4 of 4" data-slide="3" id="product-dot-3"></button>
           </div>
         </div>
 
@@ -397,6 +401,7 @@ function bindManual(): void {
 }
 
 function render(): void {
+  clearProductShotsAuto();
   destroyManualPageFlip();
   removeManualEndTap();
   const path = getAppPath();
@@ -451,41 +456,52 @@ function bindProduct(): void {
 
 function bindProductShotsCarousel(): void {
   const scroller = document.querySelector<HTMLDivElement>("#product-shots");
-  const dots = document.querySelectorAll<HTMLButtonElement>("#product-shots-dots .product-shots-dot");
   const slides = scroller?.querySelectorAll<HTMLElement>(".product-shot");
-  if (!scroller || !slides?.length || dots.length !== slides.length) return;
+  if (!scroller || !slides?.length) return;
 
-  const syncDots = (): void => {
+  let pauseAuto = false;
+
+  const slideIndex = (): number => {
     const w = scroller.clientWidth;
-    if (w <= 0) return;
-    const idx = Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
-    dots.forEach((dot, i) => {
-      const on = i === idx;
-      dot.classList.toggle("is-active", on);
-      dot.setAttribute("aria-selected", on ? "true" : "false");
-    });
+    if (w <= 0) return 0;
+    return Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
   };
 
-  scroller.addEventListener("scroll", syncDots, { passive: true });
-  syncDots();
+  const goToIndex = (idx: number, behavior: ScrollBehavior): void => {
+    const slide = slides[idx];
+    if (!slide) return;
+    scroller.scrollTo({ left: slide.offsetLeft, behavior });
+  };
 
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      const slide = slides[i];
-      if (!slide) return;
-      scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
-    });
+  const advanceAuto = (): void => {
+    if (pauseAuto || document.visibilityState !== "visible") return;
+    const idx = slideIndex();
+    const next = (idx + 1) % slides.length;
+    goToIndex(next, "smooth");
+  };
+
+  productShotsAutoTimer = setInterval(advanceAuto, PRODUCT_SHOTS_AUTO_MS);
+
+  scroller.addEventListener("mouseenter", () => {
+    pauseAuto = true;
+  });
+  scroller.addEventListener("mouseleave", () => {
+    pauseAuto = false;
+  });
+  scroller.addEventListener("focusin", () => {
+    pauseAuto = true;
+  });
+  scroller.addEventListener("focusout", () => {
+    pauseAuto = false;
   });
 
   scroller.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
-    const w = scroller.clientWidth;
-    const idx = Math.round(scroller.scrollLeft / w);
+    const idx = slideIndex();
     const next =
       e.key === "ArrowRight" ? Math.min(slides.length - 1, idx + 1) : Math.max(0, idx - 1);
-    const slide = slides[next];
-    if (slide) scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+    goToIndex(next, "smooth");
   });
 }
 
