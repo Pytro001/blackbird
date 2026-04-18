@@ -48,25 +48,20 @@ body {
   overflow-x: clip;
 }
 
-/* Full-page vertical sections: swipe / scroll snaps between hero, product, Q&A */
+/* Full-page vertical sections: gentle snap (proximity) so footer/legal can be read without yanking */
 @media (prefers-reduced-motion: no-preference) {
   html {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
     scroll-behavior: smooth;
   }
 }
 
-/* On phones, mandatory snap + stop:always can feel “sticky”; ease vertical scrolling */
 @media (max-width: 768px) {
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-snap-type: y proximity;
-    }
-  }
-
   .hero-editorial,
   .page-product,
-  .product-faq {
+  .product-faq,
+  .product-education,
+  .site-legal-footer {
     scroll-snap-stop: normal;
   }
 }
@@ -90,8 +85,56 @@ body {
 }
 
 .home-shell {
+  position: relative;
   min-height: 100%;
   background: var(--site-bg);
+}
+
+/* Keyboard: jump to Education or legal footer without tabbing through the whole page */
+.skip-links {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.skip-links .skip-link {
+  pointer-events: auto;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  padding: 0.65rem 1.1rem;
+  border-radius: var(--radius);
+  background: var(--orange);
+  color: var(--black);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  position: fixed;
+  left: max(1rem, env(safe-area-inset-left));
+  top: max(1rem, env(safe-area-inset-top));
+  z-index: 10001;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 2px;
+}
+
+.skip-link:nth-child(2):focus,
+.skip-link:nth-child(2):focus-visible {
+  top: max(4.75rem, calc(1rem + env(safe-area-inset-top) + 2.85rem));
 }
 
 /* —— Editorial hero —— */
@@ -326,12 +369,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.15rem;
   flex-wrap: wrap;
   padding: 0.25rem 0 max(0.25rem, env(safe-area-inset-bottom));
 }
 
-/* 44×44px minimum tap target (WCAG); visible dot stays 8px via ::after */
+/* 44×44px tap target; visible dot via ::after (small circles) */
 .product-shots-dot {
   position: relative;
   box-sizing: border-box;
@@ -352,9 +395,9 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.22);
   transition: background 0.2s ease, transform 0.2s ease;
@@ -374,7 +417,7 @@ body {
 
 .product-shots-dot.is-active::after {
   background: var(--orange);
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
 .product-shot {
@@ -438,21 +481,25 @@ body {
   border: none;
   background: transparent;
   backdrop-filter: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .btn-howto {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   margin: 0;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 1rem;
   min-height: 48px;
   font: inherit;
   font-size: clamp(0.82rem, 2.2vw, 0.9rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.92);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(245, 245, 245, 0.9);
+  background: rgba(8, 8, 8, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
   cursor: pointer;
   touch-action: manipulation;
@@ -460,9 +507,9 @@ body {
 }
 
 .btn-howto:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.22);
-  color: rgba(245, 245, 245, 0.92);
+  background: rgba(18, 18, 18, 0.92);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(252, 252, 252, 0.95);
 }
 
 .btn-howto:focus-visible {
@@ -520,7 +567,7 @@ body {
 .product-faq {
   padding: max(clamp(2.5rem, 8vw, 4.5rem), env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
-    max(clamp(3rem, 10vw, 5rem), env(safe-area-inset-bottom))
+    max(clamp(2rem, 6vw, 3.5rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
   scroll-snap-align: start;
@@ -547,7 +594,7 @@ body {
 
 @media (max-width: 420px) {
   .product-faq__heading--script,
-  .product-faq__edu-title--script {
+  .product-education__title--script {
     white-space: normal;
   }
 }
@@ -690,23 +737,31 @@ body {
   }
 }
 
-.product-faq__education {
+/* —— Education (separate section; own snap target + #education for keyboard / skip links) —— */
+.product-education {
   max-width: min(680px, 100%);
-  margin: 0 auto clamp(2.75rem, 9vw, 5rem);
-  padding: 0;
-  border: none;
-  border-radius: 0;
-  background: none;
-  backdrop-filter: none;
+  margin: 0 auto;
+  padding: max(clamp(2.25rem, 7vw, 3.5rem), env(safe-area-inset-top))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    max(clamp(2.75rem, 9vw, 5rem), env(safe-area-inset-bottom))
+    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
+  overflow-x: clip;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  outline: none;
 }
 
-.product-faq__edu-title {
+.product-education:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.product-education__title {
   margin: 0 0 1rem;
   text-align: center;
 }
 
 /* Same voice as “remove dandruff forever” */
-.product-faq__edu-title--script {
+.product-education__title--script {
   font-family: var(--font-script);
   font-size: clamp(1.15rem, 4.2vw, 2.35rem);
   font-weight: 500;
@@ -717,7 +772,7 @@ body {
   white-space: nowrap;
 }
 
-.product-faq__edu-lead {
+.product-education__lead {
   margin: 0 0 1.25rem;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 400;
@@ -725,7 +780,7 @@ body {
   color: rgba(235, 235, 235, 0.92);
 }
 
-.product-faq__edu-grid {
+.product-education__grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(1rem, 2.5vw, 1.25rem);
@@ -733,13 +788,13 @@ body {
 }
 
 @media (min-width: 640px) {
-  .product-faq__edu-grid {
+  .product-education__grid {
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem;
   }
 }
 
-.product-faq__edu-card {
+.product-education__card {
   margin: 0;
   padding: 0 0 0.25rem;
   border: none;
@@ -747,7 +802,7 @@ body {
   background: none;
 }
 
-.product-faq__edu-sub {
+.product-education__sub {
   margin: 0 0 0.5rem;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 600;
@@ -755,7 +810,7 @@ body {
   color: var(--orange);
 }
 
-.product-faq__edu-text {
+.product-education__text {
   margin: 0;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
@@ -763,7 +818,7 @@ body {
   color: rgba(228, 228, 228, 0.94);
 }
 
-.product-faq__edu-stats {
+.product-education__stats {
   margin: 0;
   padding-top: clamp(1rem, 2.5vw, 1.25rem);
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
@@ -857,15 +912,16 @@ body {
 }
 
 .btn-buy {
-  min-height: 52px;
+  min-height: 56px;
+  padding: 0 1.5rem;
   border: none;
   border-radius: 999px;
   background: var(--orange);
   color: var(--black);
   font-family: var(--font);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+  font-weight: 800;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   cursor: pointer;
   touch-action: manipulation;
@@ -896,6 +952,13 @@ body {
   max-width: min(720px, 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  outline: none;
+}
+
+.site-legal-footer:focus:not(:focus-visible) {
+  outline: none;
 }
 
 .site-legal-footer__company,

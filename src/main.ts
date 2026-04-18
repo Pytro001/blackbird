@@ -166,6 +166,19 @@ function scrollToProduct(behavior: ScrollBehavior): void {
   });
 }
 
+function scrollToHashSection(): void {
+  const hash = location.hash.slice(1);
+  if (!hash) return;
+  const el = document.getElementById(hash);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "auto", block: "start" });
+  if (el instanceof HTMLElement && (hash === "education" || hash === "site-footer")) {
+    requestAnimationFrame(() => {
+      el.focus({ preventScroll: true });
+    });
+  }
+}
+
 type ProductFaqPanelPlace = "above" | "below" | "left" | "right";
 
 type ProductFaqItem = {
@@ -185,7 +198,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLabel: "What is this?",
     answer:
       "Daily Wash is your flake-free shampoo step: gentle cleansing formulated to support a healthy scalp routine.",
-    pinTop: "28%",
+    pinTop: "38%",
     pinLeft: "44%",
     panel: "above",
   },
@@ -278,35 +291,48 @@ function productFaqSectionHtml(): string {
         />
         <div class="product-faq__spots">${spots}</div>
       </div>
-      <div class="product-faq__education">
-        <h3 class="product-faq__edu-title product-faq__edu-title--script">Education</h3>
-        <p class="product-faq__edu-lead">
-          There are two types of dandruff: oily and dry. You need to find out which one you have to select the right products.
-        </p>
-        <div class="product-faq__edu-grid">
-          <div class="product-faq__edu-card">
-            <h4 class="product-faq__edu-sub">Oily flakes</h4>
-            <p class="product-faq__edu-text">
-              These are yellowish, greasy, and sticky. They stay on your scalp and hair. Your scalp makes too much oil and yeast grows too much.
-            </p>
-          </div>
-          <div class="product-faq__edu-card">
-            <h4 class="product-faq__edu-sub">Dry flakes</h4>
-            <p class="product-faq__edu-text">
-              These are small white flakes that fall easily. Your scalp feels tight and itchy. Your scalp does not make enough oil and becomes too dry.
-            </p>
-          </div>
+    </section>`;
+}
+
+function productEducationSectionHtml(): string {
+  return `
+    <section
+      class="product-education"
+      id="education"
+      tabindex="-1"
+      aria-labelledby="education-heading"
+    >
+      <h2 id="education-heading" class="product-education__title product-education__title--script">Education</h2>
+      <p class="product-education__lead">
+        There are two types of dandruff: oily and dry. You need to find out which one you have to select the right products.
+      </p>
+      <div class="product-education__grid">
+        <div class="product-education__card">
+          <h3 class="product-education__sub">Oily flakes</h3>
+          <p class="product-education__text">
+            These are yellowish, greasy, and sticky. They stay on your scalp and hair. Your scalp makes too much oil and yeast grows too much.
+          </p>
         </div>
-        <p class="product-faq__edu-stats">
-          Roughly 50% of adults experience dandruff at some point in their lives. In other words, one out of every two people you meet has likely dealt with it. Dandruff tends to appear after puberty and can persist throughout adulthood, often peaking between the ages of 20 and 40. The condition is slightly more common in men.
-        </p>
+        <div class="product-education__card">
+          <h3 class="product-education__sub">Dry flakes</h3>
+          <p class="product-education__text">
+            These are small white flakes that fall easily. Your scalp feels tight and itchy. Your scalp does not make enough oil and becomes too dry.
+          </p>
+        </div>
       </div>
+      <p class="product-education__stats">
+        Roughly 50% of adults experience dandruff at some point in their lives. In other words, one out of every two people you meet has likely dealt with it. Dandruff tends to appear after puberty and can persist throughout adulthood, often peaking between the ages of 20 and 40. The condition is slightly more common in men.
+      </p>
     </section>`;
 }
 
 function homeHtml(): string {
   return `
     <div class="home-shell">
+    <div class="skip-links" role="navigation" aria-label="Skip links">
+      <a href="#education" class="skip-link">Skip to Education</a>
+      <a href="#site-footer" class="skip-link">Skip to legal information</a>
+    </div>
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
         <h1 class="hero-editorial__title">
@@ -327,7 +353,7 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Product photos. Drag, swipe, or use arrow keys."
+            aria-label="Product photos, looping carousel. Swipe, drag, or use arrow keys."
             tabindex="0"
           >
             <figure class="product-shot">
@@ -387,7 +413,7 @@ function homeHtml(): string {
               <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
-            <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
+            <button type="button" class="btn-buy" id="buy-btn">Buy</button>
             <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
             <p class="product-flake-note" role="note">
               These products are for dry-flakes, if you are not sure if you have dry or oily flakes
@@ -402,6 +428,7 @@ function homeHtml(): string {
       </main>
     </div>
     ${productFaqSectionHtml()}
+    ${productEducationSectionHtml()}
     ${siteLegalFooterHtml()}
     ${pdfManualModalHtml()}
     </div>
@@ -439,7 +466,7 @@ function siteLegalFooterHtml(): string {
   const a = `${BASE_HREF}agb`;
   const w = `${BASE_HREF}widerruf`;
   return `
-    <footer class="site-legal-footer" id="site-footer" aria-label="Rechtliches">
+    <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
       <p class="site-legal-footer__company">
         HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden
       </p>
@@ -832,10 +859,12 @@ function render(): void {
       view === "product" || (view === "landing" && location.hash === "#product");
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
-    } else if (location.hash === "#product-faq") {
-      requestAnimationFrame(() => {
-        document.getElementById("product-faq")?.scrollIntoView({ behavior: "auto", block: "start" });
-      });
+    } else if (
+      location.hash === "#product-faq" ||
+      location.hash === "#education" ||
+      location.hash === "#site-footer"
+    ) {
+      requestAnimationFrame(() => scrollToHashSection());
     }
   } else if (view === "manual") {
     root.innerHTML = manualHtml();
@@ -902,57 +931,134 @@ function bindProductFaq(): void {
 function bindProductShotsCarousel(): void {
   const scroller = document.querySelector<HTMLDivElement>("#product-shots");
   const dots = document.querySelectorAll<HTMLButtonElement>("#product-shots-dots .product-shots-dot");
-  const slides = scroller?.querySelectorAll<HTMLElement>(".product-shot");
-  if (!scroller || !slides?.length || dots.length !== slides.length) return;
+  if (!scroller || !dots.length) return;
 
-  const slideIndex = (): number => {
-    const w = scroller.clientWidth;
-    if (w <= 0) return 0;
-    return Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
+  const originals = Array.from(scroller.querySelectorAll<HTMLElement>(".product-shot"));
+  if (originals.length !== dots.length) return;
+
+  const n = originals.length;
+  const first = originals[0];
+  const last = originals[n - 1];
+  const cloneLast = last.cloneNode(true) as HTMLElement;
+  const cloneFirst = first.cloneNode(true) as HTMLElement;
+  for (const el of [cloneLast, cloneFirst]) {
+    el.classList.add("product-shot--clone");
+    el.setAttribute("aria-hidden", "true");
+    el.querySelectorAll("img").forEach((img) => {
+      img.setAttribute("alt", "");
+      img.setAttribute("aria-hidden", "true");
+    });
+  }
+  scroller.insertBefore(cloneLast, first);
+  scroller.appendChild(cloneFirst);
+
+  const slides = scroller.querySelectorAll<HTMLElement>(".product-shot");
+  const lastPhysical = n + 1;
+
+  const physicalFromLogical = (logical: number): number => logical + 1;
+
+  const logicalFromPhysical = (p: number): number => {
+    if (p === 0) return n - 1;
+    if (p === lastPhysical) return 0;
+    return p - 1;
   };
 
-  const goToIndex = (idx: number, behavior: ScrollBehavior): void => {
-    const slide = slides[idx];
-    if (!slide) return;
-    scroller.scrollTo({ left: slide.offsetLeft, behavior });
-  };
+  let isJumping = false;
+  let scrollSettleTimer = 0;
 
   const syncDots = (): void => {
     const w = scroller.clientWidth;
     if (w <= 0) return;
-    const idx = Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
+    const p = Math.round(scroller.scrollLeft / w);
+    const logical = logicalFromPhysical(p);
     dots.forEach((dot, i) => {
-      const on = i === idx;
+      const on = i === logical;
       dot.classList.toggle("is-active", on);
       dot.setAttribute("aria-selected", on ? "true" : "false");
     });
   };
 
-  scroller.addEventListener("scroll", syncDots, { passive: true });
-  syncDots();
+  const checkInfiniteBoundary = (): void => {
+    if (isJumping) return;
+    const w = scroller.clientWidth;
+    if (w <= 0) return;
+    const p = Math.round(scroller.scrollLeft / w);
+    if (p === 0) {
+      isJumping = true;
+      scroller.scrollLeft = slides[n].offsetLeft;
+      requestAnimationFrame(() => {
+        isJumping = false;
+        syncDots();
+      });
+    } else if (p === lastPhysical) {
+      isJumping = true;
+      scroller.scrollLeft = slides[1].offsetLeft;
+      requestAnimationFrame(() => {
+        isJumping = false;
+        syncDots();
+      });
+    }
+  };
+
+  const onScroll = (): void => {
+    if (!isJumping) syncDots();
+    window.clearTimeout(scrollSettleTimer);
+    scrollSettleTimer = window.setTimeout(() => checkInfiniteBoundary(), 100);
+  };
+
+  scroller.addEventListener("scroll", onScroll, { passive: true });
+  scroller.addEventListener("scrollend", checkInfiniteBoundary);
+
+  const scrollToPhysical = (physical: number, behavior: ScrollBehavior): void => {
+    const slide = slides[physical];
+    if (!slide) return;
+    scroller.scrollTo({ left: slide.offsetLeft, behavior });
+  };
+
+  requestAnimationFrame(() => {
+    scroller.scrollLeft = slides[1].offsetLeft;
+    syncDots();
+  });
+
+  const onResize = (): void => {
+    const w = scroller.clientWidth;
+    if (w <= 0) return;
+    const p = Math.round(scroller.scrollLeft / w);
+    const logical = logicalFromPhysical(p);
+    isJumping = true;
+    scroller.scrollLeft = slides[physicalFromLogical(logical)].offsetLeft;
+    requestAnimationFrame(() => {
+      isJumping = false;
+      syncDots();
+    });
+  };
+  window.addEventListener("resize", onResize);
 
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
-      const slide = slides[i];
-      if (!slide) return;
       dots.forEach((d, j) => {
         d.classList.toggle("is-active", j === i);
         d.setAttribute("aria-selected", j === i ? "true" : "false");
       });
-      scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+      scrollToPhysical(physicalFromLogical(i), "smooth");
     });
   });
 
   scroller.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
-    const idx = slideIndex();
+    const w = scroller.clientWidth;
+    if (w <= 0) return;
+    const p = Math.round(scroller.scrollLeft / w);
+    const logical = logicalFromPhysical(p);
     const next =
-      e.key === "ArrowRight" ? Math.min(slides.length - 1, idx + 1) : Math.max(0, idx - 1);
-    goToIndex(next, "smooth");
+      e.key === "ArrowRight"
+        ? (logical + 1) % n
+        : (logical - 1 + n) % n;
+    scrollToPhysical(physicalFromLogical(next), "smooth");
   });
 
-  /* Drag with mouse / trackpad to scroll horizontally (desktop) */
+  /* Drag with mouse / trackpad to scroll horizontally (desktop); touch uses native pan-x */
   let dragPointerId: number | null = null;
   let dragStartX = 0;
   let scrollStart = 0;
@@ -974,6 +1080,7 @@ function bindProductShotsCarousel(): void {
     scroller.removeEventListener("pointermove", onPointerMove);
     scroller.removeEventListener("pointerup", endDrag);
     scroller.removeEventListener("pointercancel", endDrag);
+    window.setTimeout(() => checkInfiniteBoundary(), 120);
   };
 
   scroller.addEventListener("pointerdown", (e: PointerEvent) => {
@@ -1041,6 +1148,15 @@ function bindThanks(): void {
 
 window.addEventListener("popstate", () => {
   render();
+});
+
+window.addEventListener("hashchange", () => {
+  const path = getAppPath();
+  if (path !== "/" && path !== "/product") return;
+  const h = location.hash;
+  if (h === "#product-faq" || h === "#education" || h === "#site-footer") {
+    requestAnimationFrame(() => scrollToHashSection());
+  }
 });
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
