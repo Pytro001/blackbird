@@ -88,8 +88,13 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Served from public/; opened in modal via iframe (native PDF viewer). */
+/** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
 const PDF_MANUAL_FILE = "blackbird_user_manual.pdf";
+
+function pdfManualAbsoluteUrl(): string {
+  const path = publicAssetUrl(PDF_MANUAL_FILE);
+  return new URL(path, window.location.origin).href;
+}
 
 function pdfManualModalHtml(): string {
   return `
@@ -101,12 +106,16 @@ function pdfManualModalHtml(): string {
             <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
           </svg>
         </button>
-        <iframe
-          class="pdf-modal__iframe"
-          id="pdf-manual-iframe"
+        <embed
+          class="pdf-modal__embed"
+          id="pdf-manual-embed"
+          type="application/pdf"
           title="BlackBird user manual"
-          src="about:blank"
-        ></iframe>
+        />
+        <p class="pdf-modal__pdf-actions">
+          <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
+            >Open manual in new tab</a>
+        </p>
       </div>
     </div>`;
 }
@@ -140,11 +149,13 @@ function unlockBodyScrollAfterPdfModal(): void {
 function openPdfManualModal(): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
-  const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
-  if (!modal || !iframe) return;
+  const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
+  const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
+  if (!modal || !embed) return;
   lockBodyScrollForPdfModal();
-  const pdfSrc = `${publicAssetUrl(PDF_MANUAL_FILE)}#view=FitH&toolbar=1`;
-  iframe.src = pdfSrc;
+  const url = pdfManualAbsoluteUrl();
+  embed.src = url;
+  if (newTab) newTab.href = url;
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
 }
@@ -158,7 +169,10 @@ function closePdfManualModal(immediate = false): void {
       modal.hidden = true;
       modal.classList.remove("pdf-modal--open");
     }
-    document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe")?.setAttribute("src", "about:blank");
+    const emb = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
+    if (emb) {
+      emb.removeAttribute("src");
+    }
     unlockBodyScrollAfterPdfModal();
   };
 
