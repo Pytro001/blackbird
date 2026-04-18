@@ -48,30 +48,7 @@ body {
   overflow-x: clip;
 }
 
-/* Full-page vertical sections: gentle snap (proximity) so footer/legal can be read without yanking */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y proximity;
-    scroll-behavior: smooth;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-editorial,
-  .page-product,
-  .product-faq,
-  .product-education,
-  .site-legal-footer {
-    scroll-snap-stop: normal;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-snap-type: none;
-    scroll-behavior: auto;
-  }
-}
+/* Full-page scroll: no vertical snap — free positioning (carousels keep horizontal snap only) */
 
 body {
   font-family: var(--font);
@@ -150,8 +127,6 @@ body {
     max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 3vw, 1.75rem), env(safe-area-inset-left));
   background: transparent;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .hero-editorial__title-wrap {
@@ -256,8 +231,6 @@ body {
     max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   background: transparent;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 #hair-analysis {
@@ -639,8 +612,6 @@ body {
     max(clamp(0.85rem, 2.8vw, 1.5rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .product-faq__heading {
@@ -806,7 +777,7 @@ body {
   }
 }
 
-/* —— Education (separate section; own snap target + #education for keyboard / skip links) —— */
+/* —— Education (#education for keyboard / skip links) —— */
 .product-education {
   max-width: min(680px, 100%);
   margin: 0 auto;
@@ -815,8 +786,6 @@ body {
     max(clamp(6.75rem, 20vw, 11.5rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   outline: none;
 }
 
@@ -1024,8 +993,6 @@ body {
   align-items: center;
   gap: clamp(0.65rem, 2vw, 0.9rem);
   text-align: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
   outline: none;
 }
 
