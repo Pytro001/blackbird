@@ -148,19 +148,19 @@ function homeHtml(): string {
           >
             <figure class="product-shot">
               <img
-                src="${BASE_HREF}product-box-set.jpg"
-                width="819"
-                height="1024"
-                alt="BLACKBIRD gift box with four anti-dandruff products"
+                src="${BASE_HREF}product-bottles-lineup.png"
+                width="1024"
+                height="819"
+                alt="BLACKBIRD Daily Wash, After Wash, and Before Sleep bottles"
                 decoding="async"
               />
             </figure>
             <figure class="product-shot">
               <img
-                src="${BASE_HREF}hero-lineup.png"
-                width="920"
-                height="575"
-                alt="BLACKBIRD product lineup"
+                src="${BASE_HREF}product-box-set.jpg"
+                width="819"
+                height="1024"
+                alt="BLACKBIRD gift box with four anti-dandruff products"
                 decoding="async"
               />
             </figure>
