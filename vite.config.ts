@@ -20,7 +20,15 @@ function spaFallback(): {
           url === "/thanks" ||
           url.startsWith("/thanks/") ||
           url === "/how-to-use" ||
-          url.startsWith("/how-to-use/");
+          url.startsWith("/how-to-use/") ||
+          url === "/impressum" ||
+          url.startsWith("/impressum/") ||
+          url === "/datenschutz" ||
+          url.startsWith("/datenschutz/") ||
+          url === "/agb" ||
+          url.startsWith("/agb/") ||
+          url === "/widerruf" ||
+          url.startsWith("/widerruf/");
         if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;
@@ -39,7 +47,15 @@ function spaFallback(): {
           url === "/thanks" ||
           url.startsWith("/thanks/") ||
           url === "/how-to-use" ||
-          url.startsWith("/how-to-use/");
+          url.startsWith("/how-to-use/") ||
+          url === "/impressum" ||
+          url.startsWith("/impressum/") ||
+          url === "/datenschutz" ||
+          url.startsWith("/datenschutz/") ||
+          url === "/agb" ||
+          url.startsWith("/agb/") ||
+          url === "/widerruf" ||
+          url.startsWith("/widerruf/");
         if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;

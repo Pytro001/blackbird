@@ -26,7 +26,15 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-type View = "landing" | "product" | "thanks" | "manual";
+type View =
+  | "landing"
+  | "product"
+  | "thanks"
+  | "manual"
+  | "impressum"
+  | "datenschutz"
+  | "agb"
+  | "widerruf";
 
 /** Dermatologist Analysis WhatsApp (number + prefilled message). */
 const WHATSAPP_CHAT_URL =
@@ -139,6 +147,10 @@ function pathToView(): View {
   if (path === "/product") return "product";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
+  if (path === "/impressum") return "impressum";
+  if (path === "/datenschutz") return "datenschutz";
+  if (path === "/agb") return "agb";
+  if (path === "/widerruf") return "widerruf";
   return "landing";
 }
 
@@ -390,6 +402,7 @@ function homeHtml(): string {
       </main>
     </div>
     ${productFaqSectionHtml()}
+    ${siteLegalFooterHtml()}
     ${pdfManualModalHtml()}
     </div>
   `;
@@ -405,6 +418,228 @@ function thanksHtml(): string {
       </main>
     </div>
   `;
+}
+
+function legalPageShell(title: string, body: string): string {
+  return `
+    <div class="page-step page-legal">
+      <header class="legal-header">
+        <a href="${BASE_HREF}" class="manual-back">Zur Startseite</a>
+      </header>
+      <main class="legal-main">
+        <h1 class="legal-title">${escapeHtml(title)}</h1>
+        <div class="legal-prose">${body}</div>
+      </main>
+    </div>`;
+}
+
+function siteLegalFooterHtml(): string {
+  const i = `${BASE_HREF}impressum`;
+  const d = `${BASE_HREF}datenschutz`;
+  const a = `${BASE_HREF}agb`;
+  const w = `${BASE_HREF}widerruf`;
+  return `
+    <footer class="site-legal-footer" id="site-footer" aria-label="Rechtliches">
+      <p class="site-legal-footer__company">
+        HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden
+      </p>
+      <p class="site-legal-footer__contact">
+        E-Mail:
+        <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
+      </p>
+      <nav class="site-legal-footer__nav" aria-label="Rechtliche Hinweise">
+        <a href="${i}">Impressum</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${d}">Datenschutz</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${a}">AGB</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${w}">Widerruf</a>
+      </nav>
+    </footer>`;
+}
+
+function impressumHtml(): string {
+  const body = `
+    <p class="legal-lead">Angaben gemäß § 5 TMG / § 55 Abs. 1 RStV</p>
+    <h2 class="legal-h2">Diensteanbieter</h2>
+    <p>
+      HUGE Production GmbH<br />
+      Sebnitzer Str. 35<br />
+      01099 Dresden<br />
+      Deutschland
+    </p>
+    <h2 class="legal-h2">Kontakt</h2>
+    <p>
+      E-Mail:
+      <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
+    </p>
+    <h2 class="legal-h2">Vertretungsberechtigte Geschäftsführer</h2>
+    <p>Tadeus Jonathan Mehl, Konstantin Saifoulline</p>
+    <h2 class="legal-h2">Registereintrag</h2>
+    <p>
+      Eintragung im Handelsregister. Registergericht: Amtsgericht Dresden.<br />
+      Die Handelsregisternummer (HRB) ergänzen wir nach Eintragung oder auf Anfrage.
+    </p>
+    <h2 class="legal-h2">Umsatzsteuer</h2>
+    <p>
+      Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: wird bei Vorliegen ggf. angegeben.
+    </p>
+    <h2 class="legal-h2">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+    <p>
+      Tadeus Jonathan Mehl, Konstantin Saifoulline<br />
+      HUGE Production GmbH, Anschrift wie oben.
+    </p>
+    <h2 class="legal-h2">EU-Streitschlichtung</h2>
+    <p>
+      Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+      <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.
+      Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+    </p>
+  `;
+  return legalPageShell("Impressum", body);
+}
+
+function datenschutzHtml(): string {
+  const body = `
+    <p class="legal-lead">
+      Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener Daten bei Nutzung dieser Website und der über sie angebotenen Angebote (z.&nbsp;B. Bestellung).
+    </p>
+    <h2 class="legal-h2">Verantwortlicher</h2>
+    <p>
+      HUGE Production GmbH<br />
+      Sebnitzer Str. 35, 01099 Dresden, Deutschland<br />
+      E-Mail: <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
+    </p>
+    <h2 class="legal-h2">Allgemeines</h2>
+    <p>
+      Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen. Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung einer funktionsfähigen Website, unserer Inhalte und Leistungen (z.&nbsp;B. Bestellabwicklung) erforderlich ist oder Sie eingewilligt haben bzw. eine gesetzliche Grundlage besteht.
+    </p>
+    <h2 class="legal-h2">Hosting und Server-Logfiles</h2>
+    <p>
+      Beim Aufruf dieser Website werden durch den Hosting-Provider bzw. Server automatisch Informationen in sogenannten Server-Logfiles erhoben (z.&nbsp;B. IP-Adresse, Datum und Uhrzeit des Abrufs, Browsertyp, Betriebssystem). Die Verarbeitung dient der Sicherheit (z.&nbsp;B. Missbrauchsbekämpfung) und der Stabilität der Website. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse).
+    </p>
+    <h2 class="legal-h2">Bestellung und Zahlung (Stripe)</h2>
+    <p>
+      Wenn Sie über unsere Website einen Kauf tätigen, leiten wir Sie zur Zahlungsabwicklung an den Zahlungsdienstleister Stripe weiter. Dabei werden die zur Vertragsabwicklung erforderlichen Daten (z.&nbsp;B. Bestell- und Zahlungsdaten) verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertrag). Näheres zu Stripe finden Sie in der Datenschutzerklärung von Stripe:
+      <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer">stripe.com/de/privacy</a>.
+    </p>
+    <h2 class="legal-h2">WhatsApp</h2>
+    <p>
+      Wenn Sie über einen Link auf unserer Website WhatsApp (Meta) nutzen, gelten die dortigen Nutzungs- und Datenschutzbedingungen des jeweiligen Anbieters. Wir haben keinen Einfluss auf die Datenverarbeitung durch Meta/WhatsApp außerhalb unserer Website.
+    </p>
+    <h2 class="legal-h2">Kontaktaufnahme per E-Mail</h2>
+    <p>
+      Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen bzw. Vertrag) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung).
+    </p>
+    <h2 class="legal-h2">Speicherdauer</h2>
+    <p>
+      Wir speichern personenbezogene Daten nur so lange, wie dies für die jeweiligen Zwecke erforderlich ist oder gesetzliche Aufbewahrungsfristen bestehen.
+    </p>
+    <h2 class="legal-h2">Ihre Rechte</h2>
+    <p>
+      Sie haben nach Maßgabe der DSGVO insbesondere das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung. Außerdem haben Sie das Recht, sich bei einer Aufsichtsbehörde zu beschweren.
+    </p>
+    <h2 class="legal-h2">Änderungen</h2>
+    <p>
+      Wir behalten uns vor, diese Datenschutzerklärung anzupassen, wenn sich Rechtslage oder unsere Leistungen ändern. Maßgeblich ist die jeweils auf der Website veröffentlichte Fassung.
+    </p>
+  `;
+  return legalPageShell("Datenschutzerklärung", body);
+}
+
+function agbHtml(): string {
+  const body = `
+    <p class="legal-lead">Allgemeine Geschäftsbedingungen (AGB) für den Online-Kauf über diese Website</p>
+    <h2 class="legal-h2">§ 1 Geltungsbereich</h2>
+    <p>
+      Diese AGB gelten für Verträge zwischen HUGE Production GmbH (nachfolgend „Anbieter“) und Verbraucherinnen und Verbrauchern (nachfolgend „Kunde“) über die über diese Website angebotenen Waren.
+    </p>
+    <h2 class="legal-h2">§ 2 Vertragsschluss</h2>
+    <p>
+      Die Darstellung der Produkte auf der Website stellt kein rechtlich bindendes Angebot dar. Die Bestellung des Kunden stellt ein Angebot zum Abschluss eines Kaufvertrags dar. Der Vertrag kommt zustande, sobald der Anbieter die Bestellung annimmt oder die Ware ausliefert oder der Kunde zur Zahlung per Zahlungsdienstleister weitergeleitet wird und die Zahlung ordnungsgemäß erfolgt – je nach technischem Ablauf des Bestellvorgangs.
+    </p>
+    <h2 class="legal-h2">§ 3 Preise und Versandkosten</h2>
+    <p>
+      Es gelten die zum Zeitpunkt der Bestellung auf der Website angegebenen Preise und Versandbedingungen. Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern ausgewiesen.
+    </p>
+    <h2 class="legal-h2">§ 4 Zahlung</h2>
+    <p>
+      Die Zahlung erfolgt über den angegebenen Zahlungsdienstleister (z.&nbsp;B. Stripe). Es gelten dabei die jeweiligen Bedingungen des Zahlungsdienstleisters.
+    </p>
+    <h2 class="legal-h2">§ 5 Lieferung</h2>
+    <p>
+      Die Lieferung erfolgt an die vom Kunden angegebene Lieferadresse innerhalb der angegebenen Fristen, sofern nichts Abweichendes vereinbart ist.
+    </p>
+    <h2 class="legal-h2">§ 6 Gewährleistung</h2>
+    <p>
+      Es gelten die gesetzlichen Gewährleistungsrechte. Für Verbraucher beträgt die Gesetzliche Verjährungsfrist für Mängelansprüche bei neuen Waren zwei Jahre ab Lieferung der Ware.
+    </p>
+    <h2 class="legal-h2">§ 7 Haftung</h2>
+    <p>
+      Die Haftung des Anbieters richtet sich nach den gesetzlichen Vorschriften, soweit ausgeschlossen nicht zulässig ist. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den typischen, vorhersehbaren Schaden.
+    </p>
+    <h2 class="legal-h2">§ 8 Schlussbestimmungen</h2>
+    <p>
+      Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Zwingende Verbraucherschutzvorschriften des Staates, in dem der Kunde seinen gewöhnlichen Aufenthalt hat, bleiben unberührt, sofern anwendbar.
+      Gerichtsstand und Erfüllungsort bei Verträgen mit Kaufleuten sind, soweit zulässig, der Sitz des Anbieters.
+    </p>
+    <p>
+      <strong>Hinweis:</strong> Passen Sie diese AGB bei Bedarf an Ihren konkreten Vertrags- und Checkout-Prozess an (z.&nbsp;B. Bestellbestätigung, Lieferländer, Streitbeilegung).
+    </p>
+  `;
+  return legalPageShell("AGB", body);
+}
+
+function widerrufHtml(): string {
+  const body = `
+    <p class="legal-lead">Widerrufsbelehrung für Verbraucherinnen und Verbraucher</p>
+    <h2 class="legal-h2">Widerrufsrecht</h2>
+    <p>
+      Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht der Beförderer ist, die Waren in Besitz genommen haben bzw. hat.
+    </p>
+    <p>
+      Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden, E-Mail:
+      <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>)
+      mittels einer eindeutigen Erklärung (z.&nbsp;B. ein mit der Post versandter Brief oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
+    </p>
+    <h2 class="legal-h2">Folgen des Widerrufs</h2>
+    <p>
+      Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, einschließlich der Lieferkosten (mit Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine andere Art der Lieferung als die von uns angebotene, günstigste Standardlieferung gewählt haben), unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.
+    </p>
+    <p>
+      Wir können die Rückzahlung verweigern, bis wir die Waren wieder zurückerhalten haben oder bis Sie den Nachweis erbracht haben, dass Sie die Waren zurückgesandt haben, je nachdem, welches der frühere Zeitpunkt ist.
+    </p>
+    <p>
+      Sie haben die Waren unverzüglich und in jedem Fall spätestens binnen vierzehn Tagen ab dem Tag, an dem Sie uns über den Widerruf dieses Vertrags unterrichten, an uns zurückzusenden oder zu übergeben. Die Frist ist gewahrt, wenn Sie die Waren vor Ablauf der Frist von vierzehn Tagen absenden.
+    </p>
+    <p>
+      Sie tragen die unmittelbaren Kosten der Rücksendung der Waren.
+    </p>
+    <p>
+      <strong>Hinweis zum Erlöschen des Widerrufsrechts:</strong> Das Widerrufsrecht erlischt bei Verträgen über die Lieferung versiegelter Waren, die aus Gründen des Gesundheitsschutzes oder der Hygiene nicht zur Rückgabe geeignet sind, wenn ihre Versiegelung nach der Lieferung entfernt wurde (sofern zutreffend).
+    </p>
+    <h2 class="legal-h2">Muster-Widerrufsformular</h2>
+    <p>
+      Wenn Sie den Vertrag widerrufen wollen, füllen Sie bitte dieses Formular aus und senden Sie es zurück.
+    </p>
+    <pre class="legal-pre" aria-label="Muster-Widerrufsformular">An HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden, E-Mail: invite@hugeconversations.com
+
+Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)
+
+Bestellt am (*)/erhalten am (*)
+
+Name des/der Verbraucher(s)
+
+Anschrift des/der Verbraucher(s)
+
+Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)
+
+Datum
+
+(*) Unzutreffendes streichen.</pre>
+  `;
+  return legalPageShell("Widerruf", body);
 }
 
 function manualPageUrls(): string[] {
@@ -566,6 +801,15 @@ function bindManual(): void {
   document.getElementById("manual-stage")?.addEventListener("keydown", manualStageKeydown);
 }
 
+function setDocumentLang(view: View): void {
+  const de =
+    view === "impressum" ||
+    view === "datenschutz" ||
+    view === "agb" ||
+    view === "widerruf";
+  document.documentElement.lang = de ? "de" : "en";
+}
+
 function render(): void {
   closePdfManualModal();
   destroyManualPageFlip();
@@ -578,6 +822,7 @@ function render(): void {
   }
 
   const view = pathToView();
+  setDocumentLang(view);
 
   if (view === "landing" || view === "product") {
     root.innerHTML = homeHtml();
@@ -595,7 +840,17 @@ function render(): void {
   } else if (view === "manual") {
     root.innerHTML = manualHtml();
     bindManual();
-  } else if (view === "thanks") root.innerHTML = thanksHtml();
+  } else if (view === "thanks") {
+    root.innerHTML = thanksHtml();
+  } else if (view === "impressum") {
+    root.innerHTML = impressumHtml();
+  } else if (view === "datenschutz") {
+    root.innerHTML = datenschutzHtml();
+  } else if (view === "agb") {
+    root.innerHTML = agbHtml();
+  } else if (view === "widerruf") {
+    root.innerHTML = widerrufHtml();
+  }
 
   if (view === "thanks") bindThanks();
 }
