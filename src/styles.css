@@ -332,7 +332,6 @@ body {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
 }
 
 .product-shots {
@@ -363,61 +362,6 @@ body {
 
 .product-shots:focus-visible {
   box-shadow: 0 0 0 2px rgba(229, 142, 53, 0.55);
-}
-
-.product-shots-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.15rem;
-  flex-wrap: wrap;
-  padding: 0.25rem 0 max(0.25rem, env(safe-area-inset-bottom));
-}
-
-/* 44×44px tap target; visible dot via ::after (small circles) */
-.product-shots-dot {
-  position: relative;
-  box-sizing: border-box;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  flex: 0 0 auto;
-}
-
-.product-shots-dot::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
-  transition: background 0.2s ease, transform 0.2s ease;
-  pointer-events: none;
-}
-
-.product-shots-dot:hover::after,
-.product-shots-dot:focus-visible::after {
-  background: rgba(255, 255, 255, 0.45);
-  outline: none;
-}
-
-.product-shots-dot:focus-visible {
-  outline: 2px solid rgba(229, 142, 53, 0.55);
-  outline-offset: 2px;
-}
-
-.product-shots-dot.is-active::after {
-  background: var(--orange);
-  transform: scale(1.2);
 }
 
 .product-shot {
@@ -540,8 +484,16 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-  background: rgba(0, 0, 0, 0.82);
+  background: rgba(0, 0, 0, 0.76);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.28s ease;
+}
+
+.pdf-modal--open .pdf-modal__backdrop {
+  opacity: 1;
 }
 
 .pdf-modal__sheet {
@@ -550,10 +502,59 @@ body {
   width: min(96vw, 920px);
   height: min(90dvh, 1200px);
   max-height: min(90dvh, 1200px);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(229, 142, 53, 0.22);
   background: #111;
+  border: 1px solid rgba(229, 142, 53, 0.22);
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+  transition:
+    transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease;
+}
+
+.pdf-modal--open .pdf-modal__sheet {
+  transform: none;
+  opacity: 1;
+}
+
+.pdf-modal__close {
+  position: absolute;
+  top: max(0.45rem, env(safe-area-inset-top));
+  right: max(0.45rem, env(safe-area-inset-right));
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(245, 245, 245, 0.92);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.pdf-modal__close:hover,
+.pdf-modal__close:focus-visible {
+  background: rgba(229, 142, 53, 0.28);
+  color: var(--white);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(229, 142, 53, 0.35);
+}
+
+.pdf-modal__close:active {
+  transform: scale(0.96);
 }
 
 .pdf-modal__iframe {
@@ -561,6 +562,17 @@ body {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pdf-modal__backdrop,
+  .pdf-modal__sheet {
+    transition-duration: 0.01ms !important;
+  }
+
+  .pdf-modal__sheet {
+    transform: none !important;
+  }
 }
 
 /* —— Scroll FAQ: four-bottle image + hotspots —— */

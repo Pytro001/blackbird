@@ -15,6 +15,18 @@ const MANUAL_PAGE_VER = "1";
 
 let manualPageFlip: PageFlip | null = null;
 
+/** Product carousel: auto-advance forward (ms). */
+const PRODUCT_SHOTS_AUTO_MS = 3200;
+/** After user swipes or uses keys, resume auto-advance after this delay. */
+const PRODUCT_SHOTS_AUTO_RESUME_MS = 6500;
+
+let productShotsAutoTimer: number | undefined;
+let productShotsAutoResumeTimer: number | undefined;
+
+/** Scroll position before PDF modal body lock; restored on animated close. */
+let pdfModalScrollY = 0;
+let pdfModalCloseTimer: number | undefined;
+
 /** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
@@ -55,6 +67,11 @@ function pdfManualModalHtml(): string {
     <div class="pdf-modal" id="pdf-manual-modal" hidden>
       <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="Close manual"></button>
       <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="BlackBird user manual">
+        <button type="button" class="pdf-modal__close" id="pdf-manual-close" aria-label="Close">
+          <svg class="pdf-modal__close-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
+          </svg>
+        </button>
         <iframe
           class="pdf-modal__iframe"
           id="pdf-manual-iframe"
@@ -66,20 +83,62 @@ function pdfManualModalHtml(): string {
 }
 
 function openPdfManualModal(): void {
+  window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
   const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
   if (!modal || !iframe) return;
+  pdfModalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
   if (!iframe.src || iframe.src === "about:blank") {
     iframe.src = PDF_MANUAL_URL;
   }
   modal.hidden = false;
+  modal.classList.remove("pdf-modal--open");
   document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      modal.classList.add("pdf-modal--open");
+    });
+  });
 }
 
-function closePdfManualModal(): void {
-  document.body.style.overflow = "";
+function closePdfManualModal(immediate = false): void {
+  window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
-  if (modal) modal.hidden = true;
+
+  const applyClose = (restoreScroll: boolean): void => {
+    if (modal) {
+      modal.hidden = true;
+      modal.classList.remove("pdf-modal--open");
+    }
+    document.body.style.overflow = "";
+    if (restoreScroll) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
+        });
+      });
+    }
+  };
+
+  if (!modal) {
+    document.body.style.overflow = "";
+    return;
+  }
+
+  if (immediate) {
+    applyClose(false);
+    return;
+  }
+
+  if (!modal.classList.contains("pdf-modal--open")) {
+    applyClose(true);
+    return;
+  }
+
+  modal.classList.remove("pdf-modal--open");
+  pdfModalCloseTimer = window.setTimeout(() => {
+    applyClose(true);
+  }, 320);
 }
 
 /** Next calendar day at 12:45 local (24h express ETA display). */
@@ -353,7 +412,7 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Product photos, looping carousel. Swipe, drag, or use arrow keys."
+            aria-label="Product photos. Auto-advancing carousel; swipe or use arrow keys."
             tabindex="0"
           >
             <figure class="product-shot">
@@ -396,12 +455,6 @@ function homeHtml(): string {
                 decoding="async"
               />
             </figure>
-          </div>
-          <div class="product-shots-dots" id="product-shots-dots" role="tablist" aria-label="Choose photo">
-            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 4" data-slide="0" id="product-dot-0"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 4" data-slide="1" id="product-dot-1"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 3 of 4" data-slide="2" id="product-dot-2"></button>
-            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 4 of 4" data-slide="3" id="product-dot-3"></button>
           </div>
         </div>
 
@@ -838,7 +891,11 @@ function setDocumentLang(view: View): void {
 }
 
 function render(): void {
-  closePdfManualModal();
+  window.clearInterval(productShotsAutoTimer);
+  window.clearTimeout(productShotsAutoResumeTimer);
+  productShotsAutoTimer = undefined;
+  productShotsAutoResumeTimer = undefined;
+  closePdfManualModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
   const path = getAppPath();
@@ -904,6 +961,10 @@ function bindProduct(): void {
     closePdfManualModal();
   });
 
+  document.querySelector("#pdf-manual-close")?.addEventListener("click", () => {
+    closePdfManualModal();
+  });
+
   bindProductShotsCarousel();
   bindProductFaq();
   updateProductShippingEta();
@@ -929,12 +990,16 @@ function bindProductFaq(): void {
 }
 
 function bindProductShotsCarousel(): void {
+  window.clearInterval(productShotsAutoTimer);
+  window.clearTimeout(productShotsAutoResumeTimer);
+  productShotsAutoTimer = undefined;
+  productShotsAutoResumeTimer = undefined;
+
   const scroller = document.querySelector<HTMLDivElement>("#product-shots");
-  const dots = document.querySelectorAll<HTMLButtonElement>("#product-shots-dots .product-shots-dot");
-  if (!scroller || !dots.length) return;
+  if (!scroller) return;
 
   const originals = Array.from(scroller.querySelectorAll<HTMLElement>(".product-shot"));
-  if (originals.length !== dots.length) return;
+  if (originals.length < 1) return;
 
   const n = originals.length;
   const first = originals[0];
@@ -966,17 +1031,7 @@ function bindProductShotsCarousel(): void {
   let isJumping = false;
   let scrollSettleTimer = 0;
 
-  const syncDots = (): void => {
-    const w = scroller.clientWidth;
-    if (w <= 0) return;
-    const p = Math.round(scroller.scrollLeft / w);
-    const logical = logicalFromPhysical(p);
-    dots.forEach((dot, i) => {
-      const on = i === logical;
-      dot.classList.toggle("is-active", on);
-      dot.setAttribute("aria-selected", on ? "true" : "false");
-    });
-  };
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const checkInfiniteBoundary = (): void => {
     if (isJumping) return;
@@ -988,20 +1043,17 @@ function bindProductShotsCarousel(): void {
       scroller.scrollLeft = slides[n].offsetLeft;
       requestAnimationFrame(() => {
         isJumping = false;
-        syncDots();
       });
     } else if (p === lastPhysical) {
       isJumping = true;
       scroller.scrollLeft = slides[1].offsetLeft;
       requestAnimationFrame(() => {
         isJumping = false;
-        syncDots();
       });
     }
   };
 
   const onScroll = (): void => {
-    if (!isJumping) syncDots();
     window.clearTimeout(scrollSettleTimer);
     scrollSettleTimer = window.setTimeout(() => checkInfiniteBoundary(), 100);
   };
@@ -1015,9 +1067,35 @@ function bindProductShotsCarousel(): void {
     scroller.scrollTo({ left: slide.offsetLeft, behavior });
   };
 
+  const startAutoAdvance = (): void => {
+    window.clearInterval(productShotsAutoTimer);
+    productShotsAutoTimer = undefined;
+    window.clearTimeout(productShotsAutoResumeTimer);
+    if (prefersReducedMotion || document.hidden) return;
+    productShotsAutoTimer = window.setInterval(() => {
+      if (document.hidden) return;
+      const w = scroller.clientWidth;
+      if (w <= 0) return;
+      const p = Math.round(scroller.scrollLeft / w);
+      const logical = logicalFromPhysical(p);
+      const next = (logical + 1) % n;
+      scrollToPhysical(physicalFromLogical(next), "smooth");
+    }, PRODUCT_SHOTS_AUTO_MS);
+  };
+
+  const pauseAutoForUser = (): void => {
+    window.clearInterval(productShotsAutoTimer);
+    productShotsAutoTimer = undefined;
+    window.clearTimeout(productShotsAutoResumeTimer);
+    if (prefersReducedMotion) return;
+    productShotsAutoResumeTimer = window.setTimeout(() => {
+      startAutoAdvance();
+    }, PRODUCT_SHOTS_AUTO_RESUME_MS);
+  };
+
   requestAnimationFrame(() => {
     scroller.scrollLeft = slides[1].offsetLeft;
-    syncDots();
+    startAutoAdvance();
   });
 
   const onResize = (): void => {
@@ -1029,24 +1107,14 @@ function bindProductShotsCarousel(): void {
     scroller.scrollLeft = slides[physicalFromLogical(logical)].offsetLeft;
     requestAnimationFrame(() => {
       isJumping = false;
-      syncDots();
     });
   };
   window.addEventListener("resize", onResize);
 
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      dots.forEach((d, j) => {
-        d.classList.toggle("is-active", j === i);
-        d.setAttribute("aria-selected", j === i ? "true" : "false");
-      });
-      scrollToPhysical(physicalFromLogical(i), "smooth");
-    });
-  });
-
   scroller.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
+    pauseAutoForUser();
     const w = scroller.clientWidth;
     if (w <= 0) return;
     const p = Math.round(scroller.scrollLeft / w);
@@ -1057,6 +1125,22 @@ function bindProductShotsCarousel(): void {
         : (logical - 1 + n) % n;
     scrollToPhysical(physicalFromLogical(next), "smooth");
   });
+
+  scroller.addEventListener(
+    "touchstart",
+    () => {
+      pauseAutoForUser();
+    },
+    { passive: true }
+  );
+
+  scroller.addEventListener(
+    "wheel",
+    () => {
+      pauseAutoForUser();
+    },
+    { passive: true }
+  );
 
   /* Drag with mouse / trackpad to scroll horizontally (desktop); touch uses native pan-x */
   let dragPointerId: number | null = null;
@@ -1080,12 +1164,14 @@ function bindProductShotsCarousel(): void {
     scroller.removeEventListener("pointermove", onPointerMove);
     scroller.removeEventListener("pointerup", endDrag);
     scroller.removeEventListener("pointercancel", endDrag);
+    pauseAutoForUser();
     window.setTimeout(() => checkInfiniteBoundary(), 120);
   };
 
   scroller.addEventListener("pointerdown", (e: PointerEvent) => {
     if (e.pointerType === "touch") return;
     if (e.button !== 0) return;
+    pauseAutoForUser();
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     scrollStart = scroller.scrollLeft;
