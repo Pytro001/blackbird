@@ -425,7 +425,7 @@ body {
 
 .product-faq__heading {
   margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
-  max-width: min(920px, 100%);
+  max-width: min(1120px, 100%);
   text-align: center;
 }
 
@@ -450,8 +450,8 @@ body {
 
 .product-faq__figure {
   position: relative;
-  max-width: min(920px, 100%);
-  margin: 0 auto;
+  max-width: min(1120px, 100%);
+  margin: 0 auto clamp(3.25rem, 9vw, 5.5rem);
   border-radius: var(--radius);
   overflow: visible;
 }
@@ -585,8 +585,8 @@ body {
 }
 
 .product-faq__education {
-  max-width: min(920px, 100%);
-  margin: clamp(2rem, 5vw, 2.75rem) auto 0;
+  max-width: min(1120px, 100%);
+  margin: 0 auto;
   padding: 0;
   border: none;
   border-radius: 0;
