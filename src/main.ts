@@ -1098,8 +1098,10 @@ function bindProductShotsCarousel(): void {
       if (w <= 0) return;
       const p = Math.round(scroller.scrollLeft / w);
       const logical = logicalFromPhysical(p);
-      const next = (logical + 1) % n;
-      scrollToPhysical(physicalFromLogical(next), "smooth");
+      /* From last real slide, scroll to trailing clone (left) so it loops; else next logical slide */
+      const targetPhysical =
+        p === n ? lastPhysical : physicalFromLogical((logical + 1) % n);
+      scrollToPhysical(targetPhysical, "smooth");
     }, PRODUCT_SHOTS_AUTO_MS);
   };
 
