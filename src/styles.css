@@ -1049,7 +1049,7 @@ body {
 .site-legal-footer__nav a {
   color: rgba(185, 185, 185, 0.92);
   text-decoration: none;
-  border-bottom: 1px solid rgba(120, 120, 120, 0.35);
+  border: none;
   padding: 0.25rem 0.2rem;
   display: inline-flex;
   align-items: center;
@@ -1060,13 +1060,12 @@ body {
   font-size: clamp(0.65rem, 1.75vw, 0.76rem);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .site-legal-footer__nav a:hover,
 .site-legal-footer__nav a:focus-visible {
   color: var(--gray-400);
-  border-bottom-color: rgba(176, 176, 176, 0.45);
   outline: none;
 }
 
