@@ -15,16 +15,6 @@ const MANUAL_PAGE_VER = "1";
 
 let manualPageFlip: PageFlip | null = null;
 
-const PRODUCT_SHOTS_AUTO_MS = 5000;
-let productShotsAutoTimer: ReturnType<typeof setInterval> | null = null;
-
-function clearProductShotsAuto(): void {
-  if (productShotsAutoTimer !== null) {
-    clearInterval(productShotsAutoTimer);
-    productShotsAutoTimer = null;
-  }
-}
-
 /** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
@@ -325,11 +315,12 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Product photos, auto-advancing. Use arrow keys to move."
+            aria-label="Product photos. Drag, swipe, or use arrow keys."
             tabindex="0"
           >
             <figure class="product-shot">
               <img
+                draggable="false"
                 src="${BASE_HREF}product-slide-01.png"
                 width="1024"
                 height="819"
@@ -339,6 +330,7 @@ function homeHtml(): string {
             </figure>
             <figure class="product-shot">
               <img
+                draggable="false"
                 src="${BASE_HREF}product-slide-02.png"
                 width="1024"
                 height="819"
@@ -348,6 +340,7 @@ function homeHtml(): string {
             </figure>
             <figure class="product-shot">
               <img
+                draggable="false"
                 src="${BASE_HREF}product-slide-03.png"
                 width="1024"
                 height="819"
@@ -357,6 +350,7 @@ function homeHtml(): string {
             </figure>
             <figure class="product-shot">
               <img
+                draggable="false"
                 src="${BASE_HREF}product-slide-04.png"
                 width="1024"
                 height="819"
@@ -364,6 +358,12 @@ function homeHtml(): string {
                 decoding="async"
               />
             </figure>
+          </div>
+          <div class="product-shots-dots" id="product-shots-dots" role="tablist" aria-label="Choose photo">
+            <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 4" data-slide="0" id="product-dot-0"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 4" data-slide="1" id="product-dot-1"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 3 of 4" data-slide="2" id="product-dot-2"></button>
+            <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 4 of 4" data-slide="3" id="product-dot-3"></button>
           </div>
         </div>
 
@@ -567,7 +567,6 @@ function bindManual(): void {
 }
 
 function render(): void {
-  clearProductShotsAuto();
   closePdfManualModal();
   destroyManualPageFlip();
   removeManualEndTap();
@@ -647,10 +646,9 @@ function bindProductFaq(): void {
 
 function bindProductShotsCarousel(): void {
   const scroller = document.querySelector<HTMLDivElement>("#product-shots");
+  const dots = document.querySelectorAll<HTMLButtonElement>("#product-shots-dots .product-shots-dot");
   const slides = scroller?.querySelectorAll<HTMLElement>(".product-shot");
-  if (!scroller || !slides?.length) return;
-
-  let pauseAuto = false;
+  if (!scroller || !slides?.length || dots.length !== slides.length) return;
 
   const slideIndex = (): number => {
     const w = scroller.clientWidth;
@@ -664,26 +662,26 @@ function bindProductShotsCarousel(): void {
     scroller.scrollTo({ left: slide.offsetLeft, behavior });
   };
 
-  const advanceAuto = (): void => {
-    if (pauseAuto || document.visibilityState !== "visible") return;
-    const idx = slideIndex();
-    const next = (idx + 1) % slides.length;
-    goToIndex(next, "smooth");
+  const syncDots = (): void => {
+    const w = scroller.clientWidth;
+    if (w <= 0) return;
+    const idx = Math.min(slides.length - 1, Math.round(scroller.scrollLeft / w));
+    dots.forEach((dot, i) => {
+      const on = i === idx;
+      dot.classList.toggle("is-active", on);
+      dot.setAttribute("aria-selected", on ? "true" : "false");
+    });
   };
 
-  productShotsAutoTimer = setInterval(advanceAuto, PRODUCT_SHOTS_AUTO_MS);
+  scroller.addEventListener("scroll", syncDots, { passive: true });
+  syncDots();
 
-  scroller.addEventListener("mouseenter", () => {
-    pauseAuto = true;
-  });
-  scroller.addEventListener("mouseleave", () => {
-    pauseAuto = false;
-  });
-  scroller.addEventListener("focusin", () => {
-    pauseAuto = true;
-  });
-  scroller.addEventListener("focusout", () => {
-    pauseAuto = false;
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      const slide = slides[i];
+      if (!slide) return;
+      scroller.scrollTo({ left: slide.offsetLeft, behavior: "smooth" });
+    });
   });
 
   scroller.addEventListener("keydown", (e) => {
@@ -693,6 +691,43 @@ function bindProductShotsCarousel(): void {
     const next =
       e.key === "ArrowRight" ? Math.min(slides.length - 1, idx + 1) : Math.max(0, idx - 1);
     goToIndex(next, "smooth");
+  });
+
+  /* Drag with mouse / trackpad to scroll horizontally (desktop) */
+  let dragPointerId: number | null = null;
+  let dragStartX = 0;
+  let scrollStart = 0;
+
+  const onPointerMove = (e: PointerEvent): void => {
+    if (dragPointerId !== e.pointerId) return;
+    scroller.scrollLeft = scrollStart - (e.clientX - dragStartX);
+  };
+
+  const endDrag = (e: PointerEvent): void => {
+    if (dragPointerId !== e.pointerId) return;
+    dragPointerId = null;
+    scroller.classList.remove("product-shots--dragging");
+    try {
+      scroller.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+    scroller.removeEventListener("pointermove", onPointerMove);
+    scroller.removeEventListener("pointerup", endDrag);
+    scroller.removeEventListener("pointercancel", endDrag);
+  };
+
+  scroller.addEventListener("pointerdown", (e: PointerEvent) => {
+    if (e.pointerType === "touch") return;
+    if (e.button !== 0) return;
+    dragPointerId = e.pointerId;
+    dragStartX = e.clientX;
+    scrollStart = scroller.scrollLeft;
+    scroller.classList.add("product-shots--dragging");
+    scroller.setPointerCapture(e.pointerId);
+    scroller.addEventListener("pointermove", onPointerMove);
+    scroller.addEventListener("pointerup", endDrag);
+    scroller.addEventListener("pointercancel", endDrag);
   });
 }
 
