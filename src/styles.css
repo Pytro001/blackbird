@@ -549,6 +549,80 @@ body {
   }
 }
 
+.product-faq__education {
+  max-width: min(920px, 100%);
+  margin: clamp(2rem, 5vw, 2.75rem) auto 0;
+  padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1rem, 2.5vw, 1.35rem) clamp(1.35rem, 3vw, 1.6rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.product-faq__edu-title {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1rem, 2.6vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(245, 245, 245, 0.95);
+}
+
+.product-faq__edu-lead {
+  margin: 0 0 1.25rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--gray-400);
+}
+
+.product-faq__edu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2.5vw, 1.25rem);
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .product-faq__edu-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.product-faq__edu-card {
+  margin: 0;
+  padding: 1rem 1.05rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.35);
+}
+
+.product-faq__edu-sub {
+  margin: 0 0 0.5rem;
+  font-size: clamp(0.88rem, 2.2vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--orange);
+}
+
+.product-faq__edu-text {
+  margin: 0;
+  font-size: clamp(0.82rem, 2.1vw, 0.9rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--gray-400);
+}
+
+.product-faq__edu-stats {
+  margin: 0;
+  padding-top: 0.25rem;
+  font-size: clamp(0.82rem, 2.1vw, 0.9rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(176, 176, 176, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .product-name {
   margin: 0;
   font-size: clamp(1.05rem, 3vw, 1.28rem);

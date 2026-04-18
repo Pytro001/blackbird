@@ -263,18 +263,41 @@ function productFaqSectionHtml(): string {
 
   return `
     <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
-      <h2 id="product-faq-heading" class="product-faq__heading">Product questions</h2>
+      <h2 id="product-faq-heading" class="product-faq__heading">Q&amp;A</h2>
       <div class="product-faq__figure">
         <img
           class="product-faq__img"
           src="${BASE_HREF}faq-four-bottles.png"
           width="1024"
-          height="555"
+          height="576"
           alt="BLACKBIRD set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
           decoding="async"
           loading="lazy"
         />
         <div class="product-faq__spots">${spots}</div>
+      </div>
+      <div class="product-faq__education">
+        <h3 class="product-faq__edu-title">Education</h3>
+        <p class="product-faq__edu-lead">
+          There are two types of dandruff: oily and dry. You need to find out which one you have to select the right products.
+        </p>
+        <div class="product-faq__edu-grid">
+          <div class="product-faq__edu-card">
+            <h4 class="product-faq__edu-sub">Oily flakes</h4>
+            <p class="product-faq__edu-text">
+              These are yellowish, greasy, and sticky. They stay on your scalp and hair. Your scalp makes too much oil and yeast grows too much.
+            </p>
+          </div>
+          <div class="product-faq__edu-card">
+            <h4 class="product-faq__edu-sub">Dry flakes</h4>
+            <p class="product-faq__edu-text">
+              These are small white flakes that fall easily. Your scalp feels tight and itchy. Your scalp does not make enough oil and becomes too dry.
+            </p>
+          </div>
+        </div>
+        <p class="product-faq__edu-stats">
+          Roughly 50% of adults experience dandruff at some point in their lives. In other words, one out of every two people you meet has likely dealt with it. Dandruff tends to appear after puberty and can persist throughout adulthood, often peaking between the ages of 20 and 40. The condition is slightly more common in men.
+        </p>
       </div>
     </section>`;
 }
