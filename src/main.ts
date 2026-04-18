@@ -1,3 +1,5 @@
+import { PageFlip } from "page-flip";
+
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
   if (!(el instanceof HTMLDivElement)) throw new Error("#app missing");
@@ -8,6 +10,11 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+const MANUAL_PAGE_COUNT = 7;
+const MANUAL_PAGE_VER = "1";
+
+let manualPageFlip: PageFlip | null = null;
+
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
 const PRODUCT_PRICE_EUR = 69.99;
 const productPriceDisplay = new Intl.NumberFormat("de-DE", {
@@ -15,9 +22,11 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-type View = "landing" | "product" | "thanks";
+type View = "landing" | "product" | "thanks" | "manual";
 
-const DEFAULT_WA_MESSAGE = "Hi";
+/** Dermatologist Analysis WhatsApp (number + prefilled message). */
+const WHATSAPP_CHAT_URL =
+  "https://wa.me/4917644429908?text=Hi%2C%20this%20is%20the%20Dermatologist%20Analysis%20WhatsApp%20channel.%0AHere%20you%20can%20get%20an%20instant%20check%20to%20find%20out%20if%20you%20have%20oily%20or%20dry%20dandruff%2C%20so%20you%20get%20the%20right%20product%20for%20your%20scalp.%20Please%20send%203%20clear%20pictures%20of%20your%20head%20and%20scalp%20where%20the%20dandruff%20is%20visible%20in%20this%20chat.%0AYou%E2%80%99ll%20receive%20an%20immediate%20analysis%20from%20a%20dermatology-trained%20Teamember%20telling%20you%20exactly%20what%20type%20of%20dandruff%20you%20have.%0AFeel%20free%20to%20ask%20any%20other%20questions%20here%20too%20-%20just%20like%20you%20would%20to%20a%20friend.%0ABest%2C%20Your%20Blackbird%20Team";
 
 function escapeHtml(s: string): string {
   return s
@@ -27,33 +36,43 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function whatsappPrefillText(): string {
-  return (import.meta.env.VITE_WHATSAPP_MESSAGE?.trim() || DEFAULT_WA_MESSAGE).trim();
+/** Next calendar day at 12:45 local (24h express ETA display). */
+function latestDeliveryDate(now: Date = new Date()): Date {
+  const d = new Date(now);
+  d.setDate(d.getDate() + 1);
+  d.setHours(12, 45, 0, 0);
+  return d;
 }
 
-function whatsappDigits(): string {
-  return (import.meta.env.VITE_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+function formatShippingEtaLine(delivery: Date): string {
+  const datePart = new Intl.DateTimeFormat("de-DE", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(delivery);
+  return `Späteste Ankunft: ${datePart}, 12:45 Uhr`;
 }
 
-/** Full wa.me URL, or null if the number is not configured. */
-function whatsappChatUrl(): string | null {
-  const digits = whatsappDigits();
-  if (!digits) return null;
-  return `https://wa.me/${digits}?text=${encodeURIComponent(whatsappPrefillText())}`;
+function updateProductShippingEta(): void {
+  const eta = formatShippingEtaLine(latestDeliveryDate());
+  const shippingEta = document.querySelector("#product-shipping-eta");
+  const waEta = document.querySelector("#product-wa-shipping-eta");
+  if (shippingEta) shippingEta.textContent = eta;
+  if (waEta) waEta.textContent = eta;
 }
 
 function whatsAppBlockHtml(): string {
-  const url = whatsappChatUrl();
-  const cta = url
-    ? `<a class="product-wa-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`
-    : `<span class="product-wa-link product-wa-link--disabled">WhatsApp</span>`;
+  const cta = `<a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`;
 
   return `
-            <div class="product-wa" id="hair-analysis">
+            <div class="product-wa-block" id="hair-analysis">
+              <p class="product-wa-headline">Get a free Dermatologist Check</p>
+              <p class="product-wa-desc">Message us on WhatsApp to start.</p>
+              <p class="product-wa-shipping-eta" id="product-wa-shipping-eta" aria-live="polite"></p>
               <p class="product-wa-line">${cta}</p>
               <div class="product-wa-qr">
                 <img
-                  src="${BASE_HREF}whatsapp-qr.jpg"
+                  src="${BASE_HREF}whatsapp-qr.jpg?v=2"
                   width="1024"
                   height="1024"
                   alt=""
@@ -79,6 +98,7 @@ function pathToView(): View {
   const path = getAppPath();
   if (path === "/product") return "product";
   if (path === "/thanks") return "thanks";
+  if (path === "/how-to-use") return "manual";
   return "landing";
 }
 
@@ -143,11 +163,28 @@ function homeHtml(): string {
             <button type="button" class="product-shots-dot is-active" role="tab" aria-selected="true" aria-label="Photo 1 of 2" data-slide="0" id="product-dot-0"></button>
             <button type="button" class="product-shots-dot" role="tab" aria-selected="false" aria-label="Photo 2 of 2" data-slide="1" id="product-dot-1"></button>
           </div>
+          <div class="product-shots-note" role="note">
+            <p class="product-shots-note__line">
+              These products are for <strong>dry-flake</strong> dandruff and help reduce dry flakes.
+            </p>
+            <p class="product-shots-note__line">
+              Please be sure whether your flakes are <strong>dry or oily</strong> before you buy. This line is
+              not for oily-flake dandruff and can worsen problems on oily scalps. Not sure?
+              <a href="#hair-analysis" class="product-shots-note__link">WhatsApp</a> us first.
+            </p>
+          </div>
         </div>
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
+            <div class="product-shipping">
+              <p class="product-shipping__lead" id="product-shipping-lead">24h Expressversand</p>
+              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+            </div>
+            <p class="product-manual-line">
+              <a class="product-wa-link" href="${BASE_HREF}how-to-use">How to use</a>
+            </p>
             <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
             <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
             ${whatsAppBlockHtml()}
@@ -171,7 +208,168 @@ function thanksHtml(): string {
   `;
 }
 
+function manualPageUrls(): string[] {
+  return Array.from({ length: MANUAL_PAGE_COUNT }, (_, i) => {
+    const n = String(i + 1).padStart(2, "0");
+    return `${BASE_HREF}manual/page-${n}.svg?v=${MANUAL_PAGE_VER}`;
+  });
+}
+
+function destroyManualPageFlip(): void {
+  if (!manualPageFlip) return;
+  try {
+    manualPageFlip.destroy();
+  } catch {
+    /* stale */
+  }
+  manualPageFlip = null;
+}
+
+function manualHtml(): string {
+  return `
+    <div class="manual-page">
+      <header class="manual-header">
+        <a href="${BASE_HREF}" class="manual-back">Back</a>
+      </header>
+      <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
+        <div id="manual-book-host" class="manual-book-host"></div>
+        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="Start using the product guide">
+          <img class="manual-intro__preview" src="${BASE_HREF}manual/page-01.svg?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
+          <div class="manual-intro__dim" aria-hidden="true"></div>
+          <div class="manual-intro__copy">
+            <h2 class="manual-intro__title">How to use the product</h2>
+            <p class="manual-intro__hint">Click here to start</p>
+          </div>
+        </div>
+        <div class="manual-end" id="manual-end" hidden>
+          <p class="manual-end__lede">Ready to try blackbird®?</p>
+          <a class="manual-end__cta" href="${BASE_HREF}#product">Get your set</a>
+          <button type="button" class="manual-end__again btn-pill" id="manual-restart">Start again</button>
+        </div>
+        <div class="manual-progress" id="manual-progress" aria-live="polite" hidden>1 / 7</div>
+      </div>
+    </div>`;
+}
+
+function updateManualProgressDisplay(idx: number): void {
+  const progress = document.getElementById("manual-progress");
+  if (progress) progress.textContent = `${idx + 1} / ${MANUAL_PAGE_COUNT}`;
+}
+
+let manualEndTapInstalled = false;
+
+function removeManualEndTap(): void {
+  document.querySelector(".manual-end-tap")?.remove();
+  manualEndTapInstalled = false;
+}
+
+function installManualEndTapOnce(): void {
+  if (manualEndTapInstalled) return;
+  manualEndTapInstalled = true;
+  const stage = document.getElementById("manual-stage");
+  if (!stage) return;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "manual-end-tap";
+  btn.setAttribute("aria-label", "Continue");
+  stage.appendChild(btn);
+  btn.addEventListener(
+    "click",
+    () => {
+      document.getElementById("manual-end")?.removeAttribute("hidden");
+      btn.remove();
+      manualEndTapInstalled = false;
+    },
+    { once: true }
+  );
+}
+
+function startManualBook(): void {
+  const intro = document.getElementById("manual-intro");
+  const host = document.getElementById("manual-book-host");
+  const progress = document.getElementById("manual-progress");
+  if (!host || manualPageFlip) return;
+
+  intro?.classList.add("manual-intro--hide");
+  setTimeout(() => intro?.remove(), 380);
+
+  const pageFlip = new PageFlip(host, {
+    width: 450,
+    height: 600,
+    size: "stretch",
+    minWidth: 240,
+    maxWidth: 560,
+    minHeight: 320,
+    maxHeight: 720,
+    flippingTime: 680,
+    maxShadowOpacity: 0.45,
+    showCover: false,
+    mobileScrollSupport: true,
+    usePortrait: true,
+    drawShadow: true,
+    startPage: 0,
+    clickEventForward: false,
+    showPageCorners: false,
+  });
+
+  manualPageFlip = pageFlip;
+  pageFlip.loadFromImages(manualPageUrls());
+
+  pageFlip.on("init", () => {
+    progress?.removeAttribute("hidden");
+    updateManualProgressDisplay(pageFlip.getCurrentPageIndex());
+  });
+
+  pageFlip.on("flip", () => {
+    const idx = pageFlip.getCurrentPageIndex();
+    removeManualEndTap();
+    updateManualProgressDisplay(idx);
+    if (idx === MANUAL_PAGE_COUNT - 1) installManualEndTapOnce();
+  });
+}
+
+function manualStageKeydown(e: KeyboardEvent): void {
+  if (!manualPageFlip) return;
+  if (document.getElementById("manual-end")?.hasAttribute("hidden") === false) return;
+  if (e.key === "ArrowRight" || e.key === " ") {
+    e.preventDefault();
+    manualPageFlip.flipNext("top");
+  } else if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    manualPageFlip.flipPrev("top");
+  }
+}
+
+function bindManual(): void {
+  const intro = document.getElementById("manual-intro");
+  const go = (): void => {
+    intro?.removeEventListener("click", go);
+    intro?.removeEventListener("keydown", onIntroKey);
+    startManualBook();
+  };
+  const onIntroKey = (e: KeyboardEvent): void => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      go();
+    }
+  };
+  intro?.addEventListener("click", go);
+  intro?.addEventListener("keydown", onIntroKey);
+
+  document.getElementById("manual-restart")?.addEventListener("click", () => {
+    destroyManualPageFlip();
+    removeManualEndTap();
+    history.replaceState(null, "", `${BASE_HREF}how-to-use`);
+    root.innerHTML = manualHtml();
+    bindManual();
+  });
+
+  document.getElementById("manual-stage")?.addEventListener("keydown", manualStageKeydown);
+}
+
 function render(): void {
+  destroyManualPageFlip();
+  removeManualEndTap();
   const path = getAppPath();
   if (path === "/email") {
     history.replaceState(null, "", `${BASE_HREF}#product`);
@@ -190,6 +388,9 @@ function render(): void {
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     }
+  } else if (view === "manual") {
+    root.innerHTML = manualHtml();
+    bindManual();
   } else if (view === "thanks") root.innerHTML = thanksHtml();
 
   if (view === "thanks") bindThanks();
@@ -208,6 +409,7 @@ function bindProduct(): void {
   });
 
   bindProductShotsCarousel();
+  updateProductShippingEta();
 }
 
 function bindProductShotsCarousel(): void {

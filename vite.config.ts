@@ -18,7 +18,9 @@ function spaFallback(): {
           url === "/email" ||
           url.startsWith("/email/") ||
           url === "/thanks" ||
-          url.startsWith("/thanks/");
+          url.startsWith("/thanks/") ||
+          url === "/how-to-use" ||
+          url.startsWith("/how-to-use/");
         if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;
@@ -35,7 +37,9 @@ function spaFallback(): {
           url === "/email" ||
           url.startsWith("/email/") ||
           url === "/thanks" ||
-          url.startsWith("/thanks/");
+          url.startsWith("/thanks/") ||
+          url === "/how-to-use" ||
+          url.startsWith("/how-to-use/");
         if (spa) {
           const q = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
           req.url = "/" + q;
