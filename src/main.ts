@@ -116,10 +116,6 @@ function closePdfManualModal(immediate = false): void {
         requestAnimationFrame(() => {
           const productEl = document.getElementById("product");
           if (productEl) {
-            const path = getAppPath();
-            if (path === "/" || path === "/product") {
-              history.replaceState(null, "", `${BASE_HREF}#product`);
-            }
             productEl.scrollIntoView({ behavior: "auto", block: "start" });
           } else {
             window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
@@ -767,7 +763,7 @@ function manualHtml(): string {
         </div>
         <div class="manual-end" id="manual-end" hidden>
           <p class="manual-end__lede">Ready to try blackbird®?</p>
-          <a class="manual-end__cta" href="${BASE_HREF}#product">Get your set</a>
+          <a class="manual-end__cta" href="${BASE_HREF}product">Get your set</a>
           <button type="button" class="manual-end__again btn-pill" id="manual-restart">Start again</button>
         </div>
         <div class="manual-progress" id="manual-progress" aria-live="polite" hidden>1 / 7</div>
@@ -909,8 +905,9 @@ function render(): void {
   destroyManualPageFlip();
   removeManualEndTap();
   const path = getAppPath();
-  if (path === "/email") {
-    history.replaceState(null, "", `${BASE_HREF}#product`);
+  const wasEmailPath = path === "/email";
+  if (wasEmailPath) {
+    history.replaceState(null, "", BASE_HREF);
   } else if (path === "/admin" || path.startsWith("/admin/")) {
     history.replaceState(null, "", BASE_HREF);
   }
@@ -923,7 +920,7 @@ function render(): void {
     bindLanding();
     bindProduct();
     const scrollProduct =
-      view === "product" || (view === "landing" && location.hash === "#product");
+      view === "product" || (view === "landing" && wasEmailPath);
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     } else if (
@@ -953,7 +950,6 @@ function render(): void {
 
 function bindLanding(): void {
   document.querySelector("#cta-now")?.addEventListener("click", () => {
-    history.pushState(null, "", `${BASE_HREF}#product`);
     scrollToProduct("smooth");
   });
 }

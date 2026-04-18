@@ -442,7 +442,8 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: rgba(245, 245, 245, 0.9);
-  background: rgba(8, 8, 8, 0.78);
+  background: rgba(26, 26, 26, 0.55);
+  backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius);
   cursor: pointer;
@@ -451,13 +452,13 @@ body {
 }
 
 .btn-howto:hover {
-  background: rgba(18, 18, 18, 0.92);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(34, 34, 34, 0.62);
+  border-color: rgba(255, 255, 255, 0.14);
   color: rgba(252, 252, 252, 0.95);
 }
 
 .btn-howto:focus-visible {
-  outline: 2px solid rgba(229, 142, 53, 0.55);
+  outline: 2px solid rgba(255, 255, 255, 0.35);
   outline-offset: 2px;
 }
 
@@ -579,7 +580,7 @@ body {
 .product-faq {
   padding: max(clamp(2.5rem, 8vw, 4.5rem), env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
-    max(clamp(1.25rem, 4vw, 2rem), env(safe-area-inset-bottom))
+    max(clamp(0.85rem, 2.8vw, 1.5rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
   scroll-snap-align: start;
@@ -753,9 +754,9 @@ body {
 .product-education {
   max-width: min(680px, 100%);
   margin: 0 auto;
-  padding: max(clamp(1.1rem, 3.5vw, 1.85rem), env(safe-area-inset-top))
+  padding: max(clamp(0.35rem, 1.2vw, 0.7rem), env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
-    max(clamp(4.25rem, 13vw, 7.5rem), env(safe-area-inset-bottom))
+    max(clamp(6.75rem, 20vw, 11.5rem), env(safe-area-inset-bottom))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
   scroll-snap-align: start;
@@ -959,7 +960,7 @@ body {
 /* —— Site legal footer (landing): two lines, all visible —— */
 .site-legal-footer {
   margin: 0 auto;
-  padding: clamp(1rem, 3vw, 1.5rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+  padding: clamp(0.65rem, 2vw, 1rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
     max(clamp(2.75rem, 7vw, 4rem), env(safe-area-inset-bottom)) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   max-width: min(960px, 100%);
   display: flex;
