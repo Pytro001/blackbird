@@ -462,7 +462,7 @@ body {
   outline-offset: 2px;
 }
 
-/* Full-screen PDF viewer overlay (no site chrome; backdrop tap closes) */
+/* How-to manual: darkened site, white pages only, horizontal swipe; backdrop tap closes */
 .pdf-modal {
   position: fixed;
   inset: 0;
@@ -485,9 +485,9 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-  background: rgba(0, 0, 0, 0.76);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.28s ease;
@@ -501,16 +501,14 @@ body {
   position: relative;
   z-index: 1;
   width: min(96vw, 920px);
-  height: min(90dvh, 1200px);
-  max-height: min(90dvh, 1200px);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow:
-    0 28px 72px rgba(0, 0, 0, 0.58),
-    0 0 0 1px rgba(229, 142, 53, 0.22);
-  background: #111;
-  border: 1px solid rgba(229, 142, 53, 0.22);
-  transform: translateY(16px) scale(0.97);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  transform: translateY(14px) scale(0.98);
   opacity: 0;
   transition:
     transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
@@ -522,18 +520,79 @@ body {
   opacity: 1;
 }
 
+.pdf-modal__strip {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  max-height: min(90dvh, 1200px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  outline: none;
+  scrollbar-width: thin;
+}
+
+.pdf-modal__strip:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.pdf-modal__strip:focus-visible {
+  outline: 2px solid rgba(229, 142, 53, 0.45);
+  outline-offset: 3px;
+}
+
+.pdf-modal__strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pdf-modal__strip::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+.pdf-modal__page {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: min(0.5rem, 2vw);
+  background: #fff;
+}
+
+.pdf-modal__page-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(86dvh, 1120px);
+  object-fit: contain;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 .pdf-modal__close {
   position: absolute;
-  top: max(0.45rem, env(safe-area-inset-top));
-  right: max(0.45rem, env(safe-area-inset-right));
-  z-index: 3;
+  top: max(0.35rem, env(safe-area-inset-top));
+  right: max(0.35rem, env(safe-area-inset-right));
+  z-index: 4;
   width: 40px;
   height: 40px;
   padding: 0;
   border: none;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  color: rgba(245, 245, 245, 0.92);
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(245, 245, 245, 0.95);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -548,21 +607,14 @@ body {
 
 .pdf-modal__close:hover,
 .pdf-modal__close:focus-visible {
-  background: rgba(229, 142, 53, 0.28);
+  background: rgba(0, 0, 0, 0.68);
   color: var(--white);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(229, 142, 53, 0.35);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
 }
 
 .pdf-modal__close:active {
   transform: scale(0.96);
-}
-
-.pdf-modal__iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -573,6 +625,10 @@ body {
 
   .pdf-modal__sheet {
     transform: none !important;
+  }
+
+  .pdf-modal__strip {
+    scroll-behavior: auto;
   }
 }
 
