@@ -40,6 +40,29 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Next calendar day at 12:45 local (24h express ETA display). */
+function latestDeliveryDate(now: Date = new Date()): Date {
+  const d = new Date(now);
+  d.setDate(d.getDate() + 1);
+  d.setHours(12, 45, 0, 0);
+  return d;
+}
+
+function formatShippingEtaLine(delivery: Date): string {
+  const datePart = new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(delivery);
+  return `Arrival: ${datePart}, 12:45`;
+}
+
+function updateProductShippingEta(): void {
+  const eta = formatShippingEtaLine(latestDeliveryDate());
+  const el = document.querySelector("#product-shipping-eta");
+  if (el) el.textContent = eta;
+}
+
 function whatsAppBlockHtml(): string {
   return `
             <div class="product-wa-block" id="hair-analysis">
@@ -154,6 +177,7 @@ function homeHtml(): string {
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
               <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
+              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <button type="button" class="btn-buy" id="buy-btn">Buy now</button>
             <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
@@ -383,6 +407,7 @@ function bindProduct(): void {
   });
 
   bindProductShotsCarousel();
+  updateProductShippingEta();
 }
 
 function bindProductShotsCarousel(): void {
