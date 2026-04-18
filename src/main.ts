@@ -105,13 +105,14 @@ function openPdfManualModal(): void {
   pdfModalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
   strip.scrollLeft = 0;
   modal.hidden = false;
-  modal.classList.remove("pdf-modal--open");
+  modal.classList.add("pdf-modal--open");
   document.body.style.overflow = "hidden";
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      modal.classList.add("pdf-modal--open");
+    try {
       strip.focus({ preventScroll: true });
-    });
+    } catch {
+      /* focus is optional; must not block opening */
+    }
   });
 }
 

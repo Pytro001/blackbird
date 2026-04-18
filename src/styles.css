@@ -414,10 +414,10 @@ body {
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.94);
-  background: rgba(255, 255, 255, 0.14);
+  color: rgba(252, 252, 252, 0.95);
+  background: rgba(42, 42, 42, 0.68);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   cursor: pointer;
   touch-action: manipulation;
@@ -425,13 +425,13 @@ body {
 }
 
 .btn-howto:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(52, 52, 52, 0.78);
+  border-color: rgba(255, 255, 255, 0.22);
   color: #fff;
 }
 
 .btn-howto:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline: 2px solid rgba(255, 255, 255, 0.38);
   outline-offset: 2px;
 }
 
