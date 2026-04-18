@@ -183,8 +183,8 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLabel: "What is this?",
     answer:
       "Daily Wash is your flake-free shampoo step: gentle cleansing formulated to support a healthy scalp routine.",
-    pinTop: "28%",
-    pinLeft: "17%",
+    pinTop: "20%",
+    pinLeft: "44%",
     panel: "below",
   },
   {
@@ -214,7 +214,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     answer:
       "Usage varies by hair length and routine; most people plan for several weeks per bottle when used as directed.",
     pinTop: "46%",
-    pinLeft: "87%",
+    pinLeft: "78%",
     panel: "above",
   },
 ];
