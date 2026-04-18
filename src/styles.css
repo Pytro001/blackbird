@@ -956,12 +956,16 @@ body {
   opacity: 0.75;
 }
 
-/* —— Site legal footer (landing) —— */
+/* —— Site legal footer (landing): two lines, all visible —— */
 .site-legal-footer {
   margin: 0 auto;
   padding: clamp(1rem, 3vw, 1.5rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
     max(clamp(2.75rem, 7vw, 4rem), env(safe-area-inset-bottom)) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   max-width: min(960px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.65rem, 2vw, 0.9rem);
   text-align: center;
   scroll-snap-align: start;
   scroll-snap-stop: normal;
@@ -972,37 +976,38 @@ body {
   outline: none;
 }
 
-.site-legal-footer__row {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.35rem;
+.site-legal-footer__line {
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  font-size: clamp(0.58rem, 1.35vw, 0.7rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  row-gap: 0.35rem;
+  column-gap: 0.35rem;
+  font-size: clamp(0.68rem, 1.85vw, 0.8rem);
   font-weight: 400;
-  line-height: 1.45;
-  color: rgba(175, 175, 175, 0.9);
+  line-height: 1.5;
+  color: rgba(175, 175, 175, 0.92);
   letter-spacing: 0.02em;
+}
+
+.site-legal-footer__line--meta {
   text-transform: none;
 }
 
 .site-legal-footer__chunk {
-  flex: 0 0 auto;
-  white-space: nowrap;
+  display: inline;
+  max-width: 100%;
 }
 
 .site-legal-footer__chunk a {
   color: rgba(195, 195, 195, 0.95);
   text-decoration: underline;
-  text-underline-offset: 0.12em;
-  text-decoration-color: rgba(140, 140, 140, 0.4);
+  text-underline-offset: 0.14em;
+  text-decoration-color: rgba(140, 140, 140, 0.45);
+  word-break: break-word;
 }
 
 .site-legal-footer__chunk a:hover,
@@ -1012,28 +1017,23 @@ body {
 }
 
 .site-legal-footer__nav {
-  display: inline-flex;
-  flex: 0 0 auto;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 0.35rem;
   margin: 0;
   padding: 0;
-  font: inherit;
-  letter-spacing: 0.05em;
+  list-style: none;
 }
 
 .site-legal-footer__nav a {
   color: rgba(185, 185, 185, 0.92);
   text-decoration: none;
   border-bottom: 1px solid rgba(120, 120, 120, 0.35);
-  padding: 0.2rem 0.15rem;
-  white-space: nowrap;
+  padding: 0.25rem 0.2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
+  min-height: 40px;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: clamp(0.65rem, 1.75vw, 0.76rem);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: color 0.15s ease, border-color 0.15s ease;
@@ -1047,11 +1047,11 @@ body {
 }
 
 .site-legal-footer__sep {
-  flex: 0 0 auto;
-  color: rgba(110, 110, 110, 0.75);
+  color: rgba(110, 110, 110, 0.8);
   user-select: none;
   font-weight: 400;
   letter-spacing: 0;
+  flex: 0 0 auto;
 }
 
 /* —— Legal subpages —— */

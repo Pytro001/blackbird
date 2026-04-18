@@ -529,24 +529,23 @@ function siteLegalFooterHtml(): string {
   const w = `${BASE_HREF}widerruf`;
   return `
     <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
-      <div class="site-legal-footer__row">
+      <div class="site-legal-footer__line site-legal-footer__line--meta">
         <span class="site-legal-footer__chunk">HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden</span>
         <span class="site-legal-footer__sep" aria-hidden="true">·</span>
         <span class="site-legal-footer__chunk">
           E-Mail:
           <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
         </span>
-        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-        <nav class="site-legal-footer__nav" aria-label="Rechtliche Hinweise">
-          <a href="${i}">Impressum</a>
-          <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-          <a href="${d}">Datenschutz</a>
-          <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-          <a href="${a}">AGB</a>
-          <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-          <a href="${w}">Widerruf</a>
-        </nav>
       </div>
+      <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="Rechtliche Hinweise">
+        <a href="${i}">Impressum</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${d}">Datenschutz</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${a}">AGB</a>
+        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
+        <a href="${w}">Widerruf</a>
+      </nav>
     </footer>`;
 }
 
