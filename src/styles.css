@@ -330,8 +330,12 @@ body {
   gap: 0.9rem;
 }
 
+/* No outer panel border: single ring on the button only */
 .product-panel--howto {
-  padding: 0.65rem 1rem 0.72rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
 }
 
 .btn-howto {
@@ -345,21 +349,20 @@ body {
   text-transform: uppercase;
   color: rgba(245, 245, 245, 0.92);
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--radius);
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
 }
 
-.btn-howto:hover,
+.btn-howto:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(245, 245, 245, 0.92);
+}
+
 .btn-howto:focus-visible {
-  background: rgba(229, 142, 53, 0.12);
-  border-color: rgba(229, 142, 53, 0.45);
-  color: var(--white);
-  outline: none;
+  outline: 2px solid rgba(229, 142, 53, 0.55);
+  outline-offset: 2px;
 }
 
 /* Full-screen PDF viewer overlay (no site chrome; backdrop tap closes) */
