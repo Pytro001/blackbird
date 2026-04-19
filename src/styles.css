@@ -751,7 +751,7 @@ body {
 
 .product-faq__pin-label {
   display: block;
-  max-width: 7.5rem;
+  white-space: nowrap;
 }
 
 .product-faq__panel {
