@@ -602,7 +602,7 @@ function siteLegalFooterHtml(): string {
   return `
     <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
       <div class="site-legal-footer__line site-legal-footer__line--meta">
-        <span class="site-legal-footer__chunk">HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden</span>
+        <span class="site-legal-footer__chunk">HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden</span>
         ${legalSupportFooterChunkHtml()}
       </div>
       <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="Rechtliche Hinweise">
