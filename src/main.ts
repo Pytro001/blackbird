@@ -42,14 +42,6 @@ const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
 
 let manualPageFlip: PageFlip | null = null;
 
-/** Product carousel: auto-advance forward (ms). */
-const PRODUCT_SHOTS_AUTO_MS = 3200;
-/** After user swipes or uses keys, resume auto-advance after this delay. */
-const PRODUCT_SHOTS_AUTO_RESUME_MS = 6500;
-
-let productShotsAutoTimer: number | undefined;
-let productShotsAutoResumeTimer: number | undefined;
-
 /** Scroll position before PDF modal body lock; restored on animated close. */
 let pdfModalScrollY = 0;
 let pdfModalBodyLocked = false;
@@ -399,20 +391,62 @@ function productFaqAnswerHtml(answer: string): string {
     .join("");
 }
 
-function productCarouselSlidesHtml(): string {
-  return PRODUCT_CAROUSEL_SLIDES.map(
-    (slide) => `
-            <figure class="product-shot">
+function productGalleryHtml(): string {
+  const n = PRODUCT_CAROUSEL_SLIDES.length;
+  const thumbs = PRODUCT_CAROUSEL_SLIDES.map((slide, i) => {
+    const src = publicAssetUrl(slide.file);
+    return `
+            <button
+              type="button"
+              class="product-gallery__thumb${i === 0 ? " is-active" : ""}"
+              data-gallery-index="${i}"
+              aria-label="${escapeHtml(`Product photo ${i + 1} of ${n}`)}"
+            >
               <img
-                draggable="false"
-                src="${publicAssetUrl(slide.file)}"
-                width="1024"
-                height="819"
-                alt="${escapeHtml(slide.alt)}"
+                src="${escapeHtml(src)}"
+                alt=""
+                width="80"
+                height="64"
                 decoding="async"
+                loading="${i === 0 ? "eager" : "lazy"}"
               />
-            </figure>`
-  ).join("");
+            </button>`;
+  }).join("");
+
+  const first = PRODUCT_CAROUSEL_SLIDES[0];
+  const firstSrc = publicAssetUrl(first.file);
+
+  return `
+        <div class="product-gallery" id="product-gallery">
+          <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
+          <div class="product-gallery__main">
+            <div
+              class="product-gallery__stage"
+              id="product-gallery-stage"
+              tabindex="0"
+              aria-label="Product photos. Use thumbnails or side arrows to change image."
+            >
+              <figure class="product-gallery__figure">
+                <img
+                  id="product-gallery-main-img"
+                  class="product-gallery__main-img"
+                  src="${escapeHtml(firstSrc)}"
+                  width="1024"
+                  height="819"
+                  alt="${escapeHtml(first.alt)}"
+                  decoding="async"
+                  fetchpriority="high"
+                />
+              </figure>
+            </div>
+            <button type="button" class="product-gallery__arrow product-gallery__arrow--prev" id="product-shots-prev" aria-label="Previous photo">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <button type="button" class="product-gallery__arrow product-gallery__arrow--next" id="product-shots-next" aria-label="Next photo">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+        </div>`;
 }
 
 function productFaqSectionHtml(): string {
@@ -518,24 +552,7 @@ function homeHtml(): string {
     <div class="page-product" id="product">
       <main class="product-layout">
         <div class="product-shots-wrap">
-          <div
-            class="product-shots"
-            id="product-shots"
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Four product photos. Click a photo for next, or use the arrows; swipe or arrow keys also work."
-            tabindex="0"
-          >
-            ${productCarouselSlidesHtml()}
-          </div>
-          <div class="product-shots-nav" role="group" aria-label="Product photo navigation">
-            <button type="button" class="product-shots-nav__btn" id="product-shots-prev" aria-label="Previous photo">
-              <span aria-hidden="true">‹</span>
-            </button>
-            <button type="button" class="product-shots-nav__btn" id="product-shots-next" aria-label="Next photo">
-              <span aria-hidden="true">›</span>
-            </button>
-          </div>
+          ${productGalleryHtml()}
         </div>
 
         <aside class="product-side" aria-label="Product details">
@@ -963,10 +980,6 @@ function setDocumentLang(view: View): void {
 }
 
 function render(): void {
-  window.clearInterval(productShotsAutoTimer);
-  window.clearTimeout(productShotsAutoResumeTimer);
-  productShotsAutoTimer = undefined;
-  productShotsAutoResumeTimer = undefined;
   window.clearInterval(shippingEtaRefreshTimer);
   shippingEtaRefreshTimer = undefined;
   closePdfManualModal(true);
@@ -1060,169 +1073,49 @@ function bindProductFaq(): void {
 }
 
 function bindProductShotsCarousel(): void {
-  window.clearInterval(productShotsAutoTimer);
-  window.clearTimeout(productShotsAutoResumeTimer);
-  productShotsAutoTimer = undefined;
-  productShotsAutoResumeTimer = undefined;
+  const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
+  const stage = document.getElementById("product-gallery-stage");
+  const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
+  const prevBtn = document.querySelector<HTMLButtonElement>("#product-shots-prev");
+  const nextBtn = document.querySelector<HTMLButtonElement>("#product-shots-next");
+  if (!mainImg || thumbs.length < 1) return;
 
-  const scroller = document.querySelector<HTMLDivElement>("#product-shots");
-  if (!scroller) return;
+  const n = PRODUCT_CAROUSEL_SLIDES.length;
+  let index = 0;
 
-  /** Only real slides (no infinite-scroll clones) — exactly PRODUCT_CAROUSEL_SLIDES.length. */
-  const slides = Array.from(scroller.querySelectorAll<HTMLElement>(".product-shot"));
-  if (slides.length < 1) return;
-
-  const n = slides.length;
-
-  const currentIndex = (): number => {
-    const w = scroller.clientWidth;
-    if (w <= 0) return 0;
-    return Math.min(Math.max(0, Math.round(scroller.scrollLeft / w)), n - 1);
+  const show = (i: number): void => {
+    index = ((i % n) + n) % n;
+    const slide = PRODUCT_CAROUSEL_SLIDES[index];
+    mainImg.src = publicAssetUrl(slide.file);
+    mainImg.alt = slide.alt;
+    thumbs.forEach((btn, j) => {
+      btn.classList.toggle("is-active", j === index);
+    });
   };
 
-  const scrollToIndex = (index: number, behavior: ScrollBehavior): void => {
-    const slide = slides[index];
-    if (!slide) return;
-    scroller.scrollTo({ left: slide.offsetLeft, behavior });
-  };
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const startAutoAdvance = (): void => {
-    window.clearInterval(productShotsAutoTimer);
-    productShotsAutoTimer = undefined;
-    window.clearTimeout(productShotsAutoResumeTimer);
-    if (prefersReducedMotion || document.hidden) return;
-    productShotsAutoTimer = window.setInterval(() => {
-      if (document.hidden) return;
-      if (scroller.clientWidth <= 0) return;
-      const p = currentIndex();
-      const next = (p + 1) % n;
-      const wrap = next === 0 && p === n - 1;
-      scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
-    }, PRODUCT_SHOTS_AUTO_MS);
-  };
-
-  const pauseAutoForUser = (): void => {
-    window.clearInterval(productShotsAutoTimer);
-    productShotsAutoTimer = undefined;
-    window.clearTimeout(productShotsAutoResumeTimer);
-    if (prefersReducedMotion) return;
-    productShotsAutoResumeTimer = window.setTimeout(() => {
-      startAutoAdvance();
-    }, PRODUCT_SHOTS_AUTO_RESUME_MS);
-  };
-
-  const goNext = (): void => {
-    pauseAutoForUser();
-    if (scroller.clientWidth <= 0) return;
-    const p = currentIndex();
-    const next = (p + 1) % n;
-    const wrap = next === 0 && p === n - 1;
-    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
-  };
-
-  const goPrev = (): void => {
-    pauseAutoForUser();
-    if (scroller.clientWidth <= 0) return;
-    const p = currentIndex();
-    const next = (p - 1 + n) % n;
-    const wrap = p === 0 && next === n - 1;
-    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
-  };
-
-  document.querySelector("#product-shots-prev")?.addEventListener("click", (e) => {
+  prevBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    goPrev();
+    e.stopPropagation();
+    show(index - 1);
   });
-  document.querySelector("#product-shots-next")?.addEventListener("click", (e) => {
+  nextBtn?.addEventListener("click", (e) => {
     e.preventDefault();
-    goNext();
+    e.stopPropagation();
+    show(index + 1);
   });
 
-  slides.forEach((slide) => {
-    slide.addEventListener("click", () => {
-      goNext();
+  thumbs.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const raw = btn.getAttribute("data-gallery-index");
+      const i = raw ? parseInt(raw, 10) : 0;
+      if (!Number.isNaN(i)) show(i);
     });
   });
 
-  requestAnimationFrame(() => {
-    scroller.scrollLeft = slides[0].offsetLeft;
-    startAutoAdvance();
-  });
-
-  const onResize = (): void => {
-    if (scroller.clientWidth <= 0) return;
-    scroller.scrollLeft = slides[currentIndex()].offsetLeft;
-  };
-  window.addEventListener("resize", onResize);
-
-  scroller.addEventListener("keydown", (e) => {
+  stage?.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
-    pauseAutoForUser();
-    if (scroller.clientWidth <= 0) return;
-    const p = currentIndex();
-    const next = e.key === "ArrowRight" ? (p + 1) % n : (p - 1 + n) % n;
-    const wrap =
-      (e.key === "ArrowRight" && p === n - 1 && next === 0) ||
-      (e.key === "ArrowLeft" && p === 0 && next === n - 1);
-    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
-  });
-
-  scroller.addEventListener(
-    "touchstart",
-    () => {
-      pauseAutoForUser();
-    },
-    { passive: true }
-  );
-
-  scroller.addEventListener(
-    "wheel",
-    () => {
-      pauseAutoForUser();
-    },
-    { passive: true }
-  );
-
-  /* Drag with mouse / trackpad to scroll horizontally (desktop); touch uses native pan-x */
-  let dragPointerId: number | null = null;
-  let dragStartX = 0;
-  let scrollStart = 0;
-
-  const onPointerMove = (e: PointerEvent): void => {
-    if (dragPointerId !== e.pointerId) return;
-    scroller.scrollLeft = scrollStart - (e.clientX - dragStartX);
-  };
-
-  const endDrag = (e: PointerEvent): void => {
-    if (dragPointerId !== e.pointerId) return;
-    dragPointerId = null;
-    scroller.classList.remove("product-shots--dragging");
-    try {
-      scroller.releasePointerCapture(e.pointerId);
-    } catch {
-      /* ignore */
-    }
-    scroller.removeEventListener("pointermove", onPointerMove);
-    scroller.removeEventListener("pointerup", endDrag);
-    scroller.removeEventListener("pointercancel", endDrag);
-    pauseAutoForUser();
-  };
-
-  scroller.addEventListener("pointerdown", (e: PointerEvent) => {
-    if (e.pointerType === "touch") return;
-    if (e.button !== 0) return;
-    pauseAutoForUser();
-    dragPointerId = e.pointerId;
-    dragStartX = e.clientX;
-    scrollStart = scroller.scrollLeft;
-    scroller.classList.add("product-shots--dragging");
-    scroller.setPointerCapture(e.pointerId);
-    scroller.addEventListener("pointermove", onPointerMove);
-    scroller.addEventListener("pointerup", endDrag);
-    scroller.addEventListener("pointercancel", endDrag);
+    show(e.key === "ArrowRight" ? index + 1 : index - 1);
   });
 }
 
