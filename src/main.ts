@@ -55,9 +55,13 @@ let pdfModalScrollY = 0;
 let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
 
-/** Default Stripe Payment Link when Checkout API is unavailable (local dev, or API error). */
+/** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
+
+function stripePaymentLinkUrl(): string {
+  return import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
+}
 
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
 const PRODUCT_PRICE_EUR = 69.99;
@@ -499,8 +503,12 @@ function homeHtml(): string {
               <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
-            <button type="button" class="btn-buy" id="buy-btn">Buy</button>
-            <p class="product-inline-msg product-inline-msg--error" id="buy-error" hidden></p>
+            <a
+              class="btn-buy"
+              id="buy-btn"
+              href="${escapeHtml(stripePaymentLinkUrl())}"
+              rel="noopener noreferrer"
+            >Buy</a>
             <p class="product-flake-note" role="note">
               These products are for dry-flakes, if you are not sure if you have dry or oily flakes
               <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
@@ -983,10 +991,6 @@ function bindLanding(): void {
 }
 
 function bindProduct(): void {
-  document.querySelector("#buy-btn")?.addEventListener("click", () => {
-    void startStripeCheckout();
-  });
-
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {
     openPdfManualModal();
   });
@@ -1155,49 +1159,6 @@ function bindProductShotsCarousel(): void {
     scroller.addEventListener("pointerup", endDrag);
     scroller.addEventListener("pointercancel", endDrag);
   });
-}
-
-async function startStripeCheckout(): Promise<void> {
-  const btn = document.querySelector<HTMLButtonElement>("#buy-btn");
-  const errEl = document.querySelector<HTMLParagraphElement>("#buy-error");
-  const fallback =
-    import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
-
-  const setBuyError = (msg: string): void => {
-    if (!errEl) return;
-    errEl.textContent = msg;
-    errEl.hidden = !msg;
-  };
-
-  const setBusy = (busy: boolean): void => {
-    btn?.toggleAttribute("disabled", busy);
-    btn?.classList.toggle("is-loading", busy);
-  };
-
-  setBuyError("");
-  setBusy(true);
-  try {
-    const url = `${BASE_HREF}api/create-checkout-session`;
-    const res = await fetch(url, { method: "POST" });
-    const data = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
-    if (res.ok && data?.url) {
-      window.location.href = data.url;
-      return;
-    }
-    if (fallback) {
-      window.location.href = fallback;
-      return;
-    }
-    setBuyError(data?.error ?? `Checkout failed (${res.status}).`);
-  } catch {
-    if (fallback) {
-      window.location.href = fallback;
-      return;
-    }
-    setBuyError("Could not reach checkout. Check deployment and Stripe env vars.");
-  } finally {
-    setBusy(false);
-  }
 }
 
 function bindThanks(): void {

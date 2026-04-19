@@ -920,6 +920,10 @@ body {
 }
 
 .btn-buy {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 56px;
   padding: 0 1.5rem;
   border: none;
@@ -931,6 +935,7 @@ body {
   font-weight: 800;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;

@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Optional: Stripe Payment Link URL if `/api/create-checkout-session` is unavailable (e.g. plain `vite` dev). */
+  /** Optional: overrides `DEFAULT_STRIPE_PAYMENT_LINK` for the Buy button. */
   readonly VITE_STRIPE_PAYMENT_LINK?: string;
 }
 
