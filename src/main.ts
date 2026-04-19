@@ -401,6 +401,7 @@ function productGalleryHtml(): string {
               class="product-gallery__thumb${i === 0 ? " is-active" : ""}"
               data-gallery-index="${i}"
               aria-label="${escapeHtml(`Product photo ${i + 1} of ${n}`)}"
+              aria-current="${i === 0 ? "true" : "false"}"
             >
               <img
                 src="${escapeHtml(src)}"
@@ -1089,7 +1090,9 @@ function bindProductShotsCarousel(): void {
     mainImg.src = publicAssetUrl(slide.file);
     mainImg.alt = slide.alt;
     thumbs.forEach((btn, j) => {
-      btn.classList.toggle("is-active", j === index);
+      const on = j === index;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-current", on ? "true" : "false");
     });
   };
 
