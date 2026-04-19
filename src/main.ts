@@ -324,30 +324,30 @@ type ProductFaqItem = {
 const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
   {
     id: "what-is",
-    question: "What is this product?",
+    question: "What is this?",
     pinLabel: "What is this?",
     answer:
-      "I hate when bottles leak out in my luggage.\n\nIn the middle of the shampoo bottle pump head is a clamp that you can put on and off to fully close the bottle so while traveling nothing can leak out.",
+      "After my flight I opened my bag and found shampoo all over it. Never again.\n\nWe installed pump locks. Twist it to shut the spray when you are traveling.",
     pinTop: "38%",
     pinLeft: "44%",
     panel: "above",
   },
   {
     id: "two-bottles",
-    question: "Why two Daily Wash bottles?",
-    pinLabel: "Two bottles?",
+    question: "Why two daily washes?",
+    pinLabel: "Why two daily washes?",
     answer:
-      "I hate when airport security throws my shampoo away.\n\nOn planes, only 100ml bottles are allowed.\n\nWe want you to travel with us.",
+      "Airport security once threw my shampoo away. Never again.\n\nBoth are 100ml, you can take them wherever you want.",
     pinTop: "46%",
     pinLeft: "26%",
     panel: "above",
   },
   {
     id: "why-spray",
-    question: "Why a spray?",
-    pinLabel: "Why Spray?",
+    question: "Why spray?",
+    pinLabel: "Why spray?",
     answer:
-      "I hate weird cosmetics that I don't understand.\n\nSpray is the simplest form to bring our ingredients to your scalp that most men are already used to from hair spray or similar products.",
+      "Spray gets the formula straight to your scalp. Same motion as hairspray and done in seconds.",
     pinTop: "68%",
     pinLeft: "52%",
     panel: "above",
