@@ -526,7 +526,7 @@ function homeHtml(): string {
         </h1>
       </div>
       <div class="hero-editorial__bottom">
-        <p class="hero-editorial__script">flake free for men</p>
+        <p class="hero-editorial__script">get flake free</p>
         <button type="button" class="btn-pill" id="cta-now">Now</button>
       </div>
     </section>
