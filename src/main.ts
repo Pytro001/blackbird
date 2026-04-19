@@ -554,7 +554,7 @@ function homeHtml(): string {
               rel="noopener noreferrer"
             >Buy</a>
             <p class="product-flake-note" role="note">
-              These products are for dry-flakes, if you are not sure if you have dry or oily flakes
+              Our set is for dry flakes, if you are not sure if you have dry or oily flakes
               <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
             </p>
             ${whatsAppBlockHtml()}
