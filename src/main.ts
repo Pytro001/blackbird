@@ -354,16 +354,6 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLeft: "52%",
     panel: "above",
   },
-  {
-    id: "how-long",
-    question: "How long will it last?",
-    pinLabel: "How long will it last?",
-    answer:
-      "Usage varies by hair length and routine; most people plan for several weeks per bottle when used as directed.",
-    pinTop: "46%",
-    pinLeft: "78%",
-    panel: "above",
-  },
 ];
 
 function closeAllProductFaqPanels(faq: HTMLElement): void {
