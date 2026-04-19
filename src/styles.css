@@ -1001,7 +1001,7 @@ body {
   padding: 0 1.5rem;
   border: none;
   border-radius: 999px;
-  background: #f2ae62;
+  background: #f09029;
   color: var(--black);
   font-family: var(--font);
   font-size: clamp(0.95rem, 2.8vw, 1.05rem);
@@ -1017,7 +1017,7 @@ body {
 
 .btn-buy:hover,
 .btn-buy:focus-visible {
-  background: #f6c078;
+  background: #f5a040;
   filter: none;
   outline: none;
 }
