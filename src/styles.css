@@ -1015,23 +1015,24 @@ body {
   padding: 0 1.5rem;
   border: none;
   border-radius: 999px;
-  background: var(--orange);
+  background: #f2ae62;
   color: var(--black);
   font-family: var(--font);
   font-size: clamp(0.95rem, 2.8vw, 1.05rem);
-  font-weight: 800;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: none;
   text-decoration: none;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: filter 0.2s ease, transform 0.15s ease;
+  transition: filter 0.2s ease, transform 0.15s ease, background 0.2s ease;
 }
 
 .btn-buy:hover,
 .btn-buy:focus-visible {
-  filter: brightness(1.08);
+  background: #f6c078;
+  filter: none;
   outline: none;
 }
 
