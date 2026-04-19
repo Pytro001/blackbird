@@ -207,23 +207,24 @@ function closePdfManualModal(immediate = false): void {
   }, 320);
 }
 
-/** 6h from now — shown in the visitor's local timezone (not a fixed clock time). */
-function formatSuperExpressArrivalLocal(nowMs: number = Date.now()): string {
+/** 6h from now — one line: “Arrival by …” in the visitor’s local timezone. */
+function formatSuperExpressArrivalLine(nowMs: number = Date.now()): string {
   const arrival = new Date(nowMs + 6 * 60 * 60 * 1000);
-  return new Intl.DateTimeFormat(navigator.language || "en-GB", {
+  const when = new Intl.DateTimeFormat(navigator.language || "en-US", {
     weekday: "short",
-    day: "numeric",
     month: "short",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true,
   }).format(arrival);
+  return `Arrival by ${when}`;
 }
 
 function updateProductShippingEta(): void {
   const el = document.querySelector("#product-shipping-eta");
   if (!el) return;
-  const local = formatSuperExpressArrivalLocal();
-  el.textContent = `If your order ships now, est. arrival by ${local} (your time). 6h super express applies in Germany only — other regions vary.`;
+  el.textContent = formatSuperExpressArrivalLine();
 }
 
 function whatsAppBlockHtml(): string {
@@ -537,7 +538,7 @@ function homeHtml(): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">6H SUPER EXPRESS SHIPPING · Germany only</p>
+              <p class="product-shipping__lead" id="product-shipping-lead">6H SUPER EXPRESS SHIPPING for Germany</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
