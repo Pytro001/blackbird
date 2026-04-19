@@ -1095,6 +1095,14 @@ body {
   color: var(--orange);
 }
 
+.legal-h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: clamp(0.84rem, 2vw, 0.94rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(235, 235, 235, 0.95);
+}
+
 .legal-prose a {
   color: var(--gray-400);
   text-decoration: underline;

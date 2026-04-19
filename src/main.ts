@@ -76,13 +76,18 @@ type View =
   | "thanks"
   | "manual"
   | "impressum"
-  | "datenschutz"
-  | "agb"
-  | "widerruf";
+  | "datenschutz";
+
+/** Same WhatsApp number as dermatologist link; no prefilled text (legal / general contact). */
+const WHATSAPP_CONTACT_URL = "https://wa.me/4917644429908";
 
 /** Dermatologist Analysis WhatsApp (number + prefilled message). */
 const WHATSAPP_CHAT_URL =
   "https://wa.me/4917644429908?text=Hi%2C%20this%20is%20the%20Dermatologist%20Analysis%20WhatsApp%20channel.%0AHere%20you%20can%20get%20an%20instant%20check%20to%20find%20out%20if%20you%20have%20oily%20or%20dry%20dandruff%2C%20so%20you%20get%20the%20right%20product%20for%20your%20scalp.%20Please%20send%203%20clear%20pictures%20of%20your%20head%20and%20scalp%20where%20the%20dandruff%20is%20visible%20in%20this%20chat.%0AYou%E2%80%99ll%20receive%20an%20immediate%20analysis%20from%20a%20dermatology-trained%20Teamember%20telling%20you%20exactly%20what%20type%20of%20dandruff%20you%20have.%0AFeel%20free%20to%20ask%20any%20other%20questions%20here%20too%20-%20just%20like%20you%20would%20to%20a%20friend.%0ABest%2C%20Your%20Blackbird%20Team";
+
+function whatsappContactLinkHtml(): string {
+  return `<a href="${escapeHtml(WHATSAPP_CONTACT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`;
+}
 
 function escapeHtml(s: string): string {
   return s
@@ -266,10 +271,16 @@ function pathToView(): View {
   if (path === "/product") return "product";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
+  if (path === "/agb") {
+    history.replaceState(null, "", `${BASE_HREF}impressum#shop-agb`);
+    return "impressum";
+  }
+  if (path === "/widerruf") {
+    history.replaceState(null, "", `${BASE_HREF}impressum#shop-widerruf`);
+    return "impressum";
+  }
   if (path === "/impressum") return "impressum";
   if (path === "/datenschutz") return "datenschutz";
-  if (path === "/agb") return "agb";
-  if (path === "/widerruf") return "widerruf";
   return "landing";
 }
 
@@ -557,26 +568,17 @@ function legalPageShell(title: string, body: string): string {
 function siteLegalFooterHtml(): string {
   const i = `${BASE_HREF}impressum`;
   const d = `${BASE_HREF}datenschutz`;
-  const a = `${BASE_HREF}agb`;
-  const w = `${BASE_HREF}widerruf`;
   return `
     <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
       <div class="site-legal-footer__line site-legal-footer__line--meta">
         <span class="site-legal-footer__chunk">HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden</span>
         <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-        <span class="site-legal-footer__chunk">
-          E-Mail:
-          <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
-        </span>
+        <span class="site-legal-footer__chunk">Kontakt: ${whatsappContactLinkHtml()}</span>
       </div>
       <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="Rechtliche Hinweise">
         <a href="${i}">Impressum</a>
         <span class="site-legal-footer__sep" aria-hidden="true">·</span>
         <a href="${d}">Datenschutz</a>
-        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-        <a href="${a}">AGB</a>
-        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-        <a href="${w}">Widerruf</a>
       </nav>
     </footer>`;
 }
@@ -593,8 +595,7 @@ function impressumHtml(): string {
     </p>
     <h2 class="legal-h2">Kontakt</h2>
     <p>
-      E-Mail:
-      <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
+      ${whatsappContactLinkHtml()}
     </p>
     <h2 class="legal-h2">Vertretungsberechtigte Geschäftsführer</h2>
     <p>Tadeus Jonathan Mehl, Konstantin Saifoulline</p>
@@ -616,8 +617,101 @@ function impressumHtml(): string {
     <p>
       Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
       <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.
-      Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+      Unsere Kontaktdaten finden Sie oben im Impressum. Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
     </p>
+
+    <section id="shop-agb" tabindex="-1">
+      <h2 class="legal-h2">Allgemeine Geschäftsbedingungen (AGB)</h2>
+      <p class="legal-lead">Für den Online-Kauf über diese Website</p>
+      <h3 class="legal-h3">§ 1 Geltungsbereich</h3>
+      <p>
+        Diese AGB gelten für Verträge zwischen HUGE Production GmbH (nachfolgend „Anbieter“) und Verbraucherinnen und Verbrauchern (nachfolgend „Kunde“) über die über diese Website angebotenen Waren.
+      </p>
+      <h3 class="legal-h3">§ 2 Vertragsschluss</h3>
+      <p>
+        Die Darstellung der Produkte auf der Website stellt kein rechtlich bindendes Angebot dar. Die Bestellung des Kunden stellt ein Angebot zum Abschluss eines Kaufvertrags dar. Der Vertrag kommt zustande, sobald der Anbieter die Bestellung annimmt oder die Ware ausliefert oder der Kunde zur Zahlung per Zahlungsdienstleister weitergeleitet wird und die Zahlung ordnungsgemäß erfolgt – je nach technischem Ablauf des Bestellvorgangs.
+      </p>
+      <h3 class="legal-h3">§ 3 Preise und Versandkosten</h3>
+      <p>
+        Es gelten die zum Zeitpunkt der Bestellung auf der Website angegebenen Preise und Versandbedingungen. Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern ausgewiesen.
+      </p>
+      <h3 class="legal-h3">§ 4 Zahlung</h3>
+      <p>
+        Die Zahlung erfolgt über den angegebenen Zahlungsdienstleister (z.&nbsp;B. Stripe). Es gelten dabei die jeweiligen Bedingungen des Zahlungsdienstleisters.
+      </p>
+      <h3 class="legal-h3">§ 5 Lieferung</h3>
+      <p>
+        Die Lieferung erfolgt an die vom Kunden angegebene Lieferadresse innerhalb der angegebenen Fristen, sofern nichts Abweichendes vereinbart ist.
+      </p>
+      <h3 class="legal-h3">§ 6 Gewährleistung</h3>
+      <p>
+        Es gelten die gesetzlichen Gewährleistungsrechte. Für Verbraucher beträgt die gesetzliche Verjährungsfrist für Mängelansprüche bei neuen Waren zwei Jahre ab Lieferung der Ware.
+      </p>
+      <h3 class="legal-h3">§ 7 Haftung</h3>
+      <p>
+        Die Haftung des Anbieters richtet sich nach den gesetzlichen Vorschriften, soweit ausgeschlossen nicht zulässig ist. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den typischen, vorhersehbaren Schaden.
+      </p>
+      <h3 class="legal-h3">§ 8 Schlussbestimmungen</h3>
+      <p>
+        Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Zwingende Verbraucherschutzvorschriften des Staates, in dem der Kunde seinen gewöhnlichen Aufenthalt hat, bleiben unberührt, sofern anwendbar.
+        Gerichtsstand und Erfüllungsort bei Verträgen mit Kaufleuten sind, soweit zulässig, der Sitz des Anbieters.
+      </p>
+      <p>
+        <strong>Hinweis:</strong> Passen Sie diese AGB bei Bedarf an Ihren konkreten Vertrags- und Checkout-Prozess an (z.&nbsp;B. Bestellbestätigung, Lieferländer, Streitbeilegung).
+      </p>
+    </section>
+
+    <section id="shop-widerruf" tabindex="-1">
+      <h2 class="legal-h2">Widerrufsbelehrung</h2>
+      <p class="legal-lead">Für Verbraucherinnen und Verbraucher</p>
+      <h3 class="legal-h3">Widerrufsrecht</h3>
+      <p>
+        Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht der Beförderer ist, die Waren in Besitz genommen haben bzw. hat.
+      </p>
+      <p>
+        Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden)
+        mittels einer eindeutigen Erklärung (z.&nbsp;B. ein mit der Post versandter Brief oder eine Nachricht über die oben genannten Kontaktwege, einschließlich ${whatsappContactLinkHtml()}) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
+      </p>
+      <h3 class="legal-h3">Folgen des Widerrufs</h3>
+      <p>
+        Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, einschließlich der Lieferkosten (mit Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine andere Art der Lieferung als die von uns angebotene, günstigste Standardlieferung gewählt haben), unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.
+      </p>
+      <p>
+        Wir können die Rückzahlung verweigern, bis wir die Waren wieder zurückerhalten haben oder bis Sie den Nachweis erbracht haben, dass Sie die Waren zurückgesandt haben, je nachdem, welches der frühere Zeitpunkt ist.
+      </p>
+      <p>
+        Sie haben die Waren unverzüglich und in jedem Fall spätestens binnen vierzehn Tagen ab dem Tag, an dem Sie uns über den Widerruf dieses Vertrags unterrichten, an uns zurückzusenden oder zu übergeben. Die Frist ist gewahrt, wenn Sie die Waren vor Ablauf der Frist von vierzehn Tagen absenden.
+      </p>
+      <p>
+        Sie tragen die unmittelbaren Kosten der Rücksendung der Waren.
+      </p>
+      <p>
+        <strong>Hinweis zum Erlöschen des Widerrufsrechts:</strong> Das Widerrufsrecht erlischt bei Verträgen über die Lieferung versiegelter Waren, die aus Gründen des Gesundheitsschutzes oder der Hygiene nicht zur Rückgabe geeignet sind, wenn ihre Versiegelung nach der Lieferung entfernt wurde (sofern zutreffend).
+      </p>
+      <h3 class="legal-h3">Muster-Widerrufsformular</h3>
+      <p>
+        Wenn Sie den Vertrag widerrufen wollen, füllen Sie bitte dieses Formular aus und senden Sie es zurück.
+      </p>
+      <pre class="legal-pre" aria-label="Muster-Widerrufsformular">An HUGE Production GmbH
+Sebnitzer Str. 35
+01099 Dresden
+
+Kontakt: siehe oben unter „Kontakt“ (u. a. WhatsApp)
+
+Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)
+
+Bestellt am (*)/erhalten am (*)
+
+Name des/der Verbraucher(s)
+
+Anschrift des/der Verbraucher(s)
+
+Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)
+
+Datum
+
+(*) Unzutreffendes streichen.</pre>
+    </section>
   `;
   return legalPageShell("Impressum", body);
 }
@@ -631,7 +725,7 @@ function datenschutzHtml(): string {
     <p>
       HUGE Production GmbH<br />
       Sebnitzer Str. 35, 01099 Dresden, Deutschland<br />
-      E-Mail: <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>
+      Kontakt: ${whatsappContactLinkHtml()}
     </p>
     <h2 class="legal-h2">Allgemeines</h2>
     <p>
@@ -650,9 +744,9 @@ function datenschutzHtml(): string {
     <p>
       Wenn Sie über einen Link auf unserer Website WhatsApp (Meta) nutzen, gelten die dortigen Nutzungs- und Datenschutzbedingungen des jeweiligen Anbieters. Wir haben keinen Einfluss auf die Datenverarbeitung durch Meta/WhatsApp außerhalb unserer Website.
     </p>
-    <h2 class="legal-h2">Kontaktaufnahme per E-Mail</h2>
+    <h2 class="legal-h2">Kontaktaufnahme (WhatsApp)</h2>
     <p>
-      Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen bzw. Vertrag) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung).
+      Wenn Sie uns über WhatsApp kontaktieren, verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage. Es gelten die Nutzungs- und Datenschutzbedingungen von Meta/WhatsApp. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen bzw. Vertrag) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung).
     </p>
     <h2 class="legal-h2">Speicherdauer</h2>
     <p>
@@ -668,100 +762,6 @@ function datenschutzHtml(): string {
     </p>
   `;
   return legalPageShell("Datenschutzerklärung", body);
-}
-
-function agbHtml(): string {
-  const body = `
-    <p class="legal-lead">Allgemeine Geschäftsbedingungen (AGB) für den Online-Kauf über diese Website</p>
-    <h2 class="legal-h2">§ 1 Geltungsbereich</h2>
-    <p>
-      Diese AGB gelten für Verträge zwischen HUGE Production GmbH (nachfolgend „Anbieter“) und Verbraucherinnen und Verbrauchern (nachfolgend „Kunde“) über die über diese Website angebotenen Waren.
-    </p>
-    <h2 class="legal-h2">§ 2 Vertragsschluss</h2>
-    <p>
-      Die Darstellung der Produkte auf der Website stellt kein rechtlich bindendes Angebot dar. Die Bestellung des Kunden stellt ein Angebot zum Abschluss eines Kaufvertrags dar. Der Vertrag kommt zustande, sobald der Anbieter die Bestellung annimmt oder die Ware ausliefert oder der Kunde zur Zahlung per Zahlungsdienstleister weitergeleitet wird und die Zahlung ordnungsgemäß erfolgt – je nach technischem Ablauf des Bestellvorgangs.
-    </p>
-    <h2 class="legal-h2">§ 3 Preise und Versandkosten</h2>
-    <p>
-      Es gelten die zum Zeitpunkt der Bestellung auf der Website angegebenen Preise und Versandbedingungen. Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer, sofern ausgewiesen.
-    </p>
-    <h2 class="legal-h2">§ 4 Zahlung</h2>
-    <p>
-      Die Zahlung erfolgt über den angegebenen Zahlungsdienstleister (z.&nbsp;B. Stripe). Es gelten dabei die jeweiligen Bedingungen des Zahlungsdienstleisters.
-    </p>
-    <h2 class="legal-h2">§ 5 Lieferung</h2>
-    <p>
-      Die Lieferung erfolgt an die vom Kunden angegebene Lieferadresse innerhalb der angegebenen Fristen, sofern nichts Abweichendes vereinbart ist.
-    </p>
-    <h2 class="legal-h2">§ 6 Gewährleistung</h2>
-    <p>
-      Es gelten die gesetzlichen Gewährleistungsrechte. Für Verbraucher beträgt die Gesetzliche Verjährungsfrist für Mängelansprüche bei neuen Waren zwei Jahre ab Lieferung der Ware.
-    </p>
-    <h2 class="legal-h2">§ 7 Haftung</h2>
-    <p>
-      Die Haftung des Anbieters richtet sich nach den gesetzlichen Vorschriften, soweit ausgeschlossen nicht zulässig ist. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten und begrenzt auf den typischen, vorhersehbaren Schaden.
-    </p>
-    <h2 class="legal-h2">§ 8 Schlussbestimmungen</h2>
-    <p>
-      Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts. Zwingende Verbraucherschutzvorschriften des Staates, in dem der Kunde seinen gewöhnlichen Aufenthalt hat, bleiben unberührt, sofern anwendbar.
-      Gerichtsstand und Erfüllungsort bei Verträgen mit Kaufleuten sind, soweit zulässig, der Sitz des Anbieters.
-    </p>
-    <p>
-      <strong>Hinweis:</strong> Passen Sie diese AGB bei Bedarf an Ihren konkreten Vertrags- und Checkout-Prozess an (z.&nbsp;B. Bestellbestätigung, Lieferländer, Streitbeilegung).
-    </p>
-  `;
-  return legalPageShell("AGB", body);
-}
-
-function widerrufHtml(): string {
-  const body = `
-    <p class="legal-lead">Widerrufsbelehrung für Verbraucherinnen und Verbraucher</p>
-    <h2 class="legal-h2">Widerrufsrecht</h2>
-    <p>
-      Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht der Beförderer ist, die Waren in Besitz genommen haben bzw. hat.
-    </p>
-    <p>
-      Um Ihr Widerrufsrecht auszuüben, müssen Sie uns (HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden, E-Mail:
-      <a href="mailto:invite@hugeconversations.com">invite@hugeconversations.com</a>)
-      mittels einer eindeutigen Erklärung (z.&nbsp;B. ein mit der Post versandter Brief oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.
-    </p>
-    <h2 class="legal-h2">Folgen des Widerrufs</h2>
-    <p>
-      Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, einschließlich der Lieferkosten (mit Ausnahme der zusätzlichen Kosten, die sich daraus ergeben, dass Sie eine andere Art der Lieferung als die von uns angebotene, günstigste Standardlieferung gewählt haben), unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns eingegangen ist. Für diese Rückzahlung verwenden wir dasselbe Zahlungsmittel, das Sie bei der ursprünglichen Transaktion eingesetzt haben, es sei denn, mit Ihnen wurde ausdrücklich etwas anderes vereinbart; in keinem Fall werden Ihnen wegen dieser Rückzahlung Entgelte berechnet.
-    </p>
-    <p>
-      Wir können die Rückzahlung verweigern, bis wir die Waren wieder zurückerhalten haben oder bis Sie den Nachweis erbracht haben, dass Sie die Waren zurückgesandt haben, je nachdem, welches der frühere Zeitpunkt ist.
-    </p>
-    <p>
-      Sie haben die Waren unverzüglich und in jedem Fall spätestens binnen vierzehn Tagen ab dem Tag, an dem Sie uns über den Widerruf dieses Vertrags unterrichten, an uns zurückzusenden oder zu übergeben. Die Frist ist gewahrt, wenn Sie die Waren vor Ablauf der Frist von vierzehn Tagen absenden.
-    </p>
-    <p>
-      Sie tragen die unmittelbaren Kosten der Rücksendung der Waren.
-    </p>
-    <p>
-      <strong>Hinweis zum Erlöschen des Widerrufsrechts:</strong> Das Widerrufsrecht erlischt bei Verträgen über die Lieferung versiegelter Waren, die aus Gründen des Gesundheitsschutzes oder der Hygiene nicht zur Rückgabe geeignet sind, wenn ihre Versiegelung nach der Lieferung entfernt wurde (sofern zutreffend).
-    </p>
-    <h2 class="legal-h2">Muster-Widerrufsformular</h2>
-    <p>
-      Wenn Sie den Vertrag widerrufen wollen, füllen Sie bitte dieses Formular aus und senden Sie es zurück.
-    </p>
-    <pre class="legal-pre" aria-label="Muster-Widerrufsformular">An HUGE Production GmbH, Sebnitzer Str. 35, 01099 Dresden, E-Mail: invite@hugeconversations.com
-
-Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)
-
-Bestellt am (*)/erhalten am (*)
-
-Name des/der Verbraucher(s)
-
-Anschrift des/der Verbraucher(s)
-
-Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)
-
-Datum
-
-(*) Unzutreffendes streichen.</pre>
-  `;
-  return legalPageShell("Widerruf", body);
 }
 
 function manualPageUrls(): string[] {
@@ -924,11 +924,7 @@ function bindManual(): void {
 }
 
 function setDocumentLang(view: View): void {
-  const de =
-    view === "impressum" ||
-    view === "datenschutz" ||
-    view === "agb" ||
-    view === "widerruf";
+  const de = view === "impressum" || view === "datenschutz";
   document.documentElement.lang = de ? "de" : "en";
 }
 
@@ -973,12 +969,11 @@ function render(): void {
     root.innerHTML = thanksHtml();
   } else if (view === "impressum") {
     root.innerHTML = impressumHtml();
+    if (location.hash === "#shop-agb" || location.hash === "#shop-widerruf") {
+      requestAnimationFrame(() => scrollToHashSection());
+    }
   } else if (view === "datenschutz") {
     root.innerHTML = datenschutzHtml();
-  } else if (view === "agb") {
-    root.innerHTML = agbHtml();
-  } else if (view === "widerruf") {
-    root.innerHTML = widerrufHtml();
   }
 
   if (view === "thanks") bindThanks();
