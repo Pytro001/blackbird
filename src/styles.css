@@ -322,12 +322,10 @@ body {
   width: 100%;
 }
 
-/* Main photo (max width) + bare image previews overlaid top-left */
+/* Main photo fills column; smaller bare previews overlaid top-left */
 .product-gallery {
   min-width: 0;
   width: 100%;
-  max-width: min(620px, 100%);
-  margin-inline: auto;
 }
 
 .product-gallery__main {
@@ -359,8 +357,8 @@ body {
   left: clamp(0.45rem, 1.8vw, 0.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  width: clamp(76px, 18vw, 112px);
+  gap: 0.38rem;
+  width: clamp(48px, 11vw, 72px);
   margin: 0;
   padding: 0;
   overflow: visible;
