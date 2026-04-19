@@ -322,7 +322,7 @@ body {
   width: 100%;
 }
 
-/* Main photo + three thumbnails in one framed block (equal side padding on thumbs) */
+/* Main photo with small thumbnail rail overlaid top-left (inside the frame) */
 .product-gallery {
   min-width: 0;
   width: 100%;
@@ -330,8 +330,6 @@ body {
 
 .product-gallery__main {
   position: relative;
-  display: flex;
-  flex-direction: column;
   min-width: 0;
   width: 100%;
   border-radius: var(--radius);
@@ -342,12 +340,9 @@ body {
 }
 
 .product-gallery__stage {
-  flex: 0 0 auto;
+  position: relative;
   overflow: hidden;
-  border-radius: 0;
-  border: none;
-  box-shadow: none;
-  background: transparent;
+  border-radius: inherit;
   outline: none;
   cursor: grab;
   touch-action: pan-y;
@@ -356,29 +351,43 @@ body {
 }
 
 .product-gallery__thumbs {
+  position: absolute;
+  z-index: 2;
+  top: clamp(0.4rem, 1.6vw, 0.65rem);
+  left: clamp(0.4rem, 1.6vw, 0.65rem);
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  justify-content: stretch;
-  gap: 0.45rem;
-  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: clamp(44px, 10vw, 58px);
+  max-height: min(420px, 52vh);
   margin: 0;
-  padding: 0.55rem clamp(0.55rem, 2.2vw, 0.85rem) 0.65rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.28);
-  -webkit-overflow-scrolling: touch;
+  padding: 0.35rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.42);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  scrollbar-width: thin;
+}
+
+.product-gallery__thumbs::-webkit-scrollbar {
+  width: 4px;
+}
+
+.product-gallery__thumbs .product-gallery__thumb {
+  pointer-events: auto;
 }
 
 .product-gallery__thumb {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 0 0 auto;
   display: block;
+  width: 100%;
   margin: 0;
   padding: 2px;
   border: 2px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.35);
   cursor: pointer;
   overflow: hidden;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;

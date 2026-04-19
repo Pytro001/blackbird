@@ -418,8 +418,8 @@ function productGalleryHtml(): string {
                   draggable="false"
                 />
               </figure>
+              <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
             </div>
-            <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
           </div>
         </div>`;
 }
