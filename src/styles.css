@@ -973,6 +973,10 @@ body {
   max-width: 26rem;
 }
 
+.product-shipping__eta-datetime {
+  font-weight: 700;
+}
+
 .product-inline-msg {
   margin: 0;
   font-size: 0.72rem;

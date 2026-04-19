@@ -207,8 +207,8 @@ function getShippingEtaLeadHours(): number {
   }
 }
 
-/** “Order now to receive your set on …” — date + clock (en-US for AM/PM). */
-function formatShippingArrivalLine(nowMs: number = Date.now()): string {
+/** “Order now to receive your set on …” — date + time in <strong> (en-US for AM/PM). */
+function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
   const hours = getShippingEtaLeadHours();
   const arrival = new Date(nowMs + hours * 60 * 60 * 1000);
   const datePart = new Intl.DateTimeFormat("en-US", {
@@ -220,13 +220,14 @@ function formatShippingArrivalLine(nowMs: number = Date.now()): string {
     minute: "2-digit",
     hour12: true,
   }).format(arrival);
-  return `Order now to receive your set on ${datePart} at ${timePart}`;
+  const datetime = `${datePart} at ${timePart}`;
+  return `Order now to receive your set on <strong class="product-shipping__eta-datetime">${escapeHtml(datetime)}</strong>`;
 }
 
 function updateProductShippingEta(): void {
   const el = document.querySelector("#product-shipping-eta");
   if (!el) return;
-  el.textContent = formatShippingArrivalLine();
+  el.innerHTML = formatShippingArrivalLineHtml();
 }
 
 function whatsAppBlockHtml(): string {
