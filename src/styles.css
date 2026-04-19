@@ -322,10 +322,12 @@ body {
   width: 100%;
 }
 
-/* Main photo with small thumbnail rail overlaid top-left (inside the frame) */
+/* Main photo (max width) + bare image previews overlaid top-left */
 .product-gallery {
   min-width: 0;
   width: 100%;
+  max-width: min(620px, 100%);
+  margin-inline: auto;
 }
 
 .product-gallery__main {
@@ -353,26 +355,16 @@ body {
 .product-gallery__thumbs {
   position: absolute;
   z-index: 2;
-  top: clamp(0.4rem, 1.6vw, 0.65rem);
-  left: clamp(0.4rem, 1.6vw, 0.65rem);
+  top: clamp(0.45rem, 1.8vw, 0.75rem);
+  left: clamp(0.45rem, 1.8vw, 0.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  width: clamp(44px, 10vw, 58px);
-  max-height: min(420px, 52vh);
+  gap: 0.5rem;
+  width: clamp(76px, 18vw, 112px);
   margin: 0;
-  padding: 0.35rem;
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.42);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  padding: 0;
+  overflow: visible;
   pointer-events: none;
-  scrollbar-width: thin;
-}
-
-.product-gallery__thumbs::-webkit-scrollbar {
-  width: 4px;
 }
 
 .product-gallery__thumbs .product-gallery__thumb {
@@ -384,13 +376,14 @@ body {
   display: block;
   width: 100%;
   margin: 0;
-  padding: 2px;
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.35);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  opacity: 0.62;
+  transition: opacity 0.15s ease, filter 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -400,17 +393,19 @@ body {
   height: auto;
   aspect-ratio: 80 / 64;
   object-fit: contain;
+  vertical-align: top;
+  border-radius: 3px;
 }
 
 .product-gallery__thumb:hover,
 .product-gallery__thumb:focus-visible {
-  border-color: rgba(255, 255, 255, 0.35);
   outline: none;
+  opacity: 0.92;
 }
 
 .product-gallery__thumb.is-active {
-  border-color: var(--orange);
-  box-shadow: 0 0 0 1px rgba(229, 142, 53, 0.45);
+  opacity: 1;
+  filter: brightness(1.12) contrast(1.02);
 }
 
 .product-gallery__stage--dragging {
