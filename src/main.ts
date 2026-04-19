@@ -411,7 +411,7 @@ function productGalleryHtml(): string {
               class="product-gallery__stage"
               id="product-gallery-stage"
               tabindex="0"
-              aria-label="Product photos. Use thumbnails or side arrows to change image."
+              aria-label="Product photos. Drag horizontally to change image, or use thumbnails."
             >
               <figure class="product-gallery__figure">
                 <img
@@ -423,15 +423,10 @@ function productGalleryHtml(): string {
                   alt="${escapeHtml(first.alt)}"
                   decoding="async"
                   fetchpriority="high"
+                  draggable="false"
                 />
               </figure>
             </div>
-            <button type="button" class="product-gallery__arrow product-gallery__arrow--prev" id="product-shots-prev" aria-label="Previous photo">
-              <span aria-hidden="true">‹</span>
-            </button>
-            <button type="button" class="product-gallery__arrow product-gallery__arrow--next" id="product-shots-next" aria-label="Next photo">
-              <span aria-hidden="true">›</span>
-            </button>
           </div>
         </div>`;
 }
@@ -1059,13 +1054,13 @@ function bindProductFaq(): void {
   });
 }
 
+const PRODUCT_GALLERY_SWIPE_MIN_PX = 48;
+
 function bindProductShotsCarousel(): void {
   const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
   const stage = document.getElementById("product-gallery-stage");
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
-  const prevBtn = document.querySelector<HTMLButtonElement>("#product-shots-prev");
-  const nextBtn = document.querySelector<HTMLButtonElement>("#product-shots-next");
-  if (!mainImg || thumbs.length < 1) return;
+  if (!mainImg || !stage || thumbs.length < 1) return;
 
   const n = PRODUCT_CAROUSEL_SLIDES.length;
   let index = 0;
@@ -1082,17 +1077,6 @@ function bindProductShotsCarousel(): void {
     });
   };
 
-  prevBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    show(index - 1);
-  });
-  nextBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    show(index + 1);
-  });
-
   thumbs.forEach((btn) => {
     btn.addEventListener("click", () => {
       const raw = btn.getAttribute("data-gallery-index");
@@ -1101,11 +1085,50 @@ function bindProductShotsCarousel(): void {
     });
   });
 
-  stage?.addEventListener("keydown", (e) => {
+  stage.addEventListener("keydown", (e) => {
     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
     e.preventDefault();
     show(e.key === "ArrowRight" ? index + 1 : index - 1);
   });
+
+  /** Horizontal drag / swipe (mouse & touch) to change slide */
+  let dragPointerId: number | null = null;
+  let dragStartX = 0;
+  let dragStartY = 0;
+
+  const endDrag = (e: PointerEvent): void => {
+    if (dragPointerId !== e.pointerId) return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    dragPointerId = null;
+    stage.classList.remove("product-gallery__stage--dragging");
+    try {
+      stage.releasePointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+    if (n < 2) return;
+    if (Math.abs(dx) < PRODUCT_GALLERY_SWIPE_MIN_PX) return;
+    if (Math.abs(dx) <= Math.abs(dy)) return;
+    if (dx < 0) show(index + 1);
+    else show(index - 1);
+  };
+
+  stage.addEventListener("pointerdown", (e: PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    dragPointerId = e.pointerId;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    stage.classList.add("product-gallery__stage--dragging");
+    try {
+      stage.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  stage.addEventListener("pointerup", endDrag);
+  stage.addEventListener("pointercancel", endDrag);
 }
 
 function bindThanks(): void {
