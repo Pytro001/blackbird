@@ -20,7 +20,7 @@ function publicAssetUrl(path: string): string {
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
-/** Product image carousel: exactly four slides (files in public/). */
+/** Product image carousel: three slides (files in public/). */
 const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   {
     file: "product-slide-01.png",
@@ -33,10 +33,6 @@ const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   {
     file: "product-slide-03.png",
     alt: "BLACKBIRD Before Sleep: overnight care spray",
-  },
-  {
-    file: "product-slide-04.png",
-    alt: "BLACKBIRD gift set: four products in presentation box",
   },
 ];
 
