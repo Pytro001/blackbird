@@ -234,6 +234,8 @@ body {
 
 /* —— Product (image left, info right); background from .home-shell —— */
 .page-product {
+  /* Same horizontal inset left/right, then each side max() with its safe-area */
+  --product-inline-pad: clamp(1rem, 4vw, 2rem);
   min-height: 100vh;
   min-height: 100dvh;
   min-height: 100svh;
@@ -241,9 +243,9 @@ body {
   flex-direction: column;
   align-items: stretch;
   padding: max(clamp(0.75rem, 2.5vw, 1rem), env(safe-area-inset-top))
-    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    max(var(--product-inline-pad), env(safe-area-inset-right))
     max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))
-    max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
+    max(var(--product-inline-pad), env(safe-area-inset-left));
   background: transparent;
 }
 
@@ -301,7 +303,7 @@ body {
   grid-template-columns: 1fr;
   gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
-  max-width: 1180px;
+  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
   align-items: start;
@@ -309,8 +311,8 @@ body {
 
 @media (min-width: 840px) {
   .product-layout {
-    /* Wider image column; info column capped so the buy panel stays ~same width */
-    grid-template-columns: minmax(0, 1fr) minmax(280px, 440px);
+    /* Wider image column; aside column slightly narrower so main photo reads larger */
+    grid-template-columns: minmax(0, 1fr) minmax(270px, 400px);
     gap: clamp(2rem, 4.5vw, 3rem);
   }
 }
@@ -320,13 +322,14 @@ body {
   width: 100%;
 }
 
-/* Amazon-style: thumbnails + main image with overlay arrows */
+/* Amazon-style: narrow thumb rail (more room for main image) + main */
 .product-gallery {
   display: grid;
-  grid-template-columns: clamp(52px, 13vw, 72px) minmax(0, 1fr);
+  grid-template-columns: clamp(44px, 10vw, 58px) minmax(0, 1fr);
   gap: 0.65rem;
   align-items: start;
   min-width: 0;
+  width: 100%;
 }
 
 .product-gallery__thumbs {
