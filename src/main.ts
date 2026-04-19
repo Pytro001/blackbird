@@ -320,7 +320,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     answer:
       "After my flight I opened my bag and found shampoo all over it. Never again.\n\nWe installed pump locks. Twist it to shut the spray when you are traveling.",
     pinTop: "47%",
-    pinLeft: "28%",
+    pinLeft: "23%",
     panel: "below",
   },
   {
@@ -339,8 +339,8 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     pinLabel: "Why spray?",
     answer:
       "Spray gets the formula straight to your scalp. Same motion as hairspray and done in seconds.",
-    pinTop: "33%",
-    pinLeft: "73%",
+    pinTop: "30%",
+    pinLeft: "77%",
     panel: "above",
   },
 ];
