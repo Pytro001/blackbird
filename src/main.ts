@@ -195,22 +195,12 @@ function closePdfManualModal(immediate = false): void {
   }, 320);
 }
 
-/** IANA zones that match Germany (browser-reported); others get the 24h estimate. */
-const GERMANY_SHIPPING_TIMEZONES = new Set(["Europe/Berlin", "Europe/Busingen"]);
-
-function getShippingEtaLeadHours(): number {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return GERMANY_SHIPPING_TIMEZONES.has(tz) ? 6 : 24;
-  } catch {
-    return 24;
-  }
-}
+/** Shown arrival = always now + 6h in the visitor’s local timezone. */
+const SHIPPING_ETA_LEAD_HOURS = 6;
 
 /** “Order now to receive your set on …” — date + time in <strong> (en-US for AM/PM). */
 function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
-  const hours = getShippingEtaLeadHours();
-  const arrival = new Date(nowMs + hours * 60 * 60 * 1000);
+  const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
   const datePart = new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
