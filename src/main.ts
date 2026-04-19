@@ -398,7 +398,6 @@ function productGalleryHtml(): string {
 
   return `
         <div class="product-gallery" id="product-gallery">
-          <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
           <div class="product-gallery__main">
             <div
               class="product-gallery__stage"
@@ -420,6 +419,7 @@ function productGalleryHtml(): string {
                 />
               </figure>
             </div>
+            <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
           </div>
         </div>`;
 }
