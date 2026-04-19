@@ -969,7 +969,7 @@ body {
   font-size: clamp(0.72rem, 1.9vw, 0.82rem);
   font-weight: 400;
   line-height: 1.45;
-  color: var(--gray-500);
+  color: rgba(245, 245, 245, 0.82);
   max-width: 26rem;
 }
 
