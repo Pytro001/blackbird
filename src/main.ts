@@ -207,7 +207,7 @@ function getShippingEtaLeadHours(): number {
   }
 }
 
-/** “If you order now…” with month, date, and 12h time (en-US for reliable AM/PM). */
+/** “If you order now your Product arrives on …” — month, date, and 12h time (en-US for AM/PM). */
 function formatShippingArrivalLine(nowMs: number = Date.now()): string {
   const hours = getShippingEtaLeadHours();
   const arrival = new Date(nowMs + hours * 60 * 60 * 1000);
@@ -218,7 +218,7 @@ function formatShippingArrivalLine(nowMs: number = Date.now()): string {
     minute: "2-digit",
     hour12: true,
   }).format(arrival);
-  return `If you order now your Product will arrive on ${when}`;
+  return `If you order now your Product arrives on ${when}`;
 }
 
 function updateProductShippingEta(): void {
