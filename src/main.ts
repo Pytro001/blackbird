@@ -207,24 +207,36 @@ function closePdfManualModal(immediate = false): void {
   }, 320);
 }
 
-/** 6h from now — one line: “Arrival by …” in the visitor’s local timezone. */
-function formatSuperExpressArrivalLine(nowMs: number = Date.now()): string {
-  const arrival = new Date(nowMs + 6 * 60 * 60 * 1000);
-  const when = new Intl.DateTimeFormat(navigator.language || "en-US", {
-    weekday: "short",
-    month: "short",
+/** IANA zones that match Germany (browser-reported); others get the 24h estimate. */
+const GERMANY_SHIPPING_TIMEZONES = new Set(["Europe/Berlin", "Europe/Busingen"]);
+
+function getShippingEtaLeadHours(): number {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return GERMANY_SHIPPING_TIMEZONES.has(tz) ? 6 : 24;
+  } catch {
+    return 24;
+  }
+}
+
+/** “If you order now…” with month, date, and 12h time (en-US for reliable AM/PM). */
+function formatShippingArrivalLine(nowMs: number = Date.now()): string {
+  const hours = getShippingEtaLeadHours();
+  const arrival = new Date(nowMs + hours * 60 * 60 * 1000);
+  const when = new Intl.DateTimeFormat("en-US", {
+    month: "long",
     day: "numeric",
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
     hour12: true,
   }).format(arrival);
-  return `Arrival by ${when}`;
+  return `If you order now your Product will arrive on ${when}`;
 }
 
 function updateProductShippingEta(): void {
   const el = document.querySelector("#product-shipping-eta");
   if (!el) return;
-  el.textContent = formatSuperExpressArrivalLine();
+  el.textContent = formatShippingArrivalLine();
 }
 
 function whatsAppBlockHtml(): string {
@@ -537,7 +549,7 @@ function homeHtml(): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">6H SUPER EXPRESS SHIPPING for Germany</p>
+              <p class="product-shipping__lead" id="product-shipping-lead">6h super express shipping to Germany</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
