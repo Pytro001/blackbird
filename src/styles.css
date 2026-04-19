@@ -39,13 +39,27 @@ body {
   margin: 0;
 }
 
-/* Avoid horizontal rubber-banding / stray overflow on narrow viewports */
+/* Hide vertical scrollbar (page still scrolls); avoid horizontal rubber-banding */
 html {
   overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 body {
   overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 /* Full-page scroll: no vertical snap — free positioning (carousels keep horizontal snap only) */
@@ -322,6 +336,13 @@ body {
   outline: none;
   cursor: grab;
   touch-action: pan-x;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.product-shots::-webkit-scrollbar {
+  display: none;
+  height: 0;
 }
 
 .product-shots--dragging {
@@ -350,6 +371,11 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
   background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.product-shots--dragging .product-shot {
+  cursor: grabbing;
 }
 
 /* Full intrinsic aspect ratio from the files — no crop (avoid object-fit: cover). */
@@ -357,6 +383,46 @@ body {
   display: block;
   width: 100%;
   height: auto;
+  pointer-events: none;
+}
+
+.product-shots-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.65rem;
+}
+
+.product-shots-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(26, 26, 26, 0.75);
+  color: var(--white);
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 500;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.product-shots-nav__btn:hover,
+.product-shots-nav__btn:focus-visible {
+  background: rgba(40, 40, 40, 0.9);
+  border-color: rgba(255, 255, 255, 0.22);
+  outline: none;
+}
+
+.product-shots-nav__btn:active {
+  transform: scale(0.97);
 }
 
 .product-flake-note {
@@ -705,6 +771,12 @@ body {
   display: none !important;
 }
 
+.product-faq__answer-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
 .product-faq__answer {
   margin: 0;
   font-size: clamp(0.78rem, 2vw, 0.85rem);
@@ -768,7 +840,7 @@ body {
   text-align: center;
 }
 
-/* Same voice as “remove dandruff forever” */
+/* Same voice as hero script line */
 .product-education__title--script {
   font-family: var(--font-script);
   font-size: clamp(1.15rem, 4.2vw, 2.35rem);
@@ -786,6 +858,20 @@ body {
   font-weight: 400;
   line-height: 1.55;
   color: rgba(235, 235, 235, 0.92);
+}
+
+.product-education__findout {
+  color: var(--orange);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  text-decoration-color: rgba(229, 142, 53, 0.45);
+}
+
+.product-education__findout:hover,
+.product-education__findout:focus-visible {
+  color: var(--orange-muted);
+  outline: none;
 }
 
 .product-education__grid {
@@ -873,10 +959,11 @@ body {
 
 .product-shipping__eta {
   margin: 0;
-  font-size: clamp(0.78rem, 2vw, 0.85rem);
+  font-size: clamp(0.72rem, 1.9vw, 0.82rem);
   font-weight: 400;
   line-height: 1.45;
   color: var(--gray-500);
+  max-width: 26rem;
 }
 
 .product-inline-msg {
@@ -994,6 +1081,8 @@ body {
 
 .site-legal-footer__line--meta {
   text-transform: none;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .site-legal-footer__chunk {
@@ -1015,10 +1104,31 @@ body {
   outline: none;
 }
 
+.site-legal-footer__chunk--support {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.site-legal-footer__wa-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
 .site-legal-footer__nav {
   margin: 0;
   padding: 0;
   list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 1.75rem);
 }
 
 .site-legal-footer__nav a {

@@ -54,6 +54,7 @@ let productShotsAutoResumeTimer: number | undefined;
 let pdfModalScrollY = 0;
 let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
+let shippingEtaRefreshTimer: number | undefined;
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -206,27 +207,23 @@ function closePdfManualModal(immediate = false): void {
   }, 320);
 }
 
-/** Next calendar day at 12:45 local (24h express ETA display). */
-function latestDeliveryDate(now: Date = new Date()): Date {
-  const d = new Date(now);
-  d.setDate(d.getDate() + 1);
-  d.setHours(12, 45, 0, 0);
-  return d;
-}
-
-function formatShippingEtaLine(delivery: Date): string {
-  const datePart = new Intl.DateTimeFormat("en-GB", {
+/** 6h from now — shown in the visitor's local timezone (not a fixed clock time). */
+function formatSuperExpressArrivalLocal(nowMs: number = Date.now()): string {
+  const arrival = new Date(nowMs + 6 * 60 * 60 * 1000);
+  return new Intl.DateTimeFormat(navigator.language || "en-GB", {
     weekday: "short",
     day: "numeric",
     month: "short",
-  }).format(delivery);
-  return `Arrival: ${datePart}, 12:45`;
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(arrival);
 }
 
 function updateProductShippingEta(): void {
-  const eta = formatShippingEtaLine(latestDeliveryDate());
   const el = document.querySelector("#product-shipping-eta");
-  if (el) el.textContent = eta;
+  if (!el) return;
+  const local = formatSuperExpressArrivalLocal();
+  el.textContent = `If your order ships now, est. arrival by ${local} (your time). 6h super express applies in Germany only — other regions vary.`;
 }
 
 function whatsAppBlockHtml(): string {
@@ -243,9 +240,9 @@ function whatsAppBlockHtml(): string {
                 </div>
                 <div class="product-wa-qr-column" aria-hidden="true">
                   <img
-                    src="${publicAssetUrl("whatsapp-qr.jpg")}?v=2"
-                    width="1024"
-                    height="1024"
+                    src="${publicAssetUrl("whatsapp-qr.png")}"
+                    width="300"
+                    height="300"
                     alt=""
                     decoding="async"
                     loading="lazy"
@@ -327,7 +324,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     question: "What is this product?",
     pinLabel: "What is this?",
     answer:
-      "Daily Wash is your flake-free shampoo step: gentle cleansing formulated to support a healthy scalp routine.",
+      "I hate when bottles leak out in my luggage.\n\nIn the middle of the shampoo bottle pump head is a clamp that you can put on and off to fully close the bottle so while traveling nothing can leak out.",
     pinTop: "38%",
     pinLeft: "44%",
     panel: "above",
@@ -337,7 +334,7 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
     question: "Why two Daily Wash bottles?",
     pinLabel: "Two bottles?",
     answer:
-      "Two Daily Wash bottles keep your routine consistent. Use one at home and keep a spare for travel or backup so you never skip a wash.",
+      "I hate when airport security throws my shampoo away.\n\nOn planes, only 100ml bottles are allowed.\n\nWe want you to travel with us.",
     pinTop: "46%",
     pinLeft: "26%",
     panel: "above",
@@ -345,9 +342,9 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
   {
     id: "why-spray",
     question: "Why a spray?",
-    pinLabel: "Why spray?",
+    pinLabel: "Why Spray?",
     answer:
-      "The After Wash spray spreads a light, even layer without rubbing, so your scalp gets care where it needs it with a clean, dry feel.",
+      "I hate weird cosmetics that I don't understand.\n\nSpray is the simplest form to bring our ingredients to your scalp that most men are already used to from hair spray or similar products.",
     pinTop: "68%",
     pinLeft: "52%",
     panel: "above",
@@ -373,6 +370,20 @@ function closeAllProductFaqPanels(faq: HTMLElement): void {
       if (p) p.hidden = true;
     }
   });
+}
+
+function productFaqAnswerHtml(answer: string): string {
+  return answer
+    .trim()
+    .split(/\n\n+/)
+    .map((block) => {
+      const inner = block
+        .split("\n")
+        .map((line) => escapeHtml(line))
+        .join("<br />");
+      return `<p class="product-faq__answer">${inner}</p>`;
+    })
+    .join("");
 }
 
 function productCarouselSlidesHtml(): string {
@@ -407,7 +418,7 @@ function productFaqSectionHtml(): string {
               hidden
               aria-labelledby="${btnId}"
             >
-              <p class="product-faq__answer">${escapeHtml(item.answer)}</p>
+              <div class="product-faq__answer-wrap">${productFaqAnswerHtml(item.answer)}</div>
             </div>
             <button
               type="button"
@@ -450,7 +461,14 @@ function productEducationSectionHtml(): string {
     >
       <h2 id="education-heading" class="product-education__title product-education__title--script">Education</h2>
       <p class="product-education__lead">
-        There are two types of dandruff: oily and dry. You need to find out which one you have to select the right products.
+        There are two types of dandruff: oily and dry. You need to know which one you have to select the right products —
+        <a
+          class="product-education__findout"
+          href="${escapeHtml(WHATSAPP_CHAT_URL)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >find out</a>
+        with our dermatologist on WhatsApp.
       </p>
       <div class="product-education__grid">
         <div class="product-education__card">
@@ -486,7 +504,7 @@ function homeHtml(): string {
         </h1>
       </div>
       <div class="hero-editorial__bottom">
-        <p class="hero-editorial__script">remove dandruff forever</p>
+        <p class="hero-editorial__script">flake free for men</p>
         <button type="button" class="btn-pill" id="cta-now">Now</button>
       </div>
     </section>
@@ -499,10 +517,18 @@ function homeHtml(): string {
             id="product-shots"
             role="region"
             aria-roledescription="carousel"
-            aria-label="Four product photos. Auto-advancing carousel; swipe or use arrow keys."
+            aria-label="Four product photos. Click a photo for next, or use the arrows; swipe or arrow keys also work."
             tabindex="0"
           >
             ${productCarouselSlidesHtml()}
+          </div>
+          <div class="product-shots-nav" role="group" aria-label="Product photo navigation">
+            <button type="button" class="product-shots-nav__btn" id="product-shots-prev" aria-label="Previous photo">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <button type="button" class="product-shots-nav__btn" id="product-shots-next" aria-label="Next photo">
+              <span aria-hidden="true">›</span>
+            </button>
           </div>
         </div>
 
@@ -511,7 +537,7 @@ function homeHtml(): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">24h express shipping</p>
+              <p class="product-shipping__lead" id="product-shipping-lead">6H SUPER EXPRESS SHIPPING · Germany only</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
@@ -565,6 +591,11 @@ function legalPageShell(title: string, body: string): string {
     </div>`;
 }
 
+function legalSupportFooterChunkHtml(): string {
+  const iconSrc = escapeHtml(publicAssetUrl("whatsapp-icon.png"));
+  return `<span class="site-legal-footer__chunk site-legal-footer__chunk--support">Support: ${whatsappContactLinkHtml()} <img src="${iconSrc}" alt="" width="20" height="20" class="site-legal-footer__wa-icon" decoding="async" loading="lazy" /></span>`;
+}
+
 function siteLegalFooterHtml(): string {
   const i = `${BASE_HREF}impressum`;
   const d = `${BASE_HREF}datenschutz`;
@@ -572,12 +603,10 @@ function siteLegalFooterHtml(): string {
     <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
       <div class="site-legal-footer__line site-legal-footer__line--meta">
         <span class="site-legal-footer__chunk">HUGE Production GmbH · Sebnitzer Str. 35 · 01099 Dresden</span>
-        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
-        <span class="site-legal-footer__chunk">Kontakt: ${whatsappContactLinkHtml()}</span>
+        ${legalSupportFooterChunkHtml()}
       </div>
       <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="Rechtliche Hinweise">
         <a href="${i}">Impressum</a>
-        <span class="site-legal-footer__sep" aria-hidden="true">·</span>
         <a href="${d}">Datenschutz</a>
       </nav>
     </footer>`;
@@ -593,7 +622,7 @@ function impressumHtml(): string {
       01099 Dresden<br />
       Deutschland
     </p>
-    <h2 class="legal-h2">Kontakt</h2>
+    <h2 class="legal-h2">Support</h2>
     <p>
       ${whatsappContactLinkHtml()}
     </p>
@@ -696,7 +725,7 @@ function impressumHtml(): string {
 Sebnitzer Str. 35
 01099 Dresden
 
-Kontakt: siehe oben unter „Kontakt“ (u. a. WhatsApp)
+Support: siehe oben unter „Support“ (u. a. WhatsApp)
 
 Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)
 
@@ -725,7 +754,7 @@ function datenschutzHtml(): string {
     <p>
       HUGE Production GmbH<br />
       Sebnitzer Str. 35, 01099 Dresden, Deutschland<br />
-      Kontakt: ${whatsappContactLinkHtml()}
+      Support: ${whatsappContactLinkHtml()}
     </p>
     <h2 class="legal-h2">Allgemeines</h2>
     <p>
@@ -744,7 +773,7 @@ function datenschutzHtml(): string {
     <p>
       Wenn Sie über einen Link auf unserer Website WhatsApp (Meta) nutzen, gelten die dortigen Nutzungs- und Datenschutzbedingungen des jeweiligen Anbieters. Wir haben keinen Einfluss auf die Datenverarbeitung durch Meta/WhatsApp außerhalb unserer Website.
     </p>
-    <h2 class="legal-h2">Kontaktaufnahme (WhatsApp)</h2>
+    <h2 class="legal-h2">Support über WhatsApp</h2>
     <p>
       Wenn Sie uns über WhatsApp kontaktieren, verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage. Es gelten die Nutzungs- und Datenschutzbedingungen von Meta/WhatsApp. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen bzw. Vertrag) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung).
     </p>
@@ -933,6 +962,8 @@ function render(): void {
   window.clearTimeout(productShotsAutoResumeTimer);
   productShotsAutoTimer = undefined;
   productShotsAutoResumeTimer = undefined;
+  window.clearInterval(shippingEtaRefreshTimer);
+  shippingEtaRefreshTimer = undefined;
   closePdfManualModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
@@ -1001,6 +1032,7 @@ function bindProduct(): void {
   bindProductShotsCarousel();
   bindProductFaq();
   updateProductShippingEta();
+  shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
 }
 
 function bindProductFaq(): void {
@@ -1075,6 +1107,39 @@ function bindProductShotsCarousel(): void {
       startAutoAdvance();
     }, PRODUCT_SHOTS_AUTO_RESUME_MS);
   };
+
+  const goNext = (): void => {
+    pauseAutoForUser();
+    if (scroller.clientWidth <= 0) return;
+    const p = currentIndex();
+    const next = (p + 1) % n;
+    const wrap = next === 0 && p === n - 1;
+    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
+  };
+
+  const goPrev = (): void => {
+    pauseAutoForUser();
+    if (scroller.clientWidth <= 0) return;
+    const p = currentIndex();
+    const next = (p - 1 + n) % n;
+    const wrap = p === 0 && next === n - 1;
+    scrollToIndex(next, wrap || prefersReducedMotion ? "auto" : "smooth");
+  };
+
+  document.querySelector("#product-shots-prev")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    goPrev();
+  });
+  document.querySelector("#product-shots-next")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    goNext();
+  });
+
+  slides.forEach((slide) => {
+    slide.addEventListener("click", () => {
+      goNext();
+    });
+  });
 
   requestAnimationFrame(() => {
     scroller.scrollLeft = slides[0].offsetLeft;
@@ -1187,6 +1252,10 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (!modal || modal.hidden) return;
   e.preventDefault();
   closePdfManualModal();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) updateProductShippingEta();
 });
 
 render();
