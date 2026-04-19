@@ -860,20 +860,6 @@ body {
   color: rgba(235, 235, 235, 0.92);
 }
 
-.product-education__findout {
-  color: var(--orange);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
-  text-decoration-color: rgba(229, 142, 53, 0.45);
-}
-
-.product-education__findout:hover,
-.product-education__findout:focus-visible {
-  color: var(--orange-muted);
-  outline: none;
-}
-
 .product-education__grid {
   display: grid;
   grid-template-columns: 1fr;

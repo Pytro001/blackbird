@@ -474,13 +474,7 @@ function productEducationSectionHtml(): string {
     >
       <h2 id="education-heading" class="product-education__title product-education__title--script">Education</h2>
       <p class="product-education__lead">
-        There are two types of dandruff: oily and dry. You need to know which one you have to select the right products. You can find it out by
-        <a
-          class="product-education__findout"
-          href="${escapeHtml(WHATSAPP_CHAT_URL)}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >messaging our dermatologist on WhatsApp</a>.
+        There are two types of dandruff: oily and dry. You need to know which one you have to select the right products.
       </p>
       <div class="product-education__grid">
         <div class="product-education__card">
