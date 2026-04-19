@@ -593,7 +593,7 @@ function legalPageShell(title: string, body: string): string {
 
 function legalSupportFooterChunkHtml(): string {
   const iconSrc = escapeHtml(publicAssetUrl("whatsapp-icon.png"));
-  return `<span class="site-legal-footer__chunk site-legal-footer__chunk--support">Support: ${whatsappContactLinkHtml()} <img src="${iconSrc}" alt="" width="20" height="20" class="site-legal-footer__wa-icon" decoding="async" loading="lazy" /></span>`;
+  return `<span class="site-legal-footer__chunk site-legal-footer__chunk--support">Any open questions? Message our support on ${whatsappContactLinkHtml()} <img src="${iconSrc}" alt="" width="20" height="20" class="site-legal-footer__wa-icon" decoding="async" loading="lazy" /></span>`;
 }
 
 function siteLegalFooterHtml(): string {
