@@ -555,7 +555,7 @@ function homeHtml(): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">6 hours express shipping to Germany</p>
+              <p class="product-shipping__lead" id="product-shipping-lead">6h Express Shipping</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
