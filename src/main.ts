@@ -352,7 +352,25 @@ function closeAllProductFaqPanels(faq: HTMLElement): void {
     const id = btn.getAttribute("aria-controls");
     if (id) {
       const p = document.getElementById(id);
-      if (p) p.hidden = true;
+      if (p) {
+        p.hidden = true;
+        p.style.removeProperty("transform");
+      }
+    }
+  });
+}
+
+/** After showing a panel, shift its transform so it stays within the viewport. */
+function clampFaqPanelToViewport(panel: HTMLElement): void {
+  requestAnimationFrame(() => {
+    const rect = panel.getBoundingClientRect();
+    const margin = 8;
+    const overRight = rect.right - (window.innerWidth - margin);
+    const overLeft = margin - rect.left;
+    if (overRight > 0) {
+      panel.style.transform = `translateX(calc(-50% - ${overRight}px))`;
+    } else if (overLeft > 0) {
+      panel.style.transform = `translateX(calc(-50% + ${overLeft}px))`;
     }
   });
 }
@@ -1092,6 +1110,7 @@ function bindProductFaq(): void {
     if (!wasOpen) {
       btn.setAttribute("aria-expanded", "true");
       panel.hidden = false;
+      clampFaqPanelToViewport(panel);
     }
   });
 }
