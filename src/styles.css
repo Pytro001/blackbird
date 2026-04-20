@@ -554,12 +554,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn-howto:hover {
-  background: #242424;
-  border-color: rgba(255, 255, 255, 0.22);
-  color: #fff;
-}
-
 .btn-howto:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.38);
   outline-offset: 2px;
