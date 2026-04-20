@@ -322,10 +322,12 @@ body {
   width: 100%;
 }
 
-/* Main photo at natural aspect (width 100%); overlay thumbs top-left */
+/* Smaller centered gallery; desktop height matches buy + How-to column */
 .product-gallery {
   min-width: 0;
   width: 100%;
+  max-width: min(460px, 100%);
+  margin-inline: auto;
 }
 
 .product-gallery__main {
@@ -347,15 +349,69 @@ body {
   user-select: none;
 }
 
+@media (min-width: 840px) {
+  .product-shots-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+
+  .product-gallery {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+    max-width: min(440px, 92%);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-gallery__main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-gallery__stage {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-gallery__figure {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-gallery__main-img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
 .product-gallery__thumbs {
   position: absolute;
   z-index: 2;
-  top: clamp(0.45rem, 1.8vw, 0.75rem);
-  left: clamp(0.45rem, 1.8vw, 0.75rem);
+  top: clamp(0.3rem, 1.25vw, 0.65rem);
+  left: clamp(0.3rem, 1.25vw, 0.65rem);
   display: flex;
   flex-direction: column;
-  gap: 0.38rem;
-  width: clamp(48px, 11vw, 72px);
+  gap: clamp(0.2rem, 0.35vw, 0.4rem);
+  width: clamp(2rem, 20%, 3.5rem);
+  min-width: 1.75rem;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -420,10 +476,15 @@ body {
 
 .product-gallery__main-img {
   display: block;
-  width: 100%;
-  height: auto;
   vertical-align: top;
   pointer-events: none;
+}
+
+@media (max-width: 839px) {
+  .product-gallery__main-img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .product-flake-note {

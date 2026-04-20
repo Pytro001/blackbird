@@ -43,6 +43,7 @@ let pdfModalScrollY = 0;
 let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
 let shippingEtaRefreshTimer: number | undefined;
+let productGalleryAsideHeightCleanup: (() => void) | undefined;
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -957,6 +958,8 @@ function setDocumentLang(view: View): void {
 function render(): void {
   window.clearInterval(shippingEtaRefreshTimer);
   shippingEtaRefreshTimer = undefined;
+  productGalleryAsideHeightCleanup?.();
+  productGalleryAsideHeightCleanup = undefined;
   closePdfManualModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
@@ -1023,9 +1026,42 @@ function bindProduct(): void {
   });
 
   bindProductShotsCarousel();
+  bindProductGalleryAsideHeight();
   bindProductFaq();
   updateProductShippingEta();
   shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
+}
+
+/** Desktop: gallery column height matches buy panel through How-to button; keeps main + thumbs scaled. */
+function bindProductGalleryAsideHeight(): void {
+  productGalleryAsideHeightCleanup?.();
+  const wrap = document.querySelector<HTMLElement>(".product-shots-wrap");
+  const side = document.querySelector<HTMLElement>(".product-side");
+  if (!wrap || !side) return;
+
+  const apply = (): void => {
+    if (window.matchMedia("(max-width: 839px)").matches) {
+      wrap.style.removeProperty("height");
+      return;
+    }
+    wrap.style.height = `${side.offsetHeight}px`;
+  };
+
+  apply();
+  const ro = new ResizeObserver(() => {
+    requestAnimationFrame(apply);
+  });
+  ro.observe(side);
+  const onResize = (): void => {
+    apply();
+  };
+  window.addEventListener("resize", onResize);
+
+  productGalleryAsideHeightCleanup = () => {
+    ro.disconnect();
+    window.removeEventListener("resize", onResize);
+    wrap.style.removeProperty("height");
+  };
 }
 
 function bindProductFaq(): void {
