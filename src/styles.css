@@ -348,6 +348,9 @@ body {
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
+  /* Inset so the main photo doesn’t read zoomed to the frame edges */
+  padding: clamp(0.5rem, 2vw, 1rem);
+  box-sizing: border-box;
 }
 
 @media (min-width: 840px) {
@@ -379,6 +382,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: clamp(0.85rem, 2.8vw, 1.85rem);
   }
 
   .product-gallery__figure {
