@@ -483,7 +483,7 @@ body {
   letter-spacing: 0.02em;
   text-transform: none;
   color: rgba(252, 252, 252, 0.95);
-  background: #1b1b1b;
+  background: #1c1c1c;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   cursor: pointer;
