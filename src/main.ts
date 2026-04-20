@@ -450,6 +450,7 @@ function productFaqSectionHtml(): string {
     return `
           <div
             class="product-faq__spot"
+            data-id="${item.id}"
             style="--pin-top:${item.pinTop};--pin-left:${item.pinLeft};"
           >
             <div
