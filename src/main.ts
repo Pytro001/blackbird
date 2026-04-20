@@ -547,7 +547,12 @@ function homeHtml(): string {
             >Buy</a>
             <p class="product-flake-note" role="note">
               Our set is for dry flakes, if you are not sure if you have dry or oily flakes
-              <a href="#hair-analysis" class="product-wa-link">WhatsApp</a> us.
+              <a
+                class="product-wa-link"
+                href="${escapeHtml(WHATSAPP_CHAT_URL)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >WhatsApp</a> us.
             </p>
             ${whatsAppBlockHtml()}
           </div>
