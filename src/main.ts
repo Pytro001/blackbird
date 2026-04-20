@@ -418,8 +418,8 @@ function productGalleryHtml(): string {
                   fetchpriority="high"
                   draggable="false"
                 />
+                <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
               </figure>
-              <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
             </div>
           </div>
         </div>`;
@@ -1050,9 +1050,8 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
-    const r = side.getBoundingClientRect();
-    const w = Math.round(r.width);
-    const h = Math.round(r.height);
+    const w = Math.round(side.offsetWidth);
+    const h = Math.round(side.offsetHeight);
     gallery.style.width = `${w}px`;
     gallery.style.height = `${h}px`;
   };
