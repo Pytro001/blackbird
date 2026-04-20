@@ -54,7 +54,7 @@ function stripePaymentLinkUrl(): string {
 }
 
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
-const PRODUCT_PRICE_EUR = 69.99;
+const PRODUCT_PRICE_EUR = 39.99;
 const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
