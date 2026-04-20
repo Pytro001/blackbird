@@ -1185,16 +1185,28 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  flex-wrap: nowrap;
+  gap: 0.35em;
+  max-width: 100%;
+  box-sizing: border-box;
+  /* Shrinks on narrow viewports so the sentence + WhatsApp + icon stay one line */
+  font-size: clamp(0.5rem, 2.35vw, 0.82rem);
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+.site-legal-footer__chunk--support a {
+  word-break: normal;
+  overflow-wrap: normal;
+  flex-shrink: 0;
 }
 
 .site-legal-footer__wa-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
+  display: block;
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
   object-fit: contain;
-  vertical-align: middle;
 }
 
 .site-legal-footer__nav {
