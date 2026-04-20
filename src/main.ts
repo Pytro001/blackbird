@@ -1050,10 +1050,8 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
-    const w = Math.round(side.offsetWidth);
-    const h = Math.round(side.offsetHeight);
-    gallery.style.width = `${w}px`;
-    gallery.style.height = `${h}px`;
+    gallery.style.height = `${Math.round(side.offsetHeight)}px`;
+    gallery.style.removeProperty("width");
   };
 
   apply();
@@ -1075,7 +1073,7 @@ function bindProductGalleryAsideHeight(): void {
     ro.disconnect();
     window.removeEventListener("resize", onResize);
     gallery.style.removeProperty("height");
-    gallery.style.removeProperty("width");
+    gallery.style.removeProperty("width"); // clear any leftover from earlier versions
   };
 }
 
