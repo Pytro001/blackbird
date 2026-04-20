@@ -311,20 +311,20 @@ body {
 
 @media (min-width: 840px) {
   .product-layout {
-    /* Equal columns: gallery + aside mirror toward center → even left/right space to page edges */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    /* Both columns sized to their content; grid centered as a unit → equal left/right margins */
+    grid-template-columns: max-content max-content;
+    justify-content: center;
     gap: clamp(2rem, 4.5vw, 3rem);
     align-items: start;
+    width: auto;
+    max-width: 100%;
   }
 
-  /* Gallery column: horizontally centered, top-aligned with aside column */
   .product-shots-wrap {
-    justify-self: center;
     align-self: start;
   }
 
   .product-side {
-    justify-self: start;
     align-self: start;
   }
 }
