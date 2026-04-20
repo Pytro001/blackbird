@@ -316,6 +316,15 @@ body {
     gap: clamp(2rem, 4.5vw, 3rem);
     align-items: start;
   }
+
+  /* Row height follows the aside; gallery column stretches to that same height */
+  .product-shots-wrap {
+    align-self: stretch;
+  }
+
+  .product-side {
+    align-self: start;
+  }
 }
 
 .product-shots-wrap {
@@ -356,10 +365,11 @@ body {
     align-items: flex-end;
     width: 100%;
     min-height: 0;
+    box-sizing: border-box;
   }
 
   .product-gallery {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0;
     height: 100%;
     width: 100%;
@@ -369,14 +379,14 @@ body {
   }
 
   .product-gallery__main {
-    flex: 1;
+    flex: 1 1 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
   }
 
   .product-gallery__stage {
-    flex: 1;
+    flex: 1 1 0;
     min-height: 0;
     display: flex;
     align-items: center;
@@ -384,9 +394,10 @@ body {
   }
 
   .product-gallery__figure {
-    flex: 1;
+    flex: 1 1 0;
     min-height: 0;
     width: 100%;
+    max-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

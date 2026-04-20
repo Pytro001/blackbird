@@ -1048,6 +1048,10 @@ function bindProductGalleryAsideHeight(): void {
   };
 
   apply();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(apply);
+  });
+  window.addEventListener("load", apply, { once: true });
   const ro = new ResizeObserver(() => {
     requestAnimationFrame(apply);
   });
