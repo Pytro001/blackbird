@@ -901,7 +901,7 @@ body {
   }
 
   .product-faq__spot[data-id="two-bottles"] {
-    --pin-top: 14%;
+    --pin-top: 5%;
   }
 }
 
