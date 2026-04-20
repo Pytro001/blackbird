@@ -317,13 +317,14 @@ body {
     align-items: start;
   }
 
-  /* Gallery box is sized in JS to match .product-side; align into column toward the gap */
+  /* Gallery column: horizontally centered, top-aligned with aside column */
   .product-shots-wrap {
-    justify-self: end;
+    justify-self: center;
     align-self: start;
   }
 
   .product-side {
+    justify-self: start;
     align-self: start;
   }
 }
@@ -363,9 +364,8 @@ body {
   .product-shots-wrap {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: flex-start;
-    width: 100%;
     min-height: 0;
     box-sizing: border-box;
   }
