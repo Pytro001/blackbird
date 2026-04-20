@@ -536,11 +536,10 @@ body {
   font: inherit;
   font-size: clamp(0.82rem, 2.2vw, 0.9rem);
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: rgba(252, 252, 252, 0.95);
-  background: rgba(42, 42, 42, 0.68);
-  backdrop-filter: blur(10px);
+  background: #1b1b1b;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radius);
   cursor: pointer;
@@ -549,7 +548,7 @@ body {
 }
 
 .btn-howto:hover {
-  background: rgba(52, 52, 52, 0.78);
+  background: #242424;
   border-color: rgba(255, 255, 255, 0.22);
   color: #fff;
 }
