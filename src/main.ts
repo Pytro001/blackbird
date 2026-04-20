@@ -1037,21 +1037,24 @@ function bindProduct(): void {
   shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
 }
 
-/** Desktop: gallery block = same pixel width × height as .product-side (buy + WhatsApp + how-to). */
+/** Desktop: gallery = same outer size as .product-side (buy + WhatsApp + how-to panels). */
 function bindProductGalleryAsideHeight(): void {
   productGalleryAsideHeightCleanup?.();
-  const wrap = document.querySelector<HTMLElement>(".product-shots-wrap");
+  const gallery = document.querySelector<HTMLElement>("#product-gallery");
   const side = document.querySelector<HTMLElement>(".product-side");
-  if (!wrap || !side) return;
+  if (!gallery || !side) return;
 
   const apply = (): void => {
     if (window.matchMedia("(max-width: 839px)").matches) {
-      wrap.style.removeProperty("height");
-      wrap.style.removeProperty("width");
+      gallery.style.removeProperty("height");
+      gallery.style.removeProperty("width");
       return;
     }
-    wrap.style.width = `${side.offsetWidth}px`;
-    wrap.style.height = `${side.offsetHeight}px`;
+    const r = side.getBoundingClientRect();
+    const w = Math.round(r.width);
+    const h = Math.round(r.height);
+    gallery.style.width = `${w}px`;
+    gallery.style.height = `${h}px`;
   };
 
   apply();
@@ -1059,6 +1062,7 @@ function bindProductGalleryAsideHeight(): void {
     requestAnimationFrame(apply);
   });
   window.addEventListener("load", apply, { once: true });
+  document.fonts?.ready?.then(() => requestAnimationFrame(apply));
   const ro = new ResizeObserver(() => {
     requestAnimationFrame(apply);
   });
@@ -1071,8 +1075,8 @@ function bindProductGalleryAsideHeight(): void {
   productGalleryAsideHeightCleanup = () => {
     ro.disconnect();
     window.removeEventListener("resize", onResize);
-    wrap.style.removeProperty("height");
-    wrap.style.removeProperty("width");
+    gallery.style.removeProperty("height");
+    gallery.style.removeProperty("width");
   };
 }
 
