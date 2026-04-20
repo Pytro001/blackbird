@@ -193,7 +193,7 @@ body {
 .hero-editorial__script {
   margin: 0;
   font-family: var(--font-script);
-  font-size: clamp(1.15rem, 4.2vw, 2.35rem);
+  font-size: clamp(1.35rem, 5.5vw, 2.35rem);
   font-weight: 500;
   line-height: 1.2;
   color: var(--white-dim);
