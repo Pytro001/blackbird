@@ -436,9 +436,9 @@ body {
   left: clamp(0.3rem, 1.25vw, 0.65rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(0.3rem, 0.6vw, 0.55rem);
-  width: clamp(3rem, 28%, 5rem);
-  min-width: 2.75rem;
+  gap: clamp(0.2rem, 0.6vw, 0.55rem);
+  width: clamp(1.75rem, 14%, 5rem);
+  min-width: 1.5rem;
   margin: 0;
   padding: 0;
   overflow: visible;
