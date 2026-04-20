@@ -199,7 +199,7 @@ function closePdfManualModal(immediate = false): void {
 /** Shown arrival = always now + 6h in the visitor’s local timezone. */
 const SHIPPING_ETA_LEAD_HOURS = 6;
 
-/** “Order now to receive your set on …” — date + time in <strong> (en-US for AM/PM). */
+/** “Receive on April 20 at 8:32 PM” — date + time in <strong> (en-US for AM/PM). */
 function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
   const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
   const datePart = new Intl.DateTimeFormat("en-US", {
@@ -212,7 +212,7 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
     hour12: true,
   }).format(arrival);
   const datetime = `${datePart} at ${timePart}`;
-  return `Order now to receive your set on <strong class="product-shipping__eta-datetime">${escapeHtml(datetime)}</strong>`;
+  return `Receive on <strong class="product-shipping__eta-datetime">${escapeHtml(datetime)}</strong>`;
 }
 
 function updateProductShippingEta(): void {
