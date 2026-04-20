@@ -322,7 +322,7 @@ body {
   width: 100%;
 }
 
-/* Main photo + overlay thumbs; desktop height set in JS to match .product-side */
+/* Main photo at natural aspect (width 100%); overlay thumbs top-left */
 .product-gallery {
   min-width: 0;
   width: 100%;
@@ -334,9 +334,6 @@ body {
   width: 100%;
   border-radius: var(--radius);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-  background: rgba(0, 0, 0, 0.2);
 }
 
 .product-gallery__stage {
@@ -348,51 +345,6 @@ body {
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
-  /* Inset so the main photo doesn’t read zoomed to the frame edges */
-  padding: clamp(0.5rem, 2vw, 1rem);
-  box-sizing: border-box;
-}
-
-@media (min-width: 840px) {
-  .product-shots-wrap {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    align-self: stretch;
-  }
-
-  .product-gallery {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .product-gallery__main {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .product-gallery__stage {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(0.85rem, 2.8vw, 1.85rem);
-  }
-
-  .product-gallery__figure {
-    flex: 1;
-    min-height: 0;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 
 .product-gallery__thumbs {
@@ -468,18 +420,10 @@ body {
 
 .product-gallery__main-img {
   display: block;
-  height: auto;
-  pointer-events: none;
-  object-fit: contain;
   width: 100%;
-}
-
-@media (min-width: 840px) {
-  .product-gallery__main-img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
+  height: auto;
+  vertical-align: top;
+  pointer-events: none;
 }
 
 .product-flake-note {
