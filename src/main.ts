@@ -1032,7 +1032,7 @@ function bindProduct(): void {
   shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
 }
 
-/** Desktop: gallery column height matches buy panel through How-to button; keeps main + thumbs scaled. */
+/** Desktop: gallery block = same pixel width × height as .product-side (buy + WhatsApp + how-to). */
 function bindProductGalleryAsideHeight(): void {
   productGalleryAsideHeightCleanup?.();
   const wrap = document.querySelector<HTMLElement>(".product-shots-wrap");
@@ -1042,8 +1042,10 @@ function bindProductGalleryAsideHeight(): void {
   const apply = (): void => {
     if (window.matchMedia("(max-width: 839px)").matches) {
       wrap.style.removeProperty("height");
+      wrap.style.removeProperty("width");
       return;
     }
+    wrap.style.width = `${side.offsetWidth}px`;
     wrap.style.height = `${side.offsetHeight}px`;
   };
 
@@ -1065,6 +1067,7 @@ function bindProductGalleryAsideHeight(): void {
     ro.disconnect();
     window.removeEventListener("resize", onResize);
     wrap.style.removeProperty("height");
+    wrap.style.removeProperty("width");
   };
 }
 

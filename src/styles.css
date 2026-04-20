@@ -317,9 +317,10 @@ body {
     align-items: start;
   }
 
-  /* Row height follows the aside; gallery column stretches to that same height */
+  /* Gallery box is sized in JS to match .product-side; align into column toward the gap */
   .product-shots-wrap {
-    align-self: stretch;
+    justify-self: end;
+    align-self: start;
   }
 
   .product-side {
@@ -332,7 +333,7 @@ body {
   width: 100%;
 }
 
-/* Gallery: height = .product-side (buy top → how-to bottom); image letterboxed, not cropped */
+/* Desktop: outer size set by JS to match .product-side; image letterboxed inside */
 .product-gallery {
   min-width: 0;
   width: 100%;
@@ -362,8 +363,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-end;
-    width: 100%;
+    align-items: stretch;
     min-height: 0;
     box-sizing: border-box;
   }
@@ -371,9 +371,10 @@ body {
   .product-gallery {
     flex: 1 1 0;
     min-height: 0;
+    min-width: 0;
     height: 100%;
     width: 100%;
-    max-width: min(560px, 100%);
+    max-width: none;
     display: flex;
     flex-direction: column;
   }
