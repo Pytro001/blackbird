@@ -276,9 +276,15 @@ body {
   flex: 0 0 auto;
   width: clamp(64px, 18vw, 88px);
   min-width: 56px;
-  display: flex;
+  display: none;
   align-items: stretch;
   justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .product-wa-qr-column {
+    display: flex;
+  }
 }
 
 .product-wa-headline {
