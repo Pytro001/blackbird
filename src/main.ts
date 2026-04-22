@@ -228,9 +228,9 @@ function whatsAppBlockHtml(): string {
                 <div class="product-wa-text">
                   <p class="product-wa-headline">Get a free Dermatologist Check</p>
                   <p class="product-wa-desc">
-                    Message us on
+                    Our set is for dry flakes, if you are not sure if you have dry or oily flakes
                     <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                    to start.
+                    us.
                   </p>
                 </div>
                 <div class="product-wa-qr-column" aria-hidden="true">
@@ -564,15 +564,6 @@ function homeHtml(): string {
               href="${escapeHtml(stripePaymentLinkUrl())}"
               rel="noopener noreferrer"
             >Buy</a>
-            <p class="product-flake-note" role="note">
-              Our set is for dry flakes, if you are not sure if you have dry or oily flakes
-              <a
-                class="product-wa-link"
-                href="${escapeHtml(WHATSAPP_CHAT_URL)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >WhatsApp</a> us.
-            </p>
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">

@@ -520,14 +520,6 @@ body {
   }
 }
 
-.product-flake-note {
-  margin: clamp(0.45rem, 1.8vw, 0.85rem) 0 0;
-  font-size: clamp(0.8rem, 2.1vw, 0.9rem);
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--gray-500);
-}
-
 .product-side {
   min-width: 0;
   width: 100%;
