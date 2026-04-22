@@ -1115,6 +1115,16 @@ body {
   opacity: 0.75;
 }
 
+.product-refund-note {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(0.78rem, 2vw, 0.88rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: rgba(200, 200, 200, 0.88);
+}
+
 /* —— Site legal footer (landing): two lines, all visible —— */
 .site-legal-footer {
   margin: 0 auto;

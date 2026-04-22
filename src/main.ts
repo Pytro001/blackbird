@@ -564,6 +564,10 @@ function homeHtml(): string {
               href="${escapeHtml(stripePaymentLinkUrl())}"
               rel="noopener noreferrer"
             >Buy</a>
+            <p class="product-refund-note">
+              Free 30 day<br />
+              refund/replacement
+            </p>
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">
