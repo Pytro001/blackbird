@@ -23,7 +23,8 @@
   --result-no: var(--gray-400);
   --radius: 12px;
   --radius-lg: 18px;
-  --font: "Montserrat", system-ui, -apple-system, sans-serif;
+  /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
+  --font: "Diatype", "Inter", system-ui, -apple-system, sans-serif;
   --font-script: "Caveat", cursive;
 }
 
