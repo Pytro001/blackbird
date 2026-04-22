@@ -1157,7 +1157,6 @@ function bindProductShotsCarousel(): void {
     const dx = e.clientX - dragStartX;
     const dy = e.clientY - dragStartY;
     dragPointerId = null;
-    stage.classList.remove("product-gallery__stage--dragging");
     try {
       stage.releasePointerCapture(e.pointerId);
     } catch {
@@ -1176,7 +1175,6 @@ function bindProductShotsCarousel(): void {
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
-    stage.classList.add("product-gallery__stage--dragging");
     try {
       stage.setPointerCapture(e.pointerId);
     } catch {

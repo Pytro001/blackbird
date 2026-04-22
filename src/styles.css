@@ -360,7 +360,7 @@ body {
   position: relative;
   overflow: visible;
   outline: none;
-  cursor: grab;
+  cursor: default;
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
@@ -491,10 +491,6 @@ body {
 .product-gallery__thumb.is-active {
   opacity: 1;
   filter: brightness(1.12) contrast(1.02);
-}
-
-.product-gallery__stage--dragging {
-  cursor: grabbing;
 }
 
 .product-gallery__stage:focus-visible {
