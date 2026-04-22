@@ -216,7 +216,7 @@ function formatDeliveryTimeLowercase(d: Date): string {
   return s.replace(/\s*(AM|PM)\b/, (_, ap: string) => ap.toLowerCase());
 }
 
-/** “Delivery Thursday 10pm, April 22” or “Delivery Today 10pm, April 22” if same calendar day. */
+/** “Free Delivery Thursday 10pm, April 22” or “Free Delivery Today 10pm, April 22” if same calendar day. */
 function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
   const now = new Date(nowMs);
   const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
@@ -229,7 +229,7 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
     ? "Today"
     : new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
-  return `Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
+  return `Free Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
 }
 
 function updateProductShippingEta(): void {
@@ -572,7 +572,7 @@ function homeHtml(): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
             <div class="product-shipping">
-              <p class="product-shipping__lead" id="product-shipping-lead">6h Express Shipping</p>
+              <p class="product-shipping__returns">Free Returns</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
@@ -581,7 +581,6 @@ function homeHtml(): string {
               href="${escapeHtml(stripePaymentLinkUrl())}"
               rel="noopener noreferrer"
             >Buy</a>
-            <p class="product-refund-note">Free 30 day refund/replacement</p>
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">

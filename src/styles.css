@@ -1013,7 +1013,7 @@ body {
   margin: 0.15rem 0 0;
 }
 
-.product-shipping__lead {
+.product-shipping__returns {
   margin: 0;
   font-size: clamp(0.95rem, 2.75vw, 1.05rem);
   font-weight: 500;
@@ -1025,7 +1025,7 @@ body {
 
 .product-shipping__eta {
   margin: 0;
-  font-size: clamp(0.88rem, 2.35vw, 0.98rem);
+  font-size: clamp(0.95rem, 2.75vw, 1.05rem);
   font-weight: 500;
   line-height: 1.45;
   color: rgba(245, 245, 245, 0.82);
@@ -1113,16 +1113,6 @@ body {
 .btn-buy.is-loading {
   pointer-events: none;
   opacity: 0.75;
-}
-
-.product-refund-note {
-  margin: 0;
-  text-align: left;
-  font-size: clamp(0.82rem, 2.1vw, 0.9rem);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: 0.02em;
-  color: rgba(200, 200, 200, 0.88);
 }
 
 /* —— Site legal footer (landing): two lines, all visible —— */
