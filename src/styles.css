@@ -1117,7 +1117,7 @@ body {
 
 .product-refund-note {
   margin: 0;
-  text-align: center;
+  text-align: left;
   font-size: clamp(0.78rem, 2vw, 0.88rem);
   font-weight: 500;
   line-height: 1.35;
