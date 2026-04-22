@@ -49,13 +49,16 @@ let productGalleryAsideHeightCleanup: (() => void) | undefined;
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
 
+/** Subscribe on `/subscription`; override with VITE_STRIPE_SUBSCRIPTION_LINK if needed. */
+const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
+  "https://buy.stripe.com/7sY6oI7OX0OW9rabXNfbq03";
+
 function stripePaymentLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
 }
 
-/** Monthly plan on `/subscription`; set VITE_STRIPE_SUBSCRIPTION_LINK to your subscription Payment Link. */
 function stripeSubscriptionLinkUrl(): string {
-  return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || stripePaymentLinkUrl();
+  return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
