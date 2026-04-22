@@ -199,20 +199,39 @@ function closePdfManualModal(immediate = false): void {
 /** Shown arrival = always now + 6h in the visitor’s local timezone. */
 const SHIPPING_ETA_LEAD_HOURS = 6;
 
-/** “Delivery on April 22 at 10:44 PM” — date + time in <strong> (en-US for AM/PM). */
+function sameLocalCalendarDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+/** e.g. "10:44pm" or "10pm" when on the hour (12h, lowercase am/pm). */
+function formatDeliveryTimeLowercase(d: Date): string {
+  const hasMinutes = d.getMinutes() !== 0;
+  const s = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    ...(hasMinutes ? { minute: "2-digit" as const } : {}),
+    hour12: true,
+  }).format(d);
+  return s.replace(/\s*(AM|PM)\b/, (_, ap: string) => ap.toLowerCase());
+}
+
+/** “Delivery Thursday 10pm, April 22” or “Delivery today 10pm, April 22” if same calendar day. */
 function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
+  const now = new Date(nowMs);
   const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
-  const datePart = new Intl.DateTimeFormat("en-US", {
+  const calPart = new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
   }).format(arrival);
-  const timePart = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  }).format(arrival);
-  const datetime = `${datePart} at ${timePart}`;
-  return `Delivery on <strong class="product-shipping__eta-datetime">${escapeHtml(datetime)}</strong>`;
+  const timeStr = formatDeliveryTimeLowercase(arrival);
+  const dayWord = sameLocalCalendarDay(arrival, now)
+    ? "today"
+    : new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(arrival);
+  const tail = `${dayWord} ${timeStr}, ${calPart}`;
+  return `Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
 }
 
 function updateProductShippingEta(): void {
