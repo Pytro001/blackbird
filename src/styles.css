@@ -254,7 +254,7 @@ body {
 }
 
 .product-wa-block {
-  margin-top: clamp(1.5rem, 4vw, 2.35rem);
+  margin-top: clamp(0.45rem, 1.5vw, 0.75rem);
 }
 
 .product-wa-row {
@@ -290,7 +290,7 @@ body {
 .product-wa-headline {
   margin: 0;
   font-size: clamp(0.95rem, 2.6vw, 1.08rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: rgba(245, 245, 245, 0.78);
@@ -299,7 +299,7 @@ body {
 .product-wa-desc {
   margin: 0;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.4;
   color: var(--gray-500);
 }
@@ -561,7 +561,7 @@ body {
   min-height: 48px;
   font: inherit;
   font-size: clamp(0.82rem, 2.2vw, 0.9rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: none;
   color: rgba(252, 252, 252, 0.95);
@@ -991,7 +991,7 @@ body {
 .product-name {
   margin: 0;
   font-size: clamp(1.05rem, 3vw, 1.28rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.03em;
   line-height: 1.2;
   color: rgba(245, 245, 245, 0.95);
@@ -1000,7 +1000,7 @@ body {
 .product-price {
   margin: 0;
   font-size: clamp(1.4rem, 4.2vw, 1.85rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--white);
   line-height: 1.15;
@@ -1016,7 +1016,7 @@ body {
 .product-shipping__lead {
   margin: 0;
   font-size: clamp(0.95rem, 2.75vw, 1.05rem);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: none;
   color: rgba(245, 245, 245, 0.82);
@@ -1026,14 +1026,14 @@ body {
 .product-shipping__eta {
   margin: 0;
   font-size: clamp(0.88rem, 2.35vw, 0.98rem);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.45;
   color: rgba(245, 245, 245, 0.82);
   max-width: 26rem;
 }
 
 .product-shipping__eta-datetime {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .product-inline-msg {
@@ -1049,7 +1049,7 @@ body {
 
 .product-wa-link {
   color: var(--gray-400);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-decoration: underline;
   text-underline-offset: 0.18em;
@@ -1118,8 +1118,8 @@ body {
 .product-refund-note {
   margin: 0;
   text-align: left;
-  font-size: clamp(0.78rem, 2vw, 0.88rem);
-  font-weight: 400;
+  font-size: clamp(0.82rem, 2.1vw, 0.9rem);
+  font-weight: 500;
   line-height: 1.35;
   letter-spacing: 0.02em;
   color: rgba(200, 200, 200, 0.88);
