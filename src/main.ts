@@ -207,18 +207,16 @@ function sameLocalCalendarDay(a: Date, b: Date): boolean {
   );
 }
 
-/** e.g. "10:44pm" or "10pm" when on the hour (12h, lowercase am/pm). */
+/** e.g. "10pm" (hour only, 12h, lowercase am/pm). */
 function formatDeliveryTimeLowercase(d: Date): string {
-  const hasMinutes = d.getMinutes() !== 0;
   const s = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
-    ...(hasMinutes ? { minute: "2-digit" as const } : {}),
     hour12: true,
   }).format(d);
   return s.replace(/\s*(AM|PM)\b/, (_, ap: string) => ap.toLowerCase());
 }
 
-/** “Delivery Thursday 10pm, April 22” or “Delivery today 10pm, April 22” if same calendar day. */
+/** “Delivery Thursday 10pm, April 22” or “Delivery Today 10pm, April 22” if same calendar day. */
 function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
   const now = new Date(nowMs);
   const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
@@ -228,7 +226,7 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
   }).format(arrival);
   const timeStr = formatDeliveryTimeLowercase(arrival);
   const dayWord = sameLocalCalendarDay(arrival, now)
-    ? "today"
+    ? "Today"
     : new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
   return `Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
