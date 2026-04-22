@@ -53,6 +53,11 @@ function stripePaymentLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
 }
 
+/** Monthly plan on `/subscription`; set VITE_STRIPE_SUBSCRIPTION_LINK to your subscription Payment Link. */
+function stripeSubscriptionLinkUrl(): string {
+  return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || stripePaymentLinkUrl();
+}
+
 /** Shown next to Buy; keep in sync with your Stripe Price amount. */
 const PRODUCT_PRICE_EUR = 59.99;
 const productPriceDisplay = new Intl.NumberFormat("de-DE", {
@@ -60,9 +65,18 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
+const SUBSCRIPTION_PRICE_EUR = 5.99;
+const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+}).format(SUBSCRIPTION_PRICE_EUR);
+
+type LandingMode = "purchase" | "subscription";
+
 type View =
   | "landing"
   | "product"
+  | "subscription"
   | "thanks"
   | "manual"
   | "impressum"
@@ -278,6 +292,7 @@ function getAppPath(): string {
 function pathToView(): View {
   const path = getAppPath();
   if (path === "/product") return "product";
+  if (path === "/subscription") return "subscription";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
   if (path === "/agb") {
@@ -542,7 +557,14 @@ function productEducationSectionHtml(): string {
     </section>`;
 }
 
-function homeHtml(): string {
+function homeHtml(mode: LandingMode = "purchase"): string {
+  const isSubscription = mode === "subscription";
+  const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
+  const priceBlock = isSubscription
+    ? `<p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>`
+    : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
+  const buyLabel = isSubscription ? "Subscribe" : "Buy";
+
   return `
     <div class="home-shell">
     <div class="skip-links" role="navigation" aria-label="Skip links">
@@ -570,7 +592,7 @@ function homeHtml(): string {
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
-            <p class="product-price">${escapeHtml(productPriceDisplay)}</p>
+            ${priceBlock}
             <div class="product-shipping">
               <p class="product-shipping__returns">Free 30 Days Return</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
@@ -578,9 +600,9 @@ function homeHtml(): string {
             <a
               class="btn-buy"
               id="buy-btn"
-              href="${escapeHtml(stripePaymentLinkUrl())}"
+              href="${escapeHtml(checkoutHref)}"
               rel="noopener noreferrer"
-            >Buy</a>
+            >${buyLabel}</a>
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">
@@ -1006,8 +1028,9 @@ function render(): void {
   const view = pathToView();
   setDocumentLang(view);
 
-  if (view === "landing" || view === "product") {
-    root.innerHTML = homeHtml();
+  if (view === "landing" || view === "product" || view === "subscription") {
+    const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
+    root.innerHTML = homeHtml(landingMode);
     bindLanding();
     bindProduct();
     const scrollProduct =
@@ -1287,7 +1310,7 @@ window.addEventListener("popstate", () => {
 
 window.addEventListener("hashchange", () => {
   const path = getAppPath();
-  if (path !== "/" && path !== "/product") return;
+  if (path !== "/" && path !== "/product" && path !== "/subscription") return;
   const h = location.hash;
   if (h === "#product-faq" || h === "#education" || h === "#site-footer") {
     requestAnimationFrame(() => scrollToHashSection());

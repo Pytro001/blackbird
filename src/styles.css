@@ -1010,6 +1010,22 @@ body {
   line-height: 1.15;
 }
 
+.product-price__period {
+  font-weight: 500;
+  font-size: 0.55em;
+  letter-spacing: 0.03em;
+  color: rgba(245, 245, 245, 0.75);
+  margin-left: 0.15em;
+  white-space: nowrap;
+}
+
+.product-price--subscription {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15em 0.35em;
+}
+
 .product-shipping {
   display: flex;
   flex-direction: column;

@@ -15,6 +15,8 @@ function spaFallback(): {
         const spa =
           url === "/product" ||
           url.startsWith("/product/") ||
+          url === "/subscription" ||
+          url.startsWith("/subscription/") ||
           url === "/email" ||
           url.startsWith("/email/") ||
           url === "/thanks" ||
@@ -42,6 +44,8 @@ function spaFallback(): {
         const spa =
           url === "/product" ||
           url.startsWith("/product/") ||
+          url === "/subscription" ||
+          url.startsWith("/subscription/") ||
           url === "/email" ||
           url.startsWith("/email/") ||
           url === "/thanks" ||
