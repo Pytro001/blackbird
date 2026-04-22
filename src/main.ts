@@ -1108,6 +1108,11 @@ function bindProductFaq(): void {
 }
 
 const PRODUCT_GALLERY_SWIPE_MIN_PX = 48;
+/** Horizontal wheel delta before changing slide (trackpad two-finger swipe). */
+const PRODUCT_GALLERY_WHEEL_STEP_PX = 36;
+const PRODUCT_GALLERY_WHEEL_COOLDOWN_MS = 240;
+/** Midpoint movement between two touches before changing slide. */
+const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX = 52;
 
 function bindProductShotsCarousel(): void {
   const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
@@ -1184,6 +1189,73 @@ function bindProductShotsCarousel(): void {
 
   stage.addEventListener("pointerup", endDrag);
   stage.addEventListener("pointercancel", endDrag);
+
+  /** Two-finger trackpad / horizontal mouse wheel (deltaX). */
+  let wheelAccumX = 0;
+  let wheelCooldown = false;
+  let wheelAccumResetTimer: number | undefined;
+  stage.addEventListener(
+    "wheel",
+    (e: WheelEvent) => {
+      if (n < 2 || wheelCooldown) return;
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+      if (absX < 0.5 && absY < 0.5) return;
+      if (absY > absX * 1.25) {
+        wheelAccumX = 0;
+        return;
+      }
+
+      wheelAccumX += e.deltaX;
+      window.clearTimeout(wheelAccumResetTimer);
+      wheelAccumResetTimer = window.setTimeout(() => {
+        wheelAccumX = 0;
+      }, 140);
+
+      if (Math.abs(wheelAccumX) < PRODUCT_GALLERY_WHEEL_STEP_PX) return;
+
+      e.preventDefault();
+      if (wheelAccumX < 0) show(index + 1);
+      else show(index - 1);
+      wheelAccumX = 0;
+      wheelCooldown = true;
+      window.setTimeout(() => {
+        wheelCooldown = false;
+      }, PRODUCT_GALLERY_WHEEL_COOLDOWN_MS);
+    },
+    { passive: false }
+  );
+
+  /** Two-finger horizontal swipe on touch screens. */
+  let twoTouchMidX: number | null = null;
+  stage.addEventListener(
+    "touchstart",
+    (e) => {
+      if (e.touches.length !== 2) twoTouchMidX = null;
+      else twoTouchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    },
+    { passive: true }
+  );
+  stage.addEventListener(
+    "touchmove",
+    (e) => {
+      if (n < 2 || e.touches.length !== 2 || twoTouchMidX === null) return;
+      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      const dx = midX - twoTouchMidX;
+      if (Math.abs(dx) < PRODUCT_GALLERY_TWO_TOUCH_MIN_PX) return;
+      e.preventDefault();
+      if (dx < 0) show(index + 1);
+      else show(index - 1);
+      twoTouchMidX = midX;
+    },
+    { passive: false }
+  );
+  stage.addEventListener("touchend", (e) => {
+    if (e.touches.length < 2) twoTouchMidX = null;
+  });
+  stage.addEventListener("touchcancel", () => {
+    twoTouchMidX = null;
+  });
 }
 
 function bindThanks(): void {
