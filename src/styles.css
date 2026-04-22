@@ -1033,6 +1033,11 @@ body {
   margin: 0.15rem 0 0;
 }
 
+.product-shipping__free {
+  color: #5fd08a;
+  font-weight: 600;
+}
+
 .product-shipping__returns {
   margin: 0;
   font-size: clamp(0.95rem, 2.75vw, 1.05rem);

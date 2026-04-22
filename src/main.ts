@@ -246,7 +246,7 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
     ? "Today"
     : new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
-  return `Free Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
+  return `<span class="product-shipping__free">Free</span> Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
 }
 
 function updateProductShippingEta(): void {
@@ -597,7 +597,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             ${priceBlock}
             <div class="product-shipping">
-              <p class="product-shipping__returns">Free 30 Days Return</p>
+              <p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
