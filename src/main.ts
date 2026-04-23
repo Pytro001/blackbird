@@ -637,7 +637,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   const priceBlock = isSubscription
     ? `<div class="product-price-block product-price-block--subscription">
             <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
-            <p class="product-subscription-lede">Cancel at any time. When your set is empty, we automatically send a new one.</p>
+            <p class="product-subscription-lede">Cancel at any time. When your set is empty, we send you a new one.</p>
           </div>`
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
   const returnsLine = isSubscription
