@@ -443,7 +443,7 @@ const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
   answer:
     "When your bottles run empty, we send the next full set.\n\nYou can cancel your subscription anytime.",
   pinTop: "63%",
-  pinLeft: "60%",
+  pinLeft: "80%",
   panel: "above",
 };
 
