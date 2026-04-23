@@ -602,22 +602,6 @@ function productFaqSectionHtml(mode: LandingMode): string {
     </section>`;
 }
 
-/** Shown only on /subscription: copy FAQ-style block above the image FAQ. */
-function subscriptionFaqTextSectionHtml(): string {
-  return `
-    <section class="product-sub-faq" id="subscription-faq" aria-labelledby="subscription-faq-heading" tabindex="-1">
-      <h2 id="subscription-faq-heading" class="product-sub-faq__title">Subscription</h2>
-      <p class="product-sub-faq__lead">Your scalp should have consistency.</p>
-      <p class="product-sub-faq__p">
-        When your bottles run empty, we send the next full set—no reordering, no forgotten deliveries, no gaps in your routine.
-      </p>
-      <ul class="product-sub-faq__list" role="list">
-        <li>Refills automatically when empty</li>
-        <li>Cancel anytime—no contracts, no hidden fees</li>
-      </ul>
-    </section>`;
-}
-
 function productEducationSectionHtml(): string {
   return `
     <section
@@ -711,7 +695,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
         </aside>
       </main>
     </div>
-    ${isSubscription ? subscriptionFaqTextSectionHtml() : ""}
     ${productFaqSectionHtml(mode)}
     ${productEducationSectionHtml()}
     ${siteLegalFooterHtml()}
@@ -1140,7 +1123,6 @@ function render(): void {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     } else if (
       location.hash === "#product-faq" ||
-      location.hash === "#subscription-faq" ||
       location.hash === "#education" ||
       location.hash === "#site-footer"
     ) {
@@ -1414,7 +1396,7 @@ window.addEventListener("hashchange", () => {
   const path = getAppPath();
   if (path !== "/" && path !== "/product" && path !== "/subscription") return;
   const h = location.hash;
-  if (h === "#product-faq" || h === "#subscription-faq" || h === "#education" || h === "#site-footer") {
+  if (h === "#product-faq" || h === "#education" || h === "#site-footer") {
     requestAnimationFrame(() => scrollToHashSection());
   }
 });
