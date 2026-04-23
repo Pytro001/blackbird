@@ -1034,7 +1034,7 @@ body {
 }
 
 .product-shipping__free {
-  color: #5fd08a;
+  color: var(--orange);
   font-weight: 600;
 }
 
