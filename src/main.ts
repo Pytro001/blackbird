@@ -436,6 +436,24 @@ const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
   },
 ];
 
+const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
+  id: "subscription",
+  question: "Subscription",
+  pinLabel: "Subscription",
+  answer:
+    "When your bottles run empty, we send the next full set.\n\nYou can cancel your subscription anytime.",
+  pinTop: "78%",
+  pinLeft: "50%",
+  panel: "above",
+};
+
+function productFaqItemsForMode(mode: LandingMode): readonly ProductFaqItem[] {
+  if (mode === "subscription") {
+    return [...PRODUCT_FAQ_ITEMS, PRODUCT_FAQ_SUBSCRIPTION_ITEM];
+  }
+  return PRODUCT_FAQ_ITEMS;
+}
+
 function closeAllProductFaqPanels(faq: HTMLElement): void {
   faq.querySelectorAll<HTMLButtonElement>(".product-faq__pin").forEach((btn) => {
     btn.setAttribute("aria-expanded", "false");
@@ -533,8 +551,9 @@ function productGalleryHtml(): string {
         </div>`;
 }
 
-function productFaqSectionHtml(): string {
-  const spots = PRODUCT_FAQ_ITEMS.map((item) => {
+function productFaqSectionHtml(mode: LandingMode): string {
+  const items = productFaqItemsForMode(mode);
+  const spots = items.map((item) => {
     const panelId = `product-faq-panel-${item.id}`;
     const btnId = `product-faq-btn-${item.id}`;
     return `
@@ -697,7 +716,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
       </main>
     </div>
     ${isSubscription ? subscriptionFaqTextSectionHtml() : ""}
-    ${productFaqSectionHtml()}
+    ${productFaqSectionHtml(mode)}
     ${productEducationSectionHtml()}
     ${siteLegalFooterHtml()}
     ${pdfManualModalHtml()}
