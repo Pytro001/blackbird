@@ -663,9 +663,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   const returnsLine = isSubscription
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
-  const subscriptionCancelLine = isSubscription
-    ? `<p class="product-shipping__eta">Cancel any time</p>`
-    : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
 
   return `
@@ -698,7 +695,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
             ${priceBlock}
             <div class="product-shipping">
               ${returnsLine}
-              ${subscriptionCancelLine}
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
