@@ -640,13 +640,14 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   const priceBlock = isSubscription
     ? `<div class="product-price-block product-price-block--subscription">
             <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
-            <p class="product-subscription-lede">When your set is empty, we send<br />
-            a new one directly to your home.</p>
           </div>`
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
   const returnsLine = isSubscription
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
+  const subscriptionShippingTopLine = isSubscription
+    ? `<p class="product-shipping__eta">Free new set every month</p>`
+    : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
 
   return `
@@ -679,6 +680,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
             ${priceBlock}
             <div class="product-shipping">
               ${returnsLine}
+              ${subscriptionShippingTopLine}
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
