@@ -213,38 +213,93 @@ function closePdfManualModal(immediate = false): void {
   }, 320);
 }
 
-/** Shown arrival = always now + 6h in the visitor’s local timezone. */
+/** Shown arrival = always now + 6h, formatted in the visitor’s local timezone and locale. */
 const SHIPPING_ETA_LEAD_HOURS = 6;
 
-function sameLocalCalendarDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+/** "Today" / localized, keyed by BCP-47 base language. */
+const DELIVERY_TODAY_I18N: Readonly<Record<string, string>> = {
+  en: "Today",
+  de: "Heute",
+  fr: "Aujourd’hui",
+  es: "Hoy",
+  pt: "Hoje",
+  it: "Oggi",
+  nl: "Vandaag",
+  pl: "Dzisiaj",
+  sv: "I dag",
+  no: "I dag",
+  nb: "I dag",
+  da: "I dag",
+  fi: "Tänään",
+  ja: "今日",
+  ko: "오늘",
+  zh: "今天",
+  ar: "اليوم",
+  hi: "आज",
+  ru: "Сегодня",
+  uk: "Сьогодні",
+  tr: "Bugün",
+  cs: "Dnes",
+};
+
+function viewerLocaleAndTimeZone(): { locale: string; timeZone: string } {
+  const locale =
+    (typeof navigator !== "undefined" && (navigator.languages?.[0] || navigator.language)) || "en";
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return { locale, timeZone: tz && tz.length > 0 ? tz : "UTC" };
 }
 
-/** e.g. "10pm" (hour only, 12h, lowercase am/pm). */
-function formatDeliveryTimeLowercase(d: Date): string {
-  const s = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    hour12: true,
-  }).format(d);
-  return s.replace(/\s*(AM|PM)\b/, (_, ap: string) => ap.toLowerCase());
+function sameCalendarDayInTimeZone(a: Date, b: Date, timeZone: string): boolean {
+  const key = (d: Date) =>
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(d);
+  return key(a) === key(b);
 }
 
-/** “Free Delivery Thursday 10pm, April 22” or “Free Delivery Today 10pm, April 22” if same calendar day. */
-function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
-  const now = new Date(nowMs);
-  const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
-  const calPart = new Intl.DateTimeFormat("en-US", {
+function todayLabelForLocale(locale: string): string {
+  const b = (locale.toLowerCase().split("-")[0] ?? "en");
+  if (b && DELIVERY_TODAY_I18N[b]) return DELIVERY_TODAY_I18N[b];
+  return DELIVERY_TODAY_I18N.en;
+}
+
+/** Hour in viewer’s locale; 12h Latin am/pm lowercased to match site style (e.g. 10 pm). */
+function formatArrivalHourInViewerLocale(d: Date, locale: string, timeZone: string): string {
+  const dtf = new Intl.DateTimeFormat(locale, { timeZone, hour: "numeric" });
+  let s = dtf.format(d);
+  if (dtf.resolvedOptions().hour12) {
+    s = s.replace(/(\s+)(A\.?M\.?|P\.?M\.?)$/i, (_m, _sp, ap) => {
+      return ` ${/^A/i.test(ap.replace(/[^A-Za-z]/g, "")) ? "am" : "pm"}`;
+    });
+  }
+  return s.trim();
+}
+
+function formatArrivalDatePartInViewerLocale(
+  d: Date,
+  locale: string,
+  timeZone: string
+): string {
+  return new Intl.DateTimeFormat(locale, {
+    timeZone,
     month: "long",
     day: "numeric",
-  }).format(arrival);
-  const timeStr = formatDeliveryTimeLowercase(arrival);
-  const dayWord = sameLocalCalendarDay(arrival, now)
-    ? "Today"
-    : new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(arrival);
+  }).format(d);
+}
+
+/** e.g. “Free Delivery Heute 22 Uhr, 22. April” in DE, “Free Delivery 今天 …” in zh, etc. */
+function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
+  const { locale, timeZone } = viewerLocaleAndTimeZone();
+  const now = new Date(nowMs);
+  const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
+  const calPart = formatArrivalDatePartInViewerLocale(arrival, locale, timeZone);
+  const timeStr = formatArrivalHourInViewerLocale(arrival, locale, timeZone);
+  const dayWord = sameCalendarDayInTimeZone(arrival, now, timeZone)
+    ? todayLabelForLocale(locale)
+    : new Intl.DateTimeFormat(locale, { timeZone, weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
   return `<span class="product-shipping__free">Free</span> Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
 }
