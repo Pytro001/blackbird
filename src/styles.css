@@ -1102,8 +1102,8 @@ body {
 }
 
 .product-shipping__free {
-  color: var(--orange);
-  font-weight: 600;
+  color: inherit;
+  font-weight: inherit;
 }
 
 .product-shipping__returns {
