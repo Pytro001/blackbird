@@ -564,8 +564,14 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   const isSubscription = mode === "subscription";
   const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
   const priceBlock = isSubscription
-    ? `<p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>`
+    ? `<div class="product-price-block product-price-block--subscription">
+            <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
+            <p class="product-subscription-lede">When your set is empty, we automatically send a new one.</p>
+          </div>`
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
+  const returnsLine = isSubscription
+    ? `<p class="product-shipping__returns product-shipping__returns--subscription">Cancel at any time.</p>`
+    : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
 
   return `
@@ -597,7 +603,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             ${priceBlock}
             <div class="product-shipping">
-              <p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>
+              ${returnsLine}
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a

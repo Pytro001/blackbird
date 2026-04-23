@@ -1019,11 +1019,29 @@ body {
   white-space: nowrap;
 }
 
+.product-price-block--subscription {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+}
+
 .product-price--subscription {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.15em 0.35em;
+  margin: 0;
+}
+
+.product-subscription-lede {
+  margin: 0;
+  max-width: 22rem;
+  font-size: clamp(0.82rem, 2.15vw, 0.92rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: rgba(200, 200, 200, 0.9);
 }
 
 .product-shipping {
@@ -1046,6 +1064,11 @@ body {
   text-transform: none;
   color: rgba(245, 245, 245, 0.82);
   line-height: 1.35;
+}
+
+.product-shipping__returns--subscription {
+  color: rgba(220, 220, 220, 0.9);
+  font-size: clamp(0.9rem, 2.4vw, 0.98rem);
 }
 
 .product-shipping__eta {
