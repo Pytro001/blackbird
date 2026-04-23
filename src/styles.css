@@ -721,6 +721,56 @@ body {
   }
 }
 
+/* —— Subscription: text FAQ (only on /subscription) —— */
+.product-sub-faq {
+  max-width: min(640px, 100%);
+  margin: 0 auto;
+  padding: clamp(1.75rem, 5vw, 2.75rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
+    clamp(0.5rem, 2vw, 1rem) max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
+  overflow-x: clip;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.product-sub-faq__title {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.12rem, 2.9vw, 1.38rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.product-sub-faq__lead {
+  margin: 0 0 0.65rem;
+  font-size: clamp(0.95rem, 2.45vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+.product-sub-faq__p {
+  margin: 0 0 1.05rem;
+  font-size: clamp(0.86rem, 2.1vw, 0.95rem);
+  line-height: 1.6;
+  color: var(--gray-400);
+}
+
+.product-sub-faq__list {
+  margin: 0;
+  padding: 0 0 0 1.2rem;
+  font-size: clamp(0.86rem, 2.05vw, 0.94rem);
+  line-height: 1.55;
+  color: rgba(210, 210, 210, 0.9);
+}
+
+.product-sub-faq__list li {
+  margin: 0.45rem 0;
+  padding-left: 0.15rem;
+}
+
+.product-sub-faq__list li::marker {
+  color: var(--orange);
+}
+
 /* —— Scroll FAQ: four-bottle image + hotspots —— */
 .product-faq {
   padding: max(clamp(2.5rem, 8vw, 4.5rem), env(safe-area-inset-top))
