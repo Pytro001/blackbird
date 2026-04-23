@@ -647,7 +647,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta">Free new set every month</p>`
+    ? `<p class="product-shipping__eta">Get a new set every month</p>`
     : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
 
