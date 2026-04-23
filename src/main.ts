@@ -441,7 +441,7 @@ const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
   question: "Subscription",
   pinLabel: "Subscription",
   answer:
-    "When your bottles run empty, we send the next full set.\n\nYou can cancel your subscription anytime.",
+    "Your scalp should have consistency. When your bottles run empty, we send the next full set. You can cancel your subscription anytime.",
   pinTop: "63%",
   pinLeft: "80%",
   panel: "above",
@@ -640,7 +640,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   const priceBlock = isSubscription
     ? `<div class="product-price-block product-price-block--subscription">
             <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
-            <p class="product-subscription-lede">Your scalp should have consistency. When your bottles run empty, we send the next full set. You can cancel your subscription anytime.</p>
+            <p class="product-subscription-lede">You can cancel your subscription anytime.</p>
           </div>`
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
   const returnsLine = isSubscription
