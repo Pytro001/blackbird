@@ -442,8 +442,8 @@ const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
   pinLabel: "Subscription",
   answer:
     "When your bottles run empty, we send the next full set.\n\nYou can cancel your subscription anytime.",
-  pinTop: "78%",
-  pinLeft: "50%",
+  pinTop: "63%",
+  pinLeft: "60%",
   panel: "above",
 };
 
