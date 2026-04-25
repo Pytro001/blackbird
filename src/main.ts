@@ -36,6 +36,37 @@ const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   },
 ];
 
+/** [left, top, animation-delay, animation-duration] — blinking “spark” layer (mission star is separate) */
+const COSMOS_SPARKS: ReadonlyArray<readonly [string, string, string, string]> = [
+  ["2%", "8%", "0.1s", "5.2s"],
+  ["13%", "5%", "0.8s", "4.3s"],
+  ["24%", "11%", "1.4s", "6.1s"],
+  ["35%", "7%", "0.3s", "3.9s"],
+  ["48%", "14%", "2s", "5.6s"],
+  ["59%", "9%", "1.1s", "4.8s"],
+  ["7%", "28%", "0.6s", "7.2s"],
+  ["78%", "18%", "2.2s", "3.4s"],
+  ["91%", "6%", "0.2s", "5.8s"],
+  ["16%", "36%", "2.9s", "4.1s"],
+  ["42%", "31%", "1.6s", "3.6s"],
+  ["54%", "24%", "0.5s", "4.4s"],
+  ["67%", "38%", "1.2s", "3.1s"],
+  ["9%", "52%", "0.4s", "3.2s"],
+  ["83%", "11%", "2.5s", "2.1s"],
+  ["29%", "19%", "1.8s", "5.0s"],
+  ["72%", "3%", "0.9s", "6.4s"],
+  ["4%", "63%", "2.1s", "2.0s"],
+  ["58%", "47%", "1.3s", "4.9s"],
+  ["22%", "71%", "0.7s", "2.8s"],
+];
+
+function cosmosFieldSparksHtml(): string {
+  return COSMOS_SPARKS.map(
+    ([left, top, del, dur]) =>
+      `      <div class="cosmos-field__spark" style="--sl:${left};--st:${top};--sd:${del};--ss:${dur}"></div>`
+  ).join("\n");
+}
+
 let manualPageFlip: PageFlip | null = null;
 
 /** Scroll position before PDF modal body lock; restored on animated close. */
@@ -655,8 +686,8 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   return `
     <div class="home-shell">
     <div class="cosmos-field" aria-hidden="true">
-      <div class="cosmos-field__stars cosmos-field__stars--a"></div>
-      <div class="cosmos-field__stars cosmos-field__stars--b"></div>
+      <div class="cosmos-field__stars"></div>
+      ${cosmosFieldSparksHtml()}
       <div class="cosmos-wisp" aria-hidden="true"></div>
     </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
