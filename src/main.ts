@@ -708,6 +708,11 @@ function homeHtml(mode: LandingMode = "purchase"): string {
 
   return `
     <div class="home-shell">
+    <div class="home-shell__ambient" aria-hidden="true">
+      <div class="home-shell__glow home-shell__glow--a"></div>
+      <div class="home-shell__glow home-shell__glow--b"></div>
+      <div class="home-shell__glow home-shell__glow--c"></div>
+    </div>
     <div class="cosmos-field" aria-hidden="true">
       ${cosmosFieldDustMotesHtml()}
       ${cosmosFieldPopstarsHtml()}
