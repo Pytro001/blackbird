@@ -36,34 +36,26 @@ const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   },
 ];
 
-/** [left, top, animation-delay, animation-duration] — blinking “spark” layer (mission star is separate) */
-const COSMOS_SPARKS: ReadonlyArray<readonly [string, string, string, string]> = [
-  ["2%", "8%", "0.1s", "5.2s"],
-  ["13%", "5%", "0.8s", "4.3s"],
-  ["24%", "11%", "1.4s", "6.1s"],
-  ["35%", "7%", "0.3s", "3.9s"],
-  ["48%", "14%", "2s", "5.6s"],
-  ["59%", "9%", "1.1s", "4.8s"],
-  ["7%", "28%", "0.6s", "7.2s"],
-  ["78%", "18%", "2.2s", "3.4s"],
-  ["91%", "6%", "0.2s", "5.8s"],
-  ["16%", "36%", "2.9s", "4.1s"],
-  ["42%", "31%", "1.6s", "3.6s"],
-  ["54%", "24%", "0.5s", "4.4s"],
-  ["67%", "38%", "1.2s", "3.1s"],
-  ["9%", "52%", "0.4s", "3.2s"],
-  ["83%", "11%", "2.5s", "2.1s"],
-  ["29%", "19%", "1.8s", "5.0s"],
-  ["72%", "3%", "0.9s", "6.4s"],
-  ["4%", "63%", "2.1s", "2.0s"],
-  ["58%", "47%", "1.3s", "4.9s"],
-  ["22%", "71%", "0.7s", "2.8s"],
+/** Pop-in / pop-out micro-stars in the backdrop (separate from the bottom-right click star) */
+const COSMOS_POPSTARS: ReadonlyArray<readonly [string, string, string, string]> = [
+  ["4%", "12%", "0.2s", "5.8s"],
+  ["18%", "8%", "1.1s", "4.2s"],
+  ["32%", "22%", "0.5s", "6.4s"],
+  ["51%", "6%", "2.3s", "3.1s"],
+  ["67%", "19%", "1.6s", "5.1s"],
+  ["11%", "38%", "0.8s", "4.7s"],
+  ["86%", "14%", "0s", "6.0s"],
+  ["28%", "52%", "2.0s", "2.4s"],
+  ["44%", "45%", "1.3s", "3.5s"],
+  ["73%", "33%", "2.6s", "2.0s"],
+  ["9%", "64%", "0.4s", "5.3s"],
+  ["59%", "58%", "1.7s", "2.0s"],
 ];
 
-function cosmosFieldSparksHtml(): string {
-  return COSMOS_SPARKS.map(
+function cosmosFieldPopstarsHtml(): string {
+  return COSMOS_POPSTARS.map(
     ([left, top, del, dur]) =>
-      `      <div class="cosmos-field__spark" style="--sl:${left};--st:${top};--sd:${del};--ss:${dur}"></div>`
+      `      <div class="cosmos-field__popstar" style="--sl:${left};--st:${top};--sd:${del};--ss:${dur}"></div>`
   ).join("\n");
 }
 
@@ -686,9 +678,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   return `
     <div class="home-shell">
     <div class="cosmos-field" aria-hidden="true">
-      <div class="cosmos-field__stars"></div>
-      ${cosmosFieldSparksHtml()}
-      <div class="cosmos-wisp" aria-hidden="true"></div>
+      ${cosmosFieldPopstarsHtml()}
     </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
       <a href="#education" class="skip-link">Skip to Education</a>
@@ -696,35 +686,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
     </div>
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
-        <svg
-          class="hero-cosmos-doodle"
-          viewBox="0 0 120 80"
-          focusable="false"
-          aria-hidden="true"
-        >
-          <line
-            x1="18" y1="24" x2="52" y2="18"
-            stroke="rgba(200, 200, 200, 0.22)"
-            stroke-width="0.4"
-            stroke-linecap="round"
-          />
-          <line
-            x1="52" y1="18" x2="78" y2="40"
-            stroke="rgba(200, 200, 200, 0.18)"
-            stroke-width="0.35"
-            stroke-linecap="round"
-          />
-          <line
-            x1="78" y1="40" x2="100" y2="22"
-            stroke="rgba(200, 200, 200, 0.15)"
-            stroke-width="0.3"
-            stroke-linecap="round"
-          />
-          <circle cx="18" cy="24" r="0.8" fill="rgba(235, 235, 235, 0.45)" />
-          <circle cx="52" cy="18" r="0.6" fill="rgba(220, 220, 220, 0.4)" />
-          <circle cx="78" cy="40" r="0.5" fill="rgba(200, 200, 200, 0.35)" />
-          <circle cx="100" cy="22" r="0.5" fill="rgba(200, 200, 200, 0.32)" />
-        </svg>
         <h1 class="hero-editorial__title">
           blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
         </h1>
@@ -732,7 +693,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">get flake free</p>
         <button type="button" class="btn-pill" id="cta-now">Now</button>
-        <p class="cosmos-footnote" aria-hidden="true">· · · <span class="cosmos-footnote__spark" title="For stargazers">✦</span> · · ·</p>
       </div>
     </section>
 
@@ -742,7 +702,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
           ${productGalleryHtml()}
         </div>
 
-        <aside class="product-side" aria-label="Product details">
+        <aside class="product-side product-side--contrast-test" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             ${priceBlock}

@@ -81,7 +81,7 @@ body {
   overflow-x: clip;
 }
 
-/* —— Backdrop: field stars + faint line (no soft “planet” glows) —— */
+/* —— Backdrop: tiny pop-in / pop-out stars (click star is in .mission-star-dock) —— */
 .cosmos-field {
   position: absolute;
   inset: 0;
@@ -89,107 +89,44 @@ body {
   overflow: hidden;
 }
 
-/* Faint static dust (no global pulse — twinkles are on .cosmos-field__spark) */
-.cosmos-field__stars {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 1;
-  background-image:
-    radial-gradient(0.45px 0.45px at 4% 10%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 11% 3%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 20% 15%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 31% 8%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 41% 22%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 53% 4%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 64% 13%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 8% 31%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 76% 6%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 17% 44%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 38% 37%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 55% 29%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 69% 40%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 3% 58%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 88% 27%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 95% 12%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 12% 67%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 47% 55%, rgba(255, 255, 255, 0.07) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 60% 62%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 82% 45%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 25% 78%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.45px 0.45px at 74% 71%, rgba(255, 255, 255, 0.08) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 91% 33%, rgba(255, 255, 255, 0.06) 50%, transparent 50%),
-    radial-gradient(0.4px 0.4px at 33% 2%, rgba(255, 255, 255, 0.05) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 50% 18%, rgba(255, 255, 255, 0.07) 50%, transparent 50%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-}
-
-/* Individual blinks, staggered — the clickable mission star is not in this layer */
-.cosmos-field__spark {
+.cosmos-field__popstar {
   position: absolute;
   left: var(--sl, 0);
   top: var(--st, 0);
-  width: 1px;
-  height: 1px;
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   margin: 0;
   padding: 0;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 1.2px 0.2px rgba(255, 255, 255, 0.15);
-  transform: translateZ(0);
-  will-change: opacity, box-shadow;
-  animation: cosmos-spark var(--ss, 4.5s) ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 3px 0.3px rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  opacity: 0;
+  animation: cosmos-popstar var(--ss, 4s) ease-in-out infinite;
   animation-delay: var(--sd, 0s);
+  will-change: transform, opacity;
 }
 
-/* One short flash per loop; duration + delay differ per star so they rarely line up */
-@keyframes cosmos-spark {
+@keyframes cosmos-popstar {
   0%,
-  34%,
   100% {
-    opacity: 0.07;
-    box-shadow: 0 0 1px 0.1px rgba(255, 255, 255, 0.1);
+    transform: scale(0);
+    opacity: 0;
   }
-  40% {
-    opacity: 0.5;
-    box-shadow: 0 0 2.5px 0.4px rgba(255, 255, 255, 0.32);
+  4% {
+    transform: scale(1.1);
+    opacity: 0.9;
   }
-  46% {
-    opacity: 0.08;
-    box-shadow: 0 0 1.1px 0.15px rgba(255, 255, 255, 0.1);
-  }
-}
-
-.cosmos-wisp {
-  position: fixed;
-  bottom: 14vh;
-  right: min(7vw, 2.5rem);
-  width: 1.5px;
-  height: clamp(2.5rem, 8vh, 4.5rem);
-  border-radius: 2px;
-  background: linear-gradient(
-    to top,
-    transparent 0%,
-    rgba(200, 200, 200, 0.08) 45%,
-    rgba(255, 255, 255, 0.14) 100%
-  );
-  box-shadow: 0 0 18px 1px rgba(255, 255, 255, 0.06);
-  opacity: 0.45;
-  filter: blur(0.2px);
-}
-
-@media (max-width: 600px) {
-  .cosmos-wisp {
-    right: 0.75rem;
-    opacity: 0.3;
+  8%,
+  92% {
+    transform: scale(0);
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cosmos-field__spark {
-    animation: none;
-    opacity: 0.1;
+  .cosmos-field__popstar {
+    display: none;
   }
 }
 
@@ -347,20 +284,6 @@ body {
   padding: clamp(0.5rem, 2vw, 1.5rem);
 }
 
-.hero-cosmos-doodle {
-  position: absolute;
-  top: clamp(0.25rem, 2.5vh, 1.5rem);
-  right: clamp(0.5rem, 3vw, 1.5rem);
-  width: min(32vw, 8.5rem);
-  height: auto;
-  max-width: 160px;
-  pointer-events: none;
-  overflow: visible;
-  opacity: 0.2;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.35));
-  z-index: 0;
-}
-
 .hero-editorial__title {
   margin: 0;
   max-width: 100%;
@@ -412,16 +335,6 @@ body {
   text-align: center;
   white-space: nowrap;
   max-width: 100%;
-}
-
-.cosmos-footnote {
-  margin: 0;
-  font-size: clamp(0.38rem, 1.1vw, 0.5rem);
-  line-height: 1;
-  letter-spacing: 0.5em;
-  text-transform: none;
-  color: rgba(100, 100, 100, 0.35);
-  user-select: none;
 }
 
 .btn-pill {
@@ -745,6 +658,83 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* —— Test: right column, black copy on white / white chrome —— */
+.product-side--contrast-test .product-panel--buy {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.product-side--contrast-test .product-name,
+.product-side--contrast-test .product-price,
+.product-side--contrast-test .product-shipping,
+.product-side--contrast-test .product-shipping__returns,
+.product-side--contrast-test .product-shipping__eta {
+  color: #0a0a0a;
+}
+
+.product-side--contrast-test .product-price__period,
+.product-side--contrast-test .product-subscription-lede {
+  color: rgba(15, 15, 15, 0.72);
+}
+
+.product-side--contrast-test .product-shipping__eta strong {
+  color: #0a0a0a;
+}
+
+.product-side--contrast-test .product-wa-headline {
+  color: #0a0a0a;
+}
+
+.product-side--contrast-test .product-wa-desc {
+  color: rgba(20, 20, 20, 0.8);
+}
+
+.product-side--contrast-test .product-wa-link {
+  color: #0a0a0a;
+  text-decoration-color: rgba(0, 0, 0, 0.35);
+}
+
+.product-side--contrast-test .product-wa-link:hover,
+.product-side--contrast-test .product-wa-link:focus-visible {
+  color: #000;
+  text-decoration-color: rgba(0, 0, 0, 0.55);
+}
+
+.product-side--contrast-test .product-wa-qr__img {
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.product-side--contrast-test .btn-buy {
+  background: #ffffff;
+  color: #0a0a0a;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  filter: none;
+}
+
+.product-side--contrast-test .btn-buy:hover,
+.product-side--contrast-test .btn-buy:focus-visible {
+  background: #f3f3f3;
+  filter: none;
+  outline: none;
+}
+
+.product-side--contrast-test .btn-howto {
+  color: #0a0a0a;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.product-side--contrast-test .btn-howto:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.2);
+  outline-offset: 2px;
 }
 
 .product-panel {
@@ -1376,17 +1366,6 @@ body {
   opacity: 0.75;
 }
 
-.cosmos-footnote__spark {
-  display: inline-block;
-  color: rgba(180, 180, 180, 0.4);
-  font-size: 1.4em;
-  line-height: 0;
-  vertical-align: 0.15em;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-  pointer-events: auto;
-  cursor: default;
-}
-
 /* —— Site legal footer (landing): two lines, all visible —— */
 .cosmos-void-trace {
   margin: 0;
@@ -1857,10 +1836,5 @@ body {
   .hero-editorial__script {
     white-space: normal;
     font-size: clamp(1rem, 5vw, 1.25rem);
-  }
-
-  .hero-cosmos-doodle {
-    width: min(40vw, 5rem);
-    opacity: 0.12;
   }
 }
