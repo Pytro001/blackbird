@@ -163,9 +163,9 @@ body {
   }
 }
 
-/* —— Easter: bottom-right star → team message (flush to viewport bottom) —— */
+/* —— Easter: bottom-right of the page (scrolls with the site, not the viewport) —— */
 .mission-star-dock {
-  position: fixed;
+  position: absolute;
   z-index: 50;
   right: 0;
   bottom: 0;
