@@ -1,19 +1,21 @@
 :root {
-  --black: #12121a;
-  --gray-950: #1a1a24;
-  --gray-900: #22222c;
-  --gray-800: #2e2e38;
-  --gray-700: #3d3d4a;
-  --gray-600: #5c5c6a;
-  --gray-500: #8a8a98;
-  --gray-400: #b0b0bc;
+  --black: #111;
+  --gray-950: #1a1a1a;
+  --gray-900: #222;
+  --gray-800: #2e2e2e;
+  --gray-700: #3d3d3d;
+  --gray-600: #5c5c5c;
+  --gray-500: #8a8a8a;
+  --gray-400: #b0b0b0;
   --white: #f5f5f5;
   --white-dim: rgba(245, 245, 245, 0.82);
   --orange: #e58e35;
   --orange-soft: rgba(229, 142, 53, 0.22);
   --orange-muted: #c97a2e;
-  /* Slightly lighter “night” so stars read; subtile top lift */
-  --site-bg: linear-gradient(180deg, #1c1c28 0%, #14141c 38%, #0f0f14 100%);
+  /* Neutral gray–black (no blue cast) */
+  --site-bg: linear-gradient(180deg, #1a1a1a 0%, #121212 40%, #0a0a0a 100%);
+  /* 5-point star; same shape for mote + pop (not circles) */
+  --cosmos-star-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 96%, 50% 75%, 21% 96%, 32% 57%, 2% 35%, 39% 35%);
   --muted: var(--gray-500);
   --result-yes: var(--orange);
   --result-no: var(--gray-400);
@@ -81,7 +83,7 @@ body {
   overflow-x: clip;
 }
 
-/* —— Backdrop: always-on dust + pop-in twinkles (mission star: .mission-star-dock) —— */
+/* —— Backdrop: many star specks (clip-path) + soft pop “shine” (mission star: .mission-star-dock) —— */
 .cosmos-field {
   position: absolute;
   inset: 0;
@@ -89,90 +91,83 @@ body {
   overflow: hidden;
 }
 
-.cosmos-field__dust {
+.cosmos-field__mote {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.85;
-  background-image:
-    radial-gradient(0.55px 0.55px at 3% 8%, rgba(255, 255, 255, 0.2) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 11% 16%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 19% 5%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 28% 24%, rgba(255, 255, 255, 0.18) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 37% 9%, rgba(255, 255, 255, 0.11) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 45% 31%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 54% 4%, rgba(255, 255, 255, 0.13) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 62% 20%, rgba(255, 255, 255, 0.17) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 72% 11%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 81% 28%, rgba(255, 255, 255, 0.15) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 8% 38%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 91% 15%, rgba(255, 255, 255, 0.19) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 14% 48%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 33% 55%, rgba(255, 255, 255, 0.11) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 50% 42%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 68% 52%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 86% 40%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 4% 62%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 22% 70%, rgba(255, 255, 255, 0.15) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 40% 66%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 59% 74%, rgba(255, 255, 255, 0.11) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 77% 64%, rgba(255, 255, 255, 0.14) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 95% 55%, rgba(255, 255, 255, 0.13) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 17% 82%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.55px 0.55px at 48% 88%, rgba(255, 255, 255, 0.12) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 70% 92%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 88% 3%, rgba(255, 255, 255, 0.16) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 52% 2%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 99% 72%, rgba(255, 255, 255, 0.1) 50%, transparent 50%),
-    radial-gradient(0.5px 0.5px at 26% 91%, rgba(255, 255, 255, 0.11) 50%, transparent 50%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  left: var(--dl, 0);
+  top: var(--dt, 0);
+  width: 3.5px;
+  height: 3.5px;
+  margin: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.09);
+  clip-path: var(--cosmos-star-shape);
+  -webkit-clip-path: var(--cosmos-star-shape);
+  transform: translate(-50%, -50%);
+  filter: none;
+  opacity: 0.6;
 }
 
 .cosmos-field__popstar {
   position: absolute;
   left: var(--sl, 0);
   top: var(--st, 0);
-  width: 2.5px;
-  height: 2.5px;
-  border-radius: 50%;
+  width: 3.5px;
+  height: 3.5px;
   margin: 0;
   padding: 0;
-  background: #fff;
-  box-shadow: 0 0 4px 1.2px rgba(255, 255, 255, 0.5), 0 0 10px 0 rgba(200, 210, 255, 0.15);
-  transform: scale(0);
-  opacity: 0;
-  animation: cosmos-popstar var(--ss, 4s) ease-in-out infinite;
-  animation-delay: var(--sd, 0s);
-  will-change: transform, opacity;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
-@keyframes cosmos-popstar {
+.cosmos-field__popstar-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.35);
+  clip-path: var(--cosmos-star-shape);
+  -webkit-clip-path: var(--cosmos-star-shape);
+  transform-origin: center;
+  will-change: opacity, transform, filter;
+  animation: cosmos-popstar-shine var(--ss, 4.5s) ease-in-out infinite;
+  animation-delay: var(--sd, 0s);
+}
+
+@keyframes cosmos-popstar-shine {
   0%,
-  2% {
-    transform: scale(0.2);
-    opacity: 0;
-  }
-  8% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
-  22% {
-    transform: scale(0.85);
-    opacity: 0.35;
-  }
-  35%,
+  5%,
   100% {
     transform: scale(0);
     opacity: 0;
+    filter: none;
+  }
+  7% {
+    transform: scale(0.95);
+    opacity: 0.12;
+    filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.12));
+  }
+  14% {
+    transform: scale(0.45);
+    opacity: 0.05;
+  }
+  28%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+    filter: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cosmos-field__popstar {
+  .cosmos-field__mote {
+    opacity: 0.4;
+  }
+
+  .cosmos-field__popstar-inner {
     animation: none;
-    transform: scale(0.6);
-    opacity: 0.2;
+    transform: scale(0.4);
+    opacity: 0.1;
   }
 }
 

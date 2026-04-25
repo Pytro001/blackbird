@@ -36,7 +36,19 @@ const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   },
 ];
 
-/** Pop-in / pop-out micro-stars in the backdrop (separate from the bottom-right click star) */
+/** 5-point star (clip-path), not circles — many quiet static specks (separate from the click star) */
+function cosmosFieldDustMotesHtml(): string {
+  const n = 88;
+  return Array.from({ length: n }, (_, i) => {
+    const left = 2 + (i * 19 + (i * i) % 17) % 90;
+    const top = 1 + (i * 23 + (i * 13) % 19) % 92;
+    return `      <div class="cosmos-field__mote" style="--dl:${left}%;--dt:${top}%;"></div>`;
+  }).join("\n");
+}
+
+/**
+ * Pop “shine” (subtle) — [left, top, delay, duration] — more entries = busier field
+ */
 const COSMOS_POPSTARS: ReadonlyArray<readonly [string, string, string, string]> = [
   ["4%", "12%", "0.2s", "5.8s"],
   ["18%", "8%", "1.1s", "4.2s"],
@@ -52,12 +64,29 @@ const COSMOS_POPSTARS: ReadonlyArray<readonly [string, string, string, string]> 
   ["59%", "58%", "1.7s", "2.0s"],
   ["96%", "30%", "1.4s", "2.0s"],
   ["15%", "2%", "2.2s", "2.0s"],
+  ["1%", "41%", "0.6s", "2.0s"],
+  ["23%", "31%", "1.9s", "2.0s"],
+  ["40%", "16%", "2.4s", "2.0s"],
+  ["64%", "44%", "0.1s", "2.0s"],
+  ["77%", "8%", "0.3s", "2.0s"],
+  ["92%", "44%", "1.0s", "2.0s"],
+  ["6%", "20%", "2.7s", "2.0s"],
+  ["35%", "62%", "1.2s", "2.0s"],
+  ["50%", "76%", "0.9s", "2.0s"],
+  ["19%", "88%", "0.2s", "2.0s"],
+  ["81%", "62%", "2.1s", "2.0s"],
+  ["3%", "52%", "1.5s", "2.0s"],
+  ["30%", "4%", "0.4s", "2.0s"],
+  ["68%", "89%", "1.8s", "2.0s"],
+  ["13%", "76%", "2.5s", "2.0s"],
+  ["45%", "92%", "0.7s", "2.0s"],
+  ["90%", "78%", "0.0s", "2.0s"],
 ];
 
 function cosmosFieldPopstarsHtml(): string {
   return COSMOS_POPSTARS.map(
     ([left, top, del, dur]) =>
-      `      <div class="cosmos-field__popstar" style="--sl:${left};--st:${top};--sd:${del};--ss:${dur}"></div>`
+      `      <div class="cosmos-field__popstar" style="--sl:${left};--st:${top};--sd:${del};--ss:${dur}"><div class="cosmos-field__popstar-inner" aria-hidden="true"></div></div>`
   ).join("\n");
 }
 
@@ -680,7 +709,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   return `
     <div class="home-shell">
     <div class="cosmos-field" aria-hidden="true">
-      <div class="cosmos-field__dust"></div>
+      ${cosmosFieldDustMotesHtml()}
       ${cosmosFieldPopstarsHtml()}
     </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
