@@ -163,12 +163,13 @@ body {
   }
 }
 
-/* —— Easter: bottom-right star → team message —— */
+/* —— Easter: bottom-right star → team message (flush to viewport bottom) —— */
 .mission-star-dock {
   position: fixed;
   z-index: 50;
-  right: max(0.65rem, env(safe-area-inset-right));
-  bottom: max(0.65rem, env(safe-area-inset-bottom));
+  right: 0;
+  bottom: 0;
+  padding: 0 max(0.65rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -209,37 +210,34 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
   margin: 0;
-  padding: 0;
+  padding: 0.15rem;
   border: none;
-  border-radius: 50%;
-  background: rgba(18, 18, 18, 0.5);
-  color: rgba(240, 240, 240, 0.45);
-  font-size: 0.9rem;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.95rem;
   line-height: 0;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.mission-star:hover,
+.mission-star:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 .mission-star:focus-visible {
   color: rgba(255, 255, 255, 0.95);
-  background: rgba(30, 30, 30, 0.75);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
-  outline: none;
+  outline: 1px solid rgba(255, 255, 255, 0.32);
+  outline-offset: 3px;
 }
 
 .mission-star[aria-expanded="true"] {
   color: var(--orange);
-  background: rgba(40, 32, 24, 0.6);
-  box-shadow: 0 0 0 1px rgba(229, 142, 53, 0.25);
 }
 
 .mission-star__glyph {
