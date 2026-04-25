@@ -12,20 +12,19 @@
   --orange: #e58e35;
   --orange-soft: rgba(229, 142, 53, 0.22);
   --orange-muted: #c97a2e;
-  /* Page base: near-black; home page adds orange via .home-shell__glow */
   --site-base: #030303;
   --site-bg: var(--site-base);
   /* 5-point star; same shape for mote + pop (not circles) */
   --cosmos-star-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 96%, 50% 75%, 21% 96%, 32% 57%, 2% 35%, 39% 35%);
   --glow-blur: clamp(32px, 8.5vw, 76px);
   --glow-blur-soft: clamp(48px, 14vw, 120px);
-  --glow-amber-1: rgba(255, 176, 72, 0.38);
-  --glow-amber-2: rgba(229, 142, 53, 0.36);
-  --glow-amber-3: rgba(201, 100, 38, 0.28);
-  /* Legacy names still used by some orbs */
-  --glow-orange-a: rgba(255, 176, 72, 0.44);
-  --glow-orange-b: rgba(229, 130, 48, 0.32);
-  --glow-orange-c: rgba(255, 200, 120, 0.24);
+  /* Restrained accents — not a full screen tint */
+  --glow-amber-1: rgba(255, 150, 65, 0.28);
+  --glow-amber-2: rgba(230, 120, 48, 0.24);
+  --glow-amber-3: rgba(210, 100, 38, 0.2);
+  --glow-orange-a: rgba(255, 160, 58, 0.34);
+  --glow-orange-b: rgba(225, 100, 35, 0.3);
+  --glow-orange-c: rgba(255, 195, 110, 0.26);
   --muted: var(--gray-500);
   --result-yes: var(--orange);
   --result-no: var(--gray-400);
@@ -88,10 +87,21 @@ body {
 
 .home-shell {
   position: relative;
+  z-index: 0;
   min-height: 100%;
   background: var(--site-base);
   /* Clip blur/negative insets on ambient; prevents giant root scroll from filter overflow */
   overflow: hidden;
+}
+
+/* Glow orbs are position: absolute but must never stack ABOVE real content (was hiding text) */
+.home-shell .hero-editorial,
+.home-shell .page-product,
+.home-shell .product-faq,
+.home-shell .product-education,
+.home-shell .site-legal-footer {
+  position: relative;
+  z-index: 2;
 }
 
 /* Ambient: base warm wash (static, no filter) + blurred orbs that drift */
@@ -102,27 +112,34 @@ body {
   pointer-events: none;
   overflow: hidden;
   opacity: 1;
-  /* Full-page golden wash: corners, top, bottom, center so it never reads as “one edge only” */
+  /* Sparse hot spots; lots of true black (transparent) for contrast with moving orbs */
   background:
-    radial-gradient(ellipse 95% 55% at 50% -2%, var(--glow-amber-1) 0%, rgba(255, 176, 72, 0.1) 38%, transparent 62%),
-    radial-gradient(ellipse 80% 70% at 92% 28%, var(--glow-amber-2) 0%, rgba(229, 142, 53, 0.08) 40%, transparent 58%),
-    radial-gradient(ellipse 85% 60% at 4% 55%, var(--glow-amber-3) 0%, rgba(201, 100, 38, 0.09) 42%, transparent 58%),
-    radial-gradient(ellipse 100% 55% at 88% 72%, rgba(255, 200, 120, 0.2) 0%, rgba(229, 120, 40, 0.1) 36%, transparent 64%),
-    radial-gradient(ellipse 120% 70% at 50% 98%, rgba(255, 160, 64, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 55% at 48% 45%, rgba(255, 188, 96, 0.1) 0%, transparent 52%);
+    radial-gradient(ellipse 200% 120% at 50% 50%, rgba(255, 120, 40, 0.035) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 100%),
+    linear-gradient(165deg, rgba(12, 8, 4, 0.14) 0%, rgba(0, 0, 0, 0) 32%, rgba(6, 4, 2, 0.08) 55%, rgba(0, 0, 0, 0) 100%),
+    radial-gradient(ellipse 95% 50% at 50% 0%, var(--glow-amber-1) 0%, rgba(255, 120, 45, 0.08) 44%, transparent 72%),
+    radial-gradient(ellipse 75% 60% at 6% 22%, rgba(255, 130, 50, 0.1) 0%, rgba(0, 0, 0, 0) 58%),
+    radial-gradient(ellipse 78% 65% at 94% 20%, var(--glow-amber-2) 0%, rgba(0, 0, 0, 0) 58%),
+    radial-gradient(ellipse 88% 60% at 0% 58%, var(--glow-amber-3) 0%, rgba(0, 0, 0, 0) 58%),
+    radial-gradient(ellipse 95% 58% at 98% 68%, rgba(255, 150, 70, 0.12) 0%, rgba(200, 80, 25, 0.04) 48%, transparent 68%),
+    radial-gradient(ellipse 130% 80% at 50% 100%, rgba(255, 130, 55, 0.1) 0%, rgba(0, 0, 0, 0) 60%),
+    radial-gradient(ellipse 60% 55% at 32% 42%, rgba(255, 150, 65, 0.07) 0%, transparent 54%),
+    radial-gradient(ellipse 70% 55% at 70% 48%, rgba(255, 130, 48, 0.08) 0%, transparent 56%),
+    radial-gradient(ellipse 100% 75% at 15% 88%, rgba(230, 100, 35, 0.08) 0%, rgba(0, 0, 0, 0) 52%),
+    radial-gradient(ellipse 65% 50% at 82% 12%, rgba(255, 170, 80, 0.06) 0%, rgba(0, 0, 0, 0) 52%);
   background-color: var(--site-base);
 }
 
 .home-shell__glow {
   position: absolute;
+  z-index: 0;
   width: min(100vmin, 720px);
   height: min(80vmin, 600px);
   border-radius: 50%;
-  filter: blur(var(--glow-blur)) saturate(1.08);
+  filter: blur(var(--glow-blur)) saturate(1.06);
   will-change: transform, opacity;
 }
 
-/* Softer, larger haze (FAQ / lower page) */
+/* Softer haze: kept faint; keyframes + drift carry most of the “life” */
 .home-shell__glow--e,
 .home-shell__glow--f {
   filter: blur(var(--glow-blur-soft)) saturate(1.04);
@@ -138,9 +155,9 @@ body {
   background: radial-gradient(
     ellipse 100% 85% at 62% 40%,
     var(--glow-orange-a) 0%,
-    rgba(255, 176, 72, 0.22) 32%,
-    rgba(229, 142, 53, 0.08) 55%,
-    transparent 70%
+    rgba(255, 160, 65, 0.2) 30%,
+    rgba(120, 55, 12, 0.06) 54%,
+    transparent 74%
   );
   animation: home-glow-drift-a 38s ease-in-out infinite;
 }
@@ -154,9 +171,9 @@ body {
   background: radial-gradient(
     ellipse 100% 88% at 38% 60%,
     var(--glow-orange-b) 0%,
-    rgba(201, 110, 50, 0.18) 40%,
-    rgba(100, 50, 20, 0.06) 60%,
-    transparent 75%
+    rgba(210, 95, 40, 0.18) 36%,
+    rgba(100, 45, 10, 0.07) 58%,
+    transparent 80%
   );
   animation: home-glow-drift-b 48s ease-in-out infinite 3.5s;
 }
@@ -173,9 +190,9 @@ body {
   background: radial-gradient(
     ellipse 85% 75% at 50% 50%,
     var(--glow-orange-c) 0%,
-    rgba(255, 200, 120, 0.2) 38%,
-    rgba(229, 120, 40, 0.1) 58%,
-    transparent 76%
+    rgba(255, 180, 95, 0.2) 34%,
+    rgba(180, 80, 22, 0.1) 58%,
+    transparent 82%
   );
   animation: home-glow-drift-c 44s ease-in-out infinite 1.5s;
 }
@@ -188,9 +205,10 @@ body {
   height: min(100vmin, 700px);
   background: radial-gradient(
     ellipse 80% 90% at 70% 50%,
-    rgba(255, 188, 96, 0.4) 0%,
-    rgba(229, 120, 48, 0.2) 42%,
-    transparent 72%
+    rgba(255, 175, 85, 0.3) 0%,
+    rgba(220, 100, 35, 0.12) 42%,
+    rgba(80, 40, 8, 0.04) 62%,
+    transparent 78%
   );
   animation: home-glow-drift-d 42s ease-in-out infinite 5s;
 }
@@ -206,9 +224,10 @@ body {
   height: min(60vmin, 480px);
   background: radial-gradient(
     ellipse 100% 80% at 50% 100%,
-    rgba(255, 150, 60, 0.28) 0%,
-    rgba(201, 90, 32, 0.12) 50%,
-    transparent 70%
+    rgba(255, 130, 50, 0.22) 0%,
+    rgba(200, 85, 30, 0.08) 44%,
+    rgba(60, 30, 8, 0.04) 62%,
+    transparent 76%
   );
   animation: home-glow-drift-e 55s ease-in-out infinite 2.5s;
 }
@@ -223,9 +242,10 @@ body {
   max-width: none;
   background: radial-gradient(
     ellipse 100% 90% at 30% 0%,
-    rgba(255, 200, 110, 0.3) 0%,
-    rgba(229, 150, 60, 0.12) 45%,
-    transparent 72%
+    rgba(255, 185, 100, 0.22) 0%,
+    rgba(210, 110, 40, 0.08) 44%,
+    rgba(90, 45, 10, 0.04) 60%,
+    transparent 76%
   );
   animation: home-glow-drift-f 50s ease-in-out infinite 0.5s;
 }
@@ -240,16 +260,20 @@ body {
   backface-visibility: hidden;
 }
 
+/* Bigger motion so movement stays legible; opacity swings = orange vs “pure” black (layer off) */
 @keyframes home-glow-drift-a {
   0%,
   100% {
     transform: translate(0, 0) scale(1);
+    opacity: 0.52;
   }
   33% {
-    transform: translate(-4%, 5%) scale(1.04);
+    transform: translate(-7%, 8%) scale(1.05);
+    opacity: 0.88;
   }
   66% {
-    transform: translate(3%, -3%) scale(0.98);
+    transform: translate(5%, -5%) scale(0.97);
+    opacity: 0.4;
   }
 }
 
@@ -257,23 +281,36 @@ body {
   0%,
   100% {
     transform: translate(0, 0) scale(1.02);
+    opacity: 0.55;
   }
   40% {
-    transform: translate(5%, -6%) scale(0.95);
+    transform: translate(8%, -9%) scale(0.96);
+    opacity: 0.9;
   }
   80% {
-    transform: translate(-2%, 4%) scale(1.06);
+    transform: translate(-4%, 6%) scale(1.07);
+    opacity: 0.38;
   }
 }
 
-/* Center: animation must not break margin-based center; use only translate from visual center */
+/* Center */
 @keyframes home-glow-drift-c {
   0%,
   100% {
     transform: translate(-6%, 0) scale(1);
+    opacity: 0.48;
+  }
+  25% {
+    transform: translate(-1%, 4%) scale(1.03);
+    opacity: 0.82;
   }
   50% {
-    transform: translate(4%, 5%) scale(1.06);
+    transform: translate(7%, 7%) scale(1.08);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(0, 4%) scale(1.04);
+    opacity: 0.75;
   }
 }
 
@@ -281,9 +318,11 @@ body {
   0%,
   100% {
     transform: translate(0, 0);
+    opacity: 0.48;
   }
   50% {
-    transform: translate(-5%, 8%) scale(1.05);
+    transform: translate(-8%, 11%) scale(1.06);
+    opacity: 0.85;
   }
 }
 
@@ -291,9 +330,11 @@ body {
   0%,
   100% {
     transform: translate(0, 0);
+    opacity: 0.32;
   }
   50% {
-    transform: translate(6%, -4%);
+    transform: translate(9%, -7%);
+    opacity: 0.72;
   }
 }
 
@@ -301,9 +342,11 @@ body {
   0%,
   100% {
     transform: translate(0, 0);
+    opacity: 0.3;
   }
   50% {
-    transform: translate(10%, 2%) scale(1.04);
+    transform: translate(16%, 5%) scale(1.05);
+    opacity: 0.7;
   }
 }
 
