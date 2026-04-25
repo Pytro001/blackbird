@@ -653,19 +653,64 @@ function homeHtml(mode: LandingMode = "purchase"): string {
 
   return `
     <div class="home-shell">
+    <div class="cosmos-field" aria-hidden="true">
+      <div class="cosmos-field__nebula"></div>
+      <div class="cosmos-field__stars cosmos-field__stars--a"></div>
+      <div class="cosmos-field__stars cosmos-field__stars--b"></div>
+      <div class="cosmos-wisp" aria-hidden="true"></div>
+    </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
       <a href="#education" class="skip-link">Skip to Education</a>
       <a href="#site-footer" class="skip-link">Skip to legal information</a>
     </div>
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
+        <svg
+          class="hero-cosmos-doodle"
+          viewBox="0 0 120 80"
+          focusable="false"
+          aria-hidden="true"
+        >
+          <line
+            x1="18" y1="24" x2="52" y2="18"
+            stroke="rgba(200,210,245,0.2)"
+            stroke-width="0.4"
+            stroke-linecap="round"
+          />
+          <line
+            x1="52" y1="18" x2="78" y2="40"
+            stroke="rgba(200,210,245,0.18)"
+            stroke-width="0.35"
+            stroke-linecap="round"
+          />
+          <line
+            x1="78" y1="40" x2="100" y2="22"
+            stroke="rgba(200,210,245,0.16)"
+            stroke-width="0.3"
+            stroke-linecap="round"
+          />
+          <circle cx="18" cy="24" r="0.8" fill="rgba(220,230,255,0.5)" />
+          <circle cx="52" cy="18" r="0.6" fill="rgba(200,220,255,0.4)" />
+          <circle cx="78" cy="40" r="0.5" fill="rgba(200,220,255,0.32)" />
+          <circle cx="100" cy="22" r="0.5" fill="rgba(200,220,255,0.3)" />
+        </svg>
         <h1 class="hero-editorial__title">
           blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
         </h1>
       </div>
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">get flake free</p>
+        <div class="hero-editorial__mission-strap">
+          <p class="hero-editorial__mission" id="hero-mission">
+            <span class="hero-editorial__mission-orbit" aria-hidden="true"></span>
+            <span class="hero-editorial__mission-text"
+              >Every purchase helps two German guys to build tech to help humanity explore the universe.
+              <abbr class="cosmos-easter-abbr" title="Dresden, Earth, and the next small step" lang="en">D.E.∞</abbr></span
+            >
+          </p>
+        </div>
         <button type="button" class="btn-pill" id="cta-now">Now</button>
+        <p class="cosmos-footnote" aria-hidden="true">· · · <span class="cosmos-footnote__spark" title="For stargazers">✦</span> · · ·</p>
       </div>
     </section>
 
@@ -741,6 +786,7 @@ function siteLegalFooterHtml(): string {
   const d = `${BASE_HREF}datenschutz`;
   return `
     <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
+      <p class="cosmos-void-trace" aria-hidden="true" title="Hello, empty space">·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·</p>
       <div class="site-legal-footer__line site-legal-footer__line--meta">
         ${legalSupportFooterChunkHtml()}
       </div>
