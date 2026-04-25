@@ -1,22 +1,19 @@
 :root {
-  --black: #03040a;
-  --gray-950: #0e1016;
-  --gray-900: #161a22;
-  --gray-800: #22252e;
-  --gray-700: #32363f;
-  --gray-600: #5a5d66;
-  --gray-500: #8a8d95;
-  --gray-400: #aeb2bc;
-  --white: #eef0f5;
-  --white-dim: rgba(230, 233, 240, 0.88);
+  --black: #0a0a0a;
+  --gray-950: #141414;
+  --gray-900: #1e1e1e;
+  --gray-800: #2c2c2c;
+  --gray-700: #3d3d3d;
+  --gray-600: #5c5c5c;
+  --gray-500: #8a8a8a;
+  --gray-400: #b0b0b0;
+  --white: #f5f5f5;
+  --white-dim: rgba(245, 245, 245, 0.82);
   --orange: #e58e35;
   --orange-soft: rgba(229, 142, 53, 0.22);
   --orange-muted: #c97a2e;
-  /* Deep space: cold lift + faint nebula, darker floor */
-  --site-bg:
-    radial-gradient(ellipse 130% 100% at 10% 8%, rgba(32, 44, 88, 0.2) 0%, transparent 42%),
-    radial-gradient(ellipse 90% 60% at 90% 85%, rgba(50, 28, 70, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 120% 80% at 50% 0%, #151826 0%, #080a12 40%, #03040a 100%);
+  /* Black-first base (no color clouds; only neutral lift) */
+  --site-bg: linear-gradient(180deg, #101010 0%, #0a0a0a 42%, #050505 100%);
   --muted: var(--gray-500);
   --result-yes: var(--orange);
   --result-no: var(--gray-400);
@@ -84,23 +81,12 @@ body {
   overflow-x: clip;
 }
 
-/* —— Backdrop: nebula, stars, faint beacon (behind all content) —— */
+/* —— Backdrop: field stars + faint line (no soft “planet” glows) —— */
 .cosmos-field {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-}
-
-.cosmos-field__nebula {
-  position: absolute;
-  inset: -5%;
-  background: radial-gradient(
-    ellipse 100% 50% at 50% 120%,
-    rgba(10, 14, 32, 0.85) 0%,
-    transparent 55%
-  );
-  opacity: 0.9;
 }
 
 .cosmos-field__stars {
@@ -110,13 +96,13 @@ body {
   background-image:
     radial-gradient(1.2px 1.2px at 8% 12%, rgba(255, 255, 255, 0.85) 50%, transparent 50%),
     radial-gradient(1px 1px at 15% 38%, rgba(255, 255, 255, 0.45) 50%, transparent 50%),
-    radial-gradient(1.2px 1.2px at 32% 9%, rgba(200, 220, 255, 0.55) 50%, transparent 50%),
+    radial-gradient(1.2px 1.2px at 32% 9%, rgba(255, 255, 255, 0.5) 50%, transparent 50%),
     radial-gradient(1px 1px at 45% 52%, rgba(255, 255, 255, 0.35) 50%, transparent 50%),
     radial-gradient(1.5px 1.5px at 62% 18%, rgba(255, 255, 255, 0.55) 50%, transparent 50%),
-    radial-gradient(1px 1px at 71% 64%, rgba(200, 210, 255, 0.4) 50%, transparent 50%),
+    radial-gradient(1px 1px at 71% 64%, rgba(255, 255, 255, 0.38) 50%, transparent 50%),
     radial-gradient(1.2px 1.2px at 88% 22%, rgba(255, 255, 255, 0.5) 50%, transparent 50%),
     radial-gradient(1px 1px at 12% 72%, rgba(255, 255, 255, 0.3) 50%, transparent 50%),
-    radial-gradient(1px 1px at 52% 78%, rgba(180, 200, 255, 0.35) 50%, transparent 50%),
+    radial-gradient(1px 1px at 52% 78%, rgba(255, 255, 255, 0.32) 50%, transparent 50%),
     radial-gradient(1.2px 1.2px at 38% 66%, rgba(255, 255, 255, 0.4) 50%, transparent 50%),
     radial-gradient(1.3px 1.3px at 94% 80%, rgba(255, 255, 255, 0.35) 50%, transparent 50%),
     radial-gradient(0.8px 0.8px at 22% 48%, rgba(255, 255, 255, 0.28) 50%, transparent 50%);
@@ -145,11 +131,11 @@ body {
   background: linear-gradient(
     to top,
     transparent 0%,
-    rgba(160, 185, 255, 0.1) 45%,
-    rgba(220, 230, 255, 0.2) 100%
+    rgba(200, 200, 200, 0.08) 45%,
+    rgba(255, 255, 255, 0.14) 100%
   );
-  box-shadow: 0 0 20px 1px rgba(120, 150, 255, 0.12);
-  opacity: 0.5;
+  box-shadow: 0 0 18px 1px rgba(255, 255, 255, 0.06);
+  opacity: 0.45;
   filter: blur(0.2px);
 }
 
@@ -175,6 +161,90 @@ body {
   .cosmos-field__stars--b {
     animation: none;
   }
+}
+
+/* —— Easter: bottom-right star → team message —— */
+.mission-star-dock {
+  position: fixed;
+  z-index: 50;
+  right: max(0.65rem, env(safe-area-inset-right));
+  bottom: max(0.65rem, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.mission-star-dock > * {
+  pointer-events: auto;
+}
+
+.mission-star-bubble {
+  order: -1;
+  max-width: min(19rem, calc(100vw - 2.5rem));
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(12, 12, 12, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+  text-align: left;
+}
+
+.mission-star-bubble[hidden] {
+  display: none !important;
+}
+
+.mission-star-bubble__text {
+  margin: 0;
+  font-size: clamp(0.68rem, 1.7vw, 0.8rem);
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.88);
+}
+
+.mission-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(18, 18, 18, 0.5);
+  color: rgba(240, 240, 240, 0.45);
+  font-size: 0.9rem;
+  line-height: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.mission-star:hover,
+.mission-star:focus-visible {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(30, 30, 30, 0.75);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.mission-star[aria-expanded="true"] {
+  color: var(--orange);
+  background: rgba(40, 32, 24, 0.6);
+  box-shadow: 0 0 0 1px rgba(229, 142, 53, 0.25);
+}
+
+.mission-star__glyph {
+  position: relative;
+  top: 0.5px;
 }
 
 /* Keyboard: jump to Education or legal footer without tabbing through the whole page */
@@ -259,7 +329,7 @@ body {
   pointer-events: none;
   overflow: visible;
   opacity: 0.2;
-  filter: drop-shadow(0 0 12px rgba(120, 160, 255, 0.12));
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.35));
   z-index: 0;
 }
 
@@ -274,9 +344,7 @@ body {
   text-transform: lowercase;
   color: var(--white);
   text-align: center;
-  text-shadow:
-    0 2px 24px rgba(0, 0, 0, 0.55),
-    0 0 40px rgba(30, 50, 100, 0.15);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
   position: relative;
   z-index: 1;
 }
@@ -311,74 +379,11 @@ body {
   font-size: clamp(1.35rem, 5.5vw, 2.35rem);
   font-weight: 500;
   line-height: 1.2;
-  color: rgba(225, 228, 240, 0.95);
+  color: var(--white-dim);
   letter-spacing: 0.01em;
   text-align: center;
   white-space: nowrap;
   max-width: 100%;
-}
-
-.hero-editorial__mission-strap {
-  width: 100%;
-  max-width: min(30rem, 90vw);
-  margin: 0;
-  padding: 0 0.5rem;
-}
-
-.hero-editorial__mission {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.5rem 0.65rem;
-  margin: 0;
-  font-size: clamp(0.7rem, 1.9vw, 0.8rem);
-  line-height: 1.5;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  text-align: center;
-  color: rgba(180, 188, 210, 0.7);
-  font-weight: 500;
-}
-
-.hero-editorial__mission-orbit {
-  flex: 0 0 auto;
-  width: 0.65rem;
-  height: 0.65rem;
-  margin-top: 0.1rem;
-  border: 1px solid rgba(229, 142, 53, 0.4);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(200, 210, 255, 0.08) inset, 0 0 8px rgba(100, 140, 200, 0.12);
-}
-
-.hero-editorial__mission-text {
-  flex: 1 1 14rem;
-  max-width: 28rem;
-  text-wrap: balance;
-  font-variant-numeric: tabular-nums;
-}
-
-.cosmos-easter-abbr {
-  display: inline;
-  margin-left: 0.15em;
-  font-size: 0.62em;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  text-transform: none;
-  font-variant: normal;
-  color: rgba(200, 210, 255, 0.35);
-  border-bottom: 1px dotted rgba(160, 180, 255, 0.25);
-  cursor: help;
-  vertical-align: 0.15em;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.cosmos-easter-abbr:hover,
-.cosmos-easter-abbr:focus-visible {
-  color: rgba(200, 210, 255, 0.55);
-  border-bottom-color: rgba(160, 180, 255, 0.45);
-  outline: none;
 }
 
 .cosmos-footnote {
@@ -387,7 +392,7 @@ body {
   line-height: 1;
   letter-spacing: 0.5em;
   text-transform: none;
-  color: rgba(100, 120, 180, 0.25);
+  color: rgba(100, 100, 100, 0.35);
   user-select: none;
 }
 
@@ -1345,11 +1350,11 @@ body {
 
 .cosmos-footnote__spark {
   display: inline-block;
-  color: rgba(200, 210, 255, 0.35);
+  color: rgba(180, 180, 180, 0.4);
   font-size: 1.4em;
   line-height: 0;
   vertical-align: 0.15em;
-  text-shadow: 0 0 6px rgba(100, 140, 200, 0.35);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
   pointer-events: auto;
   cursor: default;
 }
@@ -1363,7 +1368,7 @@ body {
   line-height: 1;
   letter-spacing: 0.65em;
   text-indent: 0.65em;
-  color: rgba(80, 100, 150, 0.2);
+  color: rgba(70, 70, 70, 0.25);
   user-select: none;
   pointer-events: none;
   padding-bottom: 0.1rem;
@@ -1371,7 +1376,7 @@ body {
 
 @media (min-width: 800px) {
   .cosmos-void-trace {
-    color: rgba(100, 130, 200, 0.14);
+    color: rgba(90, 90, 90, 0.2);
   }
 }
 
@@ -1829,10 +1834,5 @@ body {
   .hero-cosmos-doodle {
     width: min(40vw, 5rem);
     opacity: 0.12;
-  }
-
-  .hero-editorial__mission {
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
   }
 }

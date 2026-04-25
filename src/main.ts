@@ -44,6 +44,7 @@ let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
 let shippingEtaRefreshTimer: number | undefined;
 let productGalleryAsideHeightCleanup: (() => void) | undefined;
+let missionStarDocumentClickUnbind: (() => void) | undefined;
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -654,7 +655,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   return `
     <div class="home-shell">
     <div class="cosmos-field" aria-hidden="true">
-      <div class="cosmos-field__nebula"></div>
       <div class="cosmos-field__stars cosmos-field__stars--a"></div>
       <div class="cosmos-field__stars cosmos-field__stars--b"></div>
       <div class="cosmos-wisp" aria-hidden="true"></div>
@@ -673,26 +673,26 @@ function homeHtml(mode: LandingMode = "purchase"): string {
         >
           <line
             x1="18" y1="24" x2="52" y2="18"
-            stroke="rgba(200,210,245,0.2)"
+            stroke="rgba(200, 200, 200, 0.22)"
             stroke-width="0.4"
             stroke-linecap="round"
           />
           <line
             x1="52" y1="18" x2="78" y2="40"
-            stroke="rgba(200,210,245,0.18)"
+            stroke="rgba(200, 200, 200, 0.18)"
             stroke-width="0.35"
             stroke-linecap="round"
           />
           <line
             x1="78" y1="40" x2="100" y2="22"
-            stroke="rgba(200,210,245,0.16)"
+            stroke="rgba(200, 200, 200, 0.15)"
             stroke-width="0.3"
             stroke-linecap="round"
           />
-          <circle cx="18" cy="24" r="0.8" fill="rgba(220,230,255,0.5)" />
-          <circle cx="52" cy="18" r="0.6" fill="rgba(200,220,255,0.4)" />
-          <circle cx="78" cy="40" r="0.5" fill="rgba(200,220,255,0.32)" />
-          <circle cx="100" cy="22" r="0.5" fill="rgba(200,220,255,0.3)" />
+          <circle cx="18" cy="24" r="0.8" fill="rgba(235, 235, 235, 0.45)" />
+          <circle cx="52" cy="18" r="0.6" fill="rgba(220, 220, 220, 0.4)" />
+          <circle cx="78" cy="40" r="0.5" fill="rgba(200, 200, 200, 0.35)" />
+          <circle cx="100" cy="22" r="0.5" fill="rgba(200, 200, 200, 0.32)" />
         </svg>
         <h1 class="hero-editorial__title">
           blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
@@ -700,15 +700,6 @@ function homeHtml(mode: LandingMode = "purchase"): string {
       </div>
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">get flake free</p>
-        <div class="hero-editorial__mission-strap">
-          <p class="hero-editorial__mission" id="hero-mission">
-            <span class="hero-editorial__mission-orbit" aria-hidden="true"></span>
-            <span class="hero-editorial__mission-text"
-              >Every purchase helps two German guys to build tech to help humanity explore the universe.
-              <abbr class="cosmos-easter-abbr" title="Dresden, Earth, and the next small step" lang="en">D.E.∞</abbr></span
-            >
-          </p>
-        </div>
         <button type="button" class="btn-pill" id="cta-now">Now</button>
         <p class="cosmos-footnote" aria-hidden="true">· · · <span class="cosmos-footnote__spark" title="For stargazers">✦</span> · · ·</p>
       </div>
@@ -747,6 +738,29 @@ function homeHtml(mode: LandingMode = "purchase"): string {
     ${productEducationSectionHtml()}
     ${siteLegalFooterHtml()}
     ${pdfManualModalHtml()}
+    <div class="mission-star-dock" id="mission-star-dock">
+      <div
+        class="mission-star-bubble"
+        id="mission-star-bubble"
+        role="status"
+        aria-live="polite"
+        hidden
+      >
+        <p class="mission-star-bubble__text">
+          Every purchase helps two German guys to build tech to help humanity explore the universe.
+        </p>
+      </div>
+      <button
+        type="button"
+        class="mission-star"
+        id="mission-star"
+        aria-label="Show a message from the team"
+        aria-expanded="false"
+        aria-controls="mission-star-bubble"
+      >
+        <span class="mission-star__glyph" aria-hidden="true">✦</span>
+      </button>
+    </div>
     </div>
   `;
 }
@@ -1150,6 +1164,8 @@ function render(): void {
   closePdfManualModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
+  missionStarDocumentClickUnbind?.();
+  missionStarDocumentClickUnbind = undefined;
   const path = getAppPath();
   const wasEmailPath = path === "/email";
   if (wasEmailPath) {
@@ -1216,6 +1232,7 @@ function bindProduct(): void {
   bindProductShotsCarousel();
   bindProductGalleryAsideHeight();
   bindProductFaq();
+  bindMissionStar();
   updateProductShippingEta();
   shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
 }
@@ -1257,6 +1274,55 @@ function bindProductGalleryAsideHeight(): void {
     window.removeEventListener("resize", onResize);
     gallery.style.removeProperty("height");
     gallery.style.removeProperty("width"); // clear any leftover from earlier versions
+  };
+}
+
+function closeMissionStarBubble(): boolean {
+  const bubble = document.getElementById("mission-star-bubble");
+  const star = document.getElementById("mission-star");
+  if (!bubble || bubble.hasAttribute("hidden")) return false;
+  bubble.setAttribute("hidden", "");
+  star?.setAttribute("aria-expanded", "false");
+  return true;
+}
+
+function bindMissionStar(): void {
+  missionStarDocumentClickUnbind?.();
+  missionStarDocumentClickUnbind = undefined;
+  const star = document.getElementById("mission-star");
+  const bubble = document.getElementById("mission-star-bubble");
+  const dock = document.getElementById("mission-star-dock");
+  if (!star || !bubble || !dock) return;
+
+  const isOpen = (): boolean => !bubble.hasAttribute("hidden");
+
+  const open = (): void => {
+    if (isOpen()) return;
+    bubble.removeAttribute("hidden");
+    star.setAttribute("aria-expanded", "true");
+  };
+
+  const toggle = (): void => {
+    if (isOpen()) {
+      closeMissionStarBubble();
+    } else {
+      open();
+    }
+  };
+
+  star.addEventListener("click", (e: MouseEvent) => {
+    e.stopPropagation();
+    toggle();
+  });
+
+  const onDoc = (e: MouseEvent): void => {
+    if (!isOpen()) return;
+    if (dock.contains(e.target as Node)) return;
+    closeMissionStarBubble();
+  };
+  document.addEventListener("click", onDoc);
+  missionStarDocumentClickUnbind = () => {
+    document.removeEventListener("click", onDoc);
   };
 }
 
@@ -1452,6 +1518,10 @@ window.addEventListener("hashchange", () => {
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (e.key !== "Escape") return;
+  if (closeMissionStarBubble()) {
+    e.preventDefault();
+    return;
+  }
   const faq = document.getElementById("product-faq");
   if (faq?.querySelector('.product-faq__pin[aria-expanded="true"]')) {
     e.preventDefault();
