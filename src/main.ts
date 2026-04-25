@@ -50,6 +50,8 @@ const COSMOS_POPSTARS: ReadonlyArray<readonly [string, string, string, string]> 
   ["73%", "33%", "2.6s", "2.0s"],
   ["9%", "64%", "0.4s", "5.3s"],
   ["59%", "58%", "1.7s", "2.0s"],
+  ["96%", "30%", "1.4s", "2.0s"],
+  ["15%", "2%", "2.2s", "2.0s"],
 ];
 
 function cosmosFieldPopstarsHtml(): string {
@@ -678,6 +680,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
   return `
     <div class="home-shell">
     <div class="cosmos-field" aria-hidden="true">
+      <div class="cosmos-field__dust"></div>
       ${cosmosFieldPopstarsHtml()}
     </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
@@ -702,7 +705,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
           ${productGalleryHtml()}
         </div>
 
-        <aside class="product-side product-side--contrast-test" aria-label="Product details">
+        <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             ${priceBlock}
