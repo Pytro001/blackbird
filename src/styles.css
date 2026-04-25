@@ -18,9 +18,9 @@
   /* 5-point star; same shape for mote + pop (not circles) */
   --cosmos-star-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 96%, 50% 75%, 21% 96%, 32% 57%, 2% 35%, 39% 35%);
   --glow-blur: clamp(36px, 10vw, 88px);
-  --glow-orange-a: rgba(229, 142, 53, 0.42);
-  --glow-orange-b: rgba(201, 122, 46, 0.28);
-  --glow-orange-c: rgba(255, 170, 90, 0.2);
+  --glow-orange-a: rgba(229, 142, 53, 0.54);
+  --glow-orange-b: rgba(201, 122, 46, 0.36);
+  --glow-orange-c: rgba(255, 170, 90, 0.28);
   --muted: var(--gray-500);
   --result-yes: var(--orange);
   --result-no: var(--gray-400);
@@ -85,13 +85,14 @@ body {
   position: relative;
   min-height: 100%;
   background: var(--site-base);
-  overflow-x: clip;
+  /* Clip blur/negative insets on ambient; prevents giant root scroll from filter overflow */
+  overflow: hidden;
 }
 
 /* Soft black + blurred orange: slow drift, behind stars */
 .home-shell__ambient {
   position: absolute;
-  inset: -12%;
+  inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
@@ -108,26 +109,26 @@ body {
 }
 
 .home-shell__glow--a {
-  top: -18%;
-  right: -8%;
+  top: -8%;
+  right: -5%;
   background: radial-gradient(
     circle closest-side,
     var(--glow-orange-a) 0%,
-    rgba(229, 142, 53, 0.12) 42%,
+    rgba(229, 142, 53, 0.16) 42%,
     transparent 72%
   );
   animation: home-glow-drift-a 32s ease-in-out infinite;
 }
 
 .home-shell__glow--b {
-  bottom: -20%;
-  left: -12%;
+  bottom: -10%;
+  left: -8%;
   width: min(100vmin, 720px);
   height: min(85vmin, 580px);
   background: radial-gradient(
     circle closest-side,
     var(--glow-orange-b) 0%,
-    rgba(180, 100, 40, 0.1) 48%,
+    rgba(180, 100, 40, 0.14) 48%,
     transparent 70%
   );
   animation: home-glow-drift-b 40s ease-in-out infinite 4s;
@@ -138,11 +139,11 @@ body {
   left: 20%;
   width: min(70vmin, 480px);
   height: min(65vmin, 440px);
-  opacity: 0.85;
+  opacity: 0.9;
   background: radial-gradient(
     circle closest-side,
     var(--glow-orange-c) 0%,
-    rgba(229, 142, 53, 0.08) 50%,
+    rgba(229, 142, 53, 0.12) 50%,
     transparent 75%
   );
   animation: home-glow-drift-c 28s ease-in-out infinite 2s;
@@ -187,6 +188,7 @@ body {
 }
 
 /* —— Backdrop: many star specks (clip-path) + soft pop “shine” (mission star: .mission-star-dock) —— */
+/* No z-index here: after .home-shell__ambient in DOM, stars paint over glow; main sections stay on top. */
 .cosmos-field {
   position: absolute;
   inset: 0;
@@ -295,10 +297,10 @@ body {
 .mission-star-bubble {
   order: -1;
   max-width: min(19rem, calc(100vw - 2.5rem));
-  padding: 0.7rem 0.85rem;
+  padding: 0.65rem 0.8rem;
   border-radius: 10px;
   background: rgba(12, 12, 12, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
   text-align: left;
 }
@@ -309,11 +311,12 @@ body {
 
 .mission-star-bubble__text {
   margin: 0;
-  font-size: clamp(0.68rem, 1.7vw, 0.8rem);
+  font-family: var(--font);
+  font-size: clamp(0.6rem, 1.45vw, 0.72rem);
   line-height: 1.45;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
   color: rgba(220, 220, 220, 0.88);
 }
 
