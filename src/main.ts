@@ -704,7 +704,8 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const buyLabel = isSubscription
     ? `${escapeHtml(subscriptionPriceDisplay)} monthly plan`
     : "Buy";
-  const oneTimeTestHref = stripePaymentLinkUrl();
+  // One Time Test: fixed one-time payment link (same as DEFAULT_STRIPE_PAYMENT_LINK, not VITE)
+  const oneTimeTestHref = DEFAULT_STRIPE_PAYMENT_LINK;
   const oneTimeTestLabel = `${escapeHtml(subscriptionPriceDisplay)} One Time Test`;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
