@@ -104,7 +104,7 @@ let missionStarDocumentClickUnbind: (() => void) | undefined;
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
 
-/** Subscribe on `/subscription`; override with VITE_STRIPE_SUBSCRIPTION_LINK if needed. */
+/** Default home (`/`) is subscription; override with VITE_STRIPE_SUBSCRIPTION_LINK if needed. */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
   "https://buy.stripe.com/7sY6oI7OX0OW9rabXNfbq03";
 
@@ -123,7 +123,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-/** Shown on /subscription; must match the Stripe subscription price in the dashboard. */
+/** Shown on `/` and `/subscription`; must match the Stripe subscription price in the dashboard. */
 const SUBSCRIPTION_PRICE_EUR = 9.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
@@ -132,14 +132,7 @@ const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
 
 type LandingMode = "purchase" | "subscription";
 
-type View =
-  | "landing"
-  | "product"
-  | "subscription"
-  | "thanks"
-  | "manual"
-  | "impressum"
-  | "datenschutz";
+type View = "product" | "subscription" | "thanks" | "manual" | "impressum" | "datenschutz";
 
 /** Same WhatsApp number as dermatologist link; no prefilled text (legal / general contact). */
 const WHATSAPP_CONTACT_URL = "https://wa.me/4917644429908";
@@ -406,7 +399,7 @@ function getAppPath(): string {
 function pathToView(): View {
   const path = getAppPath();
   if (path === "/product") return "product";
-  if (path === "/subscription") return "subscription";
+  if (path === "/" || path === "/subscription") return "subscription";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
   if (path === "/agb") {
@@ -419,7 +412,7 @@ function pathToView(): View {
   }
   if (path === "/impressum") return "impressum";
   if (path === "/datenschutz") return "datenschutz";
-  return "landing";
+  return "subscription";
 }
 
 function goLanding(): void {
@@ -690,7 +683,7 @@ function productEducationSectionHtml(): string {
     </section>`;
 }
 
-function homeHtml(mode: LandingMode = "purchase"): string {
+function homeHtml(mode: LandingMode = "subscription"): string {
   const isSubscription = mode === "subscription";
   const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
   const priceBlock = isSubscription
@@ -1199,16 +1192,20 @@ function render(): void {
     history.replaceState(null, "", BASE_HREF);
   }
 
+  if (getAppPath() === "/subscription") {
+    history.replaceState(null, "", `${BASE_HREF}${location.search}${location.hash}`);
+  }
+
   const view = pathToView();
   setDocumentLang(view);
 
-  if (view === "landing" || view === "product" || view === "subscription") {
+  if (view === "product" || view === "subscription") {
     const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
     root.innerHTML = homeHtml(landingMode);
     bindLanding();
     bindProduct();
     const scrollProduct =
-      view === "product" || (view === "landing" && wasEmailPath);
+      view === "product" || (view === "subscription" && wasEmailPath);
     if (scrollProduct) {
       scrollToProduct(view === "product" ? "auto" : "smooth");
     } else if (
@@ -1237,7 +1234,7 @@ function render(): void {
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
     let chrome = "#2e2a26";
-    if (view === "subscription") chrome = "#f3ede3";
+    if (view === "subscription") chrome = "#f6f1e8";
     else if (view === "impressum" || view === "datenschutz") chrome = "#ffffff";
     themeColorMeta.setAttribute("content", chrome);
   }
