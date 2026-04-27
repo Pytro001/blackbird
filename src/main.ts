@@ -703,7 +703,7 @@ function homeHtml(mode: LandingMode = "purchase"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new monthly set</p>`
+    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
     : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
@@ -1233,9 +1233,13 @@ function render(): void {
   }
 
   document.body.classList.toggle("subscription-view", view === "subscription");
+  document.body.classList.toggle("legal-page-view", view === "impressum" || view === "datenschutz");
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
-    themeColorMeta.setAttribute("content", view === "subscription" ? "#ffffff" : "#030303");
+    let chrome = "#2e2a26";
+    if (view === "subscription") chrome = "#f9f6f0";
+    else if (view === "impressum" || view === "datenschutz") chrome = "#ffffff";
+    themeColorMeta.setAttribute("content", chrome);
   }
 
   if (view === "thanks") bindThanks();

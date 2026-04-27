@@ -1,6 +1,6 @@
 :root {
-  --black: #111;
-  --gray-950: #1a1a1a;
+  --black: #2e2a26;
+  --gray-950: #2e2a26;
   --gray-900: #222;
   --gray-800: #2e2e2e;
   --gray-700: #3d3d3d;
@@ -9,11 +9,13 @@
   --gray-400: #b0b0b0;
   --white: #f5f5f5;
   --white-dim: rgba(245, 245, 245, 0.82);
-  --orange: #e58e35;
-  --orange-soft: rgba(229, 142, 53, 0.22);
-  --orange-muted: #c97a2e;
-  --site-base: #030303;
+  --orange: #ff9e18;
+  --orange-soft: rgba(255, 158, 24, 0.22);
+  --orange-muted: #e08a10;
+  --site-base: #2e2a26;
   --site-bg: var(--site-base);
+  /* Light routes (/subscription, legal): warm paper, not flat white */
+  --subscription-paper: #f9f6f0;
   /* 5-point star; same shape for mote + pop (not circles) */
   --cosmos-star-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 96%, 50% 75%, 21% 96%, 32% 57%, 2% 35%, 39% 35%);
   --muted: var(--gray-500);
@@ -67,7 +69,7 @@ body::-webkit-scrollbar {
 
 body {
   font-family: var(--font);
-  background: var(--site-base, #030303);
+  background: var(--site-base, #2e2a26);
   color: var(--white);
   -webkit-font-smoothing: antialiased;
 }
@@ -86,12 +88,12 @@ body {
 /* —— /subscription: white page, dark type (body class set in render) —— */
 body.subscription-view,
 body.subscription-view #app {
-  background: #fff;
-  color: #111;
+  background: var(--subscription-paper);
+  color: var(--black);
 }
 
 body.subscription-view .home-shell--subscription {
-  background: #fff;
+  background: var(--subscription-paper);
 }
 
 /* Specks read on white */
@@ -105,30 +107,31 @@ body.subscription-view .cosmos-field__popstar-inner {
 }
 
 body.subscription-view .hero-editorial__title {
-  color: #111;
+  color: var(--black);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 body.subscription-view .hero-editorial__script {
-  color: rgba(20, 20, 20, 0.78);
+  color: rgba(46, 42, 38, 0.78);
 }
 
 body.subscription-view .btn-pill {
-  border-color: #111;
-  color: #111;
+  border-color: var(--black);
+  color: var(--black);
 }
 
 body.subscription-view .btn-pill:hover,
 body.subscription-view .btn-pill:focus-visible {
-  background: #111;
+  background: var(--black);
   color: #f5f5f5;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
 body.subscription-view .product-panel {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 body.subscription-view .product-name,
@@ -136,44 +139,53 @@ body.subscription-view .product-price,
 body.subscription-view .product-price--subscription,
 body.subscription-view .product-shipping__eta,
 body.subscription-view .product-shipping__returns {
-  color: #111;
+  color: var(--black);
 }
 
 body.subscription-view .product-price__period {
-  color: rgba(30, 30, 30, 0.65);
+  color: rgba(46, 42, 38, 0.65);
 }
 
 body.subscription-view .product-subscription-lede {
-  color: rgba(40, 40, 40, 0.85);
+  color: rgba(46, 42, 38, 0.85);
 }
 
 body.subscription-view .product-wa-headline {
-  color: rgba(25, 25, 25, 0.9);
+  color: rgba(46, 42, 38, 0.9);
 }
 
 body.subscription-view .product-wa-desc {
-  color: #4a4a4a;
+  color: rgba(46, 42, 38, 0.72);
 }
 
 body.subscription-view .product-wa-link {
-  color: #333;
+  color: rgba(46, 42, 38, 0.92);
   text-decoration-color: rgba(0, 0, 0, 0.28);
 }
 
 body.subscription-view .product-wa-link:hover,
 body.subscription-view .product-wa-link:focus-visible {
-  color: #111;
+  color: var(--black);
   text-decoration-color: rgba(0, 0, 0, 0.45);
 }
 
 body.subscription-view .product-wa-qr__img {
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background: transparent;
 }
 
 body.subscription-view .btn-howto {
-  color: #111;
-  background: #f2f2f2;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--black);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+}
+
+body.subscription-view .btn-howto:hover {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 body.subscription-view .btn-howto:focus-visible {
@@ -182,67 +194,72 @@ body.subscription-view .btn-howto:focus-visible {
 }
 
 body.subscription-view .product-gallery__stage:focus-visible {
-  box-shadow: inset 0 0 0 2px rgba(229, 142, 53, 0.7);
+  box-shadow: inset 0 0 0 2px rgba(255, 158, 24, 0.7);
 }
 
 body.subscription-view .product-faq__heading--script,
 body.subscription-view .product-education__title--script {
-  color: rgba(20, 20, 20, 0.9);
+  color: rgba(46, 42, 38, 0.9);
 }
 
 body.subscription-view .product-faq__img {
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: none;
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
 }
 
 body.subscription-view .product-faq__pin {
-  color: rgba(20, 20, 20, 0.95);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+  border: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
+body.subscription-view .product-faq__pin:hover,
+body.subscription-view .product-faq__pin:focus-visible {
+  color: rgba(255, 255, 255, 0.95);
+}
+
 body.subscription-view .product-faq__pin[aria-expanded="true"] {
-  background: #111;
-  color: #f5f5f5;
+  background: var(--black);
+  color: #fff;
 }
 
 body.subscription-view .product-faq__panel {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.98);
+  border: none;
+  background: rgba(255, 255, 255, 0.55);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
 }
 
 body.subscription-view .product-faq__answer {
-  color: #444;
+  color: rgba(46, 42, 38, 0.78);
 }
 
 body.subscription-view .product-education__lead,
 body.subscription-view .product-education__text,
 body.subscription-view .product-education__stats {
-  color: #333;
+  color: rgba(46, 42, 38, 0.92);
 }
 
 body.subscription-view .site-legal-footer__line {
-  color: #444;
+  color: rgba(46, 42, 38, 0.78);
 }
 
 body.subscription-view .site-legal-footer__chunk a {
-  color: #333;
+  color: rgba(46, 42, 38, 0.92);
   text-decoration-color: rgba(0, 0, 0, 0.3);
 }
 
 body.subscription-view .site-legal-footer__chunk a:hover,
 body.subscription-view .site-legal-footer__chunk a:focus-visible {
-  color: #111;
+  color: var(--black);
 }
 
 body.subscription-view .site-legal-footer__nav a {
-  color: #444;
+  color: rgba(46, 42, 38, 0.78);
 }
 
 body.subscription-view .site-legal-footer__nav a:hover,
 body.subscription-view .site-legal-footer__nav a:focus-visible {
-  color: #111;
+  color: var(--black);
 }
 
 body.subscription-view .site-legal-footer__sep {
@@ -262,18 +279,18 @@ body.subscription-view .mission-star:hover {
 }
 
 body.subscription-view .mission-star:focus-visible {
-  color: #111;
+  color: var(--black);
   outline: 1px solid rgba(0, 0, 0, 0.28);
 }
 
 body.subscription-view .mission-star-bubble {
-  background: #f6f6f6;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.65);
+  border: none;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
 }
 
 body.subscription-view .mission-star-bubble__text {
-  color: #1a1a1a;
+  color: var(--black);
 }
 
 body.subscription-view .product-inline-msg {
@@ -868,7 +885,7 @@ body.subscription-view .product-inline-msg {
 
 .product-gallery__stage:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 2px rgba(229, 142, 53, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(255, 158, 24, 0.55);
 }
 
 .product-gallery__figure {
@@ -1174,7 +1191,7 @@ body.subscription-view .product-inline-msg {
   line-height: 1.2;
   text-align: center;
   color: rgba(245, 245, 245, 0.95);
-  background: rgba(229, 142, 53, 0.92);
+  background: rgba(255, 158, 24, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
@@ -1190,7 +1207,7 @@ body.subscription-view .product-inline-msg {
   background: var(--orange);
   transform: scale(1.04);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(229, 142, 53, 0.45);
+  box-shadow: 0 0 0 2px rgba(255, 158, 24, 0.45);
 }
 
 .product-faq__pin[aria-expanded="true"] {
@@ -1498,7 +1515,7 @@ body.subscription-view .product-inline-msg {
   padding: 0 1.5rem;
   border: none;
   border-radius: 999px;
-  background: #f09029;
+  background: #ff9e18;
   color: var(--black);
   font-family: var(--font);
   font-size: clamp(0.95rem, 2.8vw, 1.05rem);
@@ -1514,7 +1531,7 @@ body.subscription-view .product-inline-msg {
 
 .btn-buy:hover,
 .btn-buy:focus-visible {
-  background: #f5a040;
+  background: #ffb03d;
   filter: none;
   outline: none;
 }
@@ -1755,6 +1772,90 @@ body.subscription-view .product-inline-msg {
   color: rgba(210, 210, 210, 0.95);
 }
 
+/* Impressum / Datenschutz: white page, site ink (body class from render) */
+body.legal-page-view,
+body.legal-page-view #app {
+  background: #fff;
+  color: var(--black);
+}
+
+body.legal-page-view .page-step.page-legal {
+  background: #fff;
+}
+
+body.legal-page-view .legal-title {
+  color: var(--black);
+}
+
+body.legal-page-view .legal-prose {
+  color: rgba(46, 42, 38, 0.92);
+}
+
+body.legal-page-view .legal-lead {
+  color: rgba(46, 42, 38, 0.78);
+}
+
+body.legal-page-view .legal-h2 {
+  color: var(--black);
+}
+
+body.legal-page-view .legal-h3 {
+  color: rgba(46, 42, 38, 0.95);
+}
+
+body.legal-page-view .legal-prose a {
+  color: rgba(46, 42, 38, 0.9);
+  text-decoration-color: rgba(46, 42, 38, 0.35);
+}
+
+body.legal-page-view .legal-prose a:hover,
+body.legal-page-view .legal-prose a:focus-visible {
+  color: var(--black);
+  text-decoration-color: rgba(46, 42, 38, 0.5);
+}
+
+body.legal-page-view .legal-pre {
+  border: none;
+  background: rgba(46, 42, 38, 0.06);
+  color: var(--black);
+}
+
+body.legal-page-view .manual-back {
+  color: rgba(46, 42, 38, 0.85);
+}
+
+body.legal-page-view .manual-back:hover,
+body.legal-page-view .manual-back:focus-visible {
+  color: var(--black);
+}
+
+body.legal-page-view .site-legal-footer__line {
+  color: rgba(46, 42, 38, 0.78);
+}
+
+body.legal-page-view .site-legal-footer__chunk a {
+  color: rgba(46, 42, 38, 0.92);
+  text-decoration-color: rgba(46, 42, 38, 0.3);
+}
+
+body.legal-page-view .site-legal-footer__chunk a:hover,
+body.legal-page-view .site-legal-footer__chunk a:focus-visible {
+  color: var(--black);
+}
+
+body.legal-page-view .site-legal-footer__nav a {
+  color: rgba(46, 42, 38, 0.78);
+}
+
+body.legal-page-view .site-legal-footer__nav a:hover,
+body.legal-page-view .site-legal-footer__nav a:focus-visible {
+  color: var(--black);
+}
+
+body.legal-page-view .site-legal-footer__sep {
+  color: rgba(46, 42, 38, 0.35);
+}
+
 /* —— Thanks step —— */
 .page-step {
   min-height: 100vh;
@@ -1876,7 +1977,7 @@ body.subscription-view .product-inline-msg {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #111;
+  background: var(--black);
 }
 
 .manual-intro__dim {
