@@ -690,9 +690,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const isSubscription = mode === "subscription";
   const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
   const priceBlock = isSubscription
-    ? `<div class="product-price-block product-price-block--subscription">
-            <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
-          </div>`
+    ? ""
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
   const subscriptionCancelLede = isSubscription
     ? `<p class="product-subscription-lede">You can cancel your subscription anytime.</p>`
@@ -701,9 +699,11 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
+    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when your old one is empty</p>`
     : "";
-  const buyLabel = isSubscription ? "Monthly Plan" : "Buy";
+  const buyLabel = isSubscription
+    ? `${escapeHtml(subscriptionPriceDisplay)} monthly plan`
+    : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
   return `
@@ -737,7 +737,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
             <div class="product-identity${isSubscription ? " product-identity--subscription" : ""}">
-            <h2 class="product-name">Blackbird Men Dandruff Set</h2>
+            <h2 class="product-name${isSubscription ? " product-name--subscription" : ""}">Blackbird Men Dandruff Set</h2>
             ${priceBlock}
             </div>
             <div class="product-shipping">
@@ -1247,7 +1247,7 @@ function render(): void {
   if (themeColorMeta) {
     let chrome = "#2e2a26";
     if (view === "subscription" || view === "impressum" || view === "datenschutz")
-      chrome = "#f6f1e8";
+      chrome = "#f9f5ef";
     themeColorMeta.setAttribute("content", chrome);
   }
 
