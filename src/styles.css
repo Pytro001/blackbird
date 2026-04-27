@@ -83,6 +83,203 @@ body {
   overflow-x: clip;
 }
 
+/* —— /subscription: white page, dark type (body class set in render) —— */
+body.subscription-view,
+body.subscription-view #app {
+  background: #fff;
+  color: #111;
+}
+
+body.subscription-view .home-shell--subscription {
+  background: #fff;
+}
+
+/* Specks read on white */
+body.subscription-view .cosmos-field__mote {
+  background: rgba(0, 0, 0, 0.14);
+  opacity: 0.5;
+}
+
+body.subscription-view .cosmos-field__popstar-inner {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+body.subscription-view .hero-editorial__title {
+  color: #111;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+body.subscription-view .hero-editorial__script {
+  color: rgba(20, 20, 20, 0.78);
+}
+
+body.subscription-view .btn-pill {
+  border-color: #111;
+  color: #111;
+}
+
+body.subscription-view .btn-pill:hover,
+body.subscription-view .btn-pill:focus-visible {
+  background: #111;
+  color: #f5f5f5;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+body.subscription-view .product-panel {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+body.subscription-view .product-name,
+body.subscription-view .product-price,
+body.subscription-view .product-price--subscription,
+body.subscription-view .product-shipping__eta,
+body.subscription-view .product-shipping__returns {
+  color: #111;
+}
+
+body.subscription-view .product-price__period {
+  color: rgba(30, 30, 30, 0.65);
+}
+
+body.subscription-view .product-subscription-lede {
+  color: rgba(40, 40, 40, 0.85);
+}
+
+body.subscription-view .product-wa-headline {
+  color: rgba(25, 25, 25, 0.9);
+}
+
+body.subscription-view .product-wa-desc {
+  color: #4a4a4a;
+}
+
+body.subscription-view .product-wa-link {
+  color: #333;
+  text-decoration-color: rgba(0, 0, 0, 0.28);
+}
+
+body.subscription-view .product-wa-link:hover,
+body.subscription-view .product-wa-link:focus-visible {
+  color: #111;
+  text-decoration-color: rgba(0, 0, 0, 0.45);
+}
+
+body.subscription-view .product-wa-qr__img {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.subscription-view .btn-howto {
+  color: #111;
+  background: #f2f2f2;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+body.subscription-view .btn-howto:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 2px;
+}
+
+body.subscription-view .product-gallery__stage:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(229, 142, 53, 0.7);
+}
+
+body.subscription-view .product-faq__heading--script,
+body.subscription-view .product-education__title--script {
+  color: rgba(20, 20, 20, 0.9);
+}
+
+body.subscription-view .product-faq__img {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+}
+
+body.subscription-view .product-faq__pin {
+  color: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+body.subscription-view .product-faq__pin[aria-expanded="true"] {
+  background: #111;
+  color: #f5f5f5;
+}
+
+body.subscription-view .product-faq__panel {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+}
+
+body.subscription-view .product-faq__answer {
+  color: #444;
+}
+
+body.subscription-view .product-education__lead,
+body.subscription-view .product-education__text,
+body.subscription-view .product-education__stats {
+  color: #333;
+}
+
+body.subscription-view .site-legal-footer__line {
+  color: #444;
+}
+
+body.subscription-view .site-legal-footer__chunk a {
+  color: #333;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+}
+
+body.subscription-view .site-legal-footer__chunk a:hover,
+body.subscription-view .site-legal-footer__chunk a:focus-visible {
+  color: #111;
+}
+
+body.subscription-view .site-legal-footer__nav a {
+  color: #444;
+}
+
+body.subscription-view .site-legal-footer__nav a:hover,
+body.subscription-view .site-legal-footer__nav a:focus-visible {
+  color: #111;
+}
+
+body.subscription-view .site-legal-footer__sep {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+body.subscription-view .cosmos-void-trace {
+  color: rgba(0, 0, 0, 0.12);
+}
+
+body.subscription-view .mission-star {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+body.subscription-view .mission-star:hover {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+body.subscription-view .mission-star:focus-visible {
+  color: #111;
+  outline: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+body.subscription-view .mission-star-bubble {
+  background: #f6f6f6;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+}
+
+body.subscription-view .mission-star-bubble__text {
+  color: #1a1a1a;
+}
+
+body.subscription-view .product-inline-msg {
+  color: #5a5a5a;
+}
+
 /* —— Backdrop: many star specks (clip-path) + soft pop “shine” (mission star: .mission-star-dock) —— */
 .cosmos-field {
   position: absolute;

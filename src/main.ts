@@ -123,7 +123,8 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
   currency: "EUR",
 }).format(PRODUCT_PRICE_EUR);
 
-const SUBSCRIPTION_PRICE_EUR = 5.99;
+/** Shown on /subscription; must match the Stripe subscription price in the dashboard. */
+const SUBSCRIPTION_PRICE_EUR = 9.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
@@ -705,9 +706,10 @@ function homeHtml(mode: LandingMode = "purchase"): string {
     ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new monthly set</p>`
     : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
+  const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
   return `
-    <div class="home-shell">
+    <div class="${shellClass}">
     <div class="cosmos-field" aria-hidden="true">
       ${cosmosFieldDustMotesHtml()}
       ${cosmosFieldPopstarsHtml()}
@@ -1228,6 +1230,12 @@ function render(): void {
     }
   } else if (view === "datenschutz") {
     root.innerHTML = datenschutzHtml();
+  }
+
+  document.body.classList.toggle("subscription-view", view === "subscription");
+  const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute("content", view === "subscription" ? "#ffffff" : "#030303");
   }
 
   if (view === "thanks") bindThanks();
