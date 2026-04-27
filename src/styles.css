@@ -186,17 +186,6 @@ body.subscription-view .product-wa-block {
   margin: 0.1rem 0 0;
 }
 
-/* Taller offer card → aside height drives gallery; slightly wider images on desktop */
-@media (min-width: 840px) {
-  body.subscription-view .product-gallery {
-    max-width: min(600px, 100%);
-  }
-
-  body.subscription-view .product-side {
-    max-width: min(500px, 100%);
-  }
-}
-
 body.subscription-view .btn-onetime {
   box-sizing: border-box;
   display: inline-flex;
@@ -848,6 +837,61 @@ body.subscription-view .product-inline-msg {
 
   .product-side {
     align-self: start;
+  }
+}
+
+/* Subscription: gallery + offer card = one centered cluster; wider image; more vertical room */
+@media (min-width: 840px) {
+  body.subscription-view .page-product {
+    padding-top: max(1.75rem, 5.5vh);
+    padding-bottom: max(2.75rem, 7vh);
+  }
+
+  body.subscription-view .product-layout--subscription {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: center;
+    width: fit-content;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    column-gap: clamp(1.75rem, 3.2vw, 2.5rem);
+    row-gap: 0;
+  }
+
+  body.subscription-view .product-shots-wrap {
+    flex: 0 1 auto;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  body.subscription-view .product-side {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: min(500px, 100%);
+  }
+
+  /* Wider image column so the photo reads larger in the shared height from JS */
+  body.subscription-view .product-gallery {
+    width: min(680px, 52vw);
+    min-width: min(560px, 46vw);
+    max-width: min(720px, 58vw);
+  }
+
+  body.subscription-view .product-gallery__figure {
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.subscription-view .product-gallery__main-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center center;
   }
 }
 

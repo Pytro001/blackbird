@@ -776,7 +776,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     </section>
 
     <div class="page-product" id="product">
-      <main class="product-layout">
+      <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
         <div class="product-shots-wrap">
           ${productGalleryHtml()}
         </div>
