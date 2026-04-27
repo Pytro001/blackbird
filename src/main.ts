@@ -702,7 +702,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
     : "";
   const buyLabel = isSubscription
-    ? `${escapeHtml(subscriptionPriceDisplay)} monthly plan`
+    ? `${escapeHtml(subscriptionPriceDisplay)} Monthly Plan`
     : "Buy";
   // One Time Test: fixed one-time payment link (same as DEFAULT_STRIPE_PAYMENT_LINK, not VITE)
   const oneTimeTestHref = DEFAULT_STRIPE_PAYMENT_LINK;
