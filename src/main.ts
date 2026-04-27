@@ -128,7 +128,10 @@ const SUBSCRIPTION_PRICE_EUR = 9.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
-}).format(SUBSCRIPTION_PRICE_EUR);
+})
+  .format(SUBSCRIPTION_PRICE_EUR)
+  // de-DE inserts a space before €; keep "9,99€" for display
+  .replace(/[\s\u00a0\u202f]+€/g, "€");
 
 type LandingMode = "purchase" | "subscription";
 
@@ -733,8 +736,10 @@ function homeHtml(mode: LandingMode = "subscription"): string {
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-panel product-panel--buy">
+            <div class="product-identity${isSubscription ? " product-identity--subscription" : ""}">
             <h2 class="product-name">Blackbird Men Dandruff Set</h2>
             ${priceBlock}
+            </div>
             <div class="product-shipping">
               ${returnsLine}
               ${subscriptionShippingTopLine}

@@ -142,8 +142,33 @@ body.subscription-view .product-shipping__returns {
   color: var(--black);
 }
 
+/* Title + price stack: tight, slightly lower in the card, even vertical rhythm in the buy panel */
+body.subscription-view .product-identity--subscription {
+  margin-top: 0;
+  padding-top: 0.15rem;
+  gap: 0.2rem;
+}
+
+body.subscription-view .product-panel--buy {
+  gap: 0.65rem;
+  padding: 1.4rem 1.45rem 1.9rem;
+}
+
+body.subscription-view .product-price--subscription {
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  gap: 0.05em 0.2em;
+}
+
 body.subscription-view .product-price__period {
   color: rgba(46, 42, 38, 0.65);
+  font-weight: 600;
+  margin-left: 0.09em;
+}
+
+body.subscription-view .product-shipping {
+  margin: 0;
+  gap: 0.4rem;
 }
 
 body.subscription-view .product-subscription-lede {
@@ -1376,6 +1401,15 @@ body.subscription-view .product-inline-msg {
   line-height: 1.55;
   color: rgba(225, 225, 225, 0.92);
   border-top: none;
+}
+
+/* Product title + price: one visual block; subscription tightens in body.subscription-view */
+.product-identity {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+  gap: 0.5rem;
 }
 
 .product-name {
