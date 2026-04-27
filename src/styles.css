@@ -85,7 +85,7 @@ body {
   overflow-x: clip;
 }
 
-/* —— /subscription: white page, dark type (body class set in render) —— */
+/* —— Default home (`/`) and subscription: warm paper, dark type (body.subscription-view) —— */
 body.subscription-view,
 body.subscription-view #app {
   background: var(--subscription-paper);
@@ -1772,15 +1772,15 @@ body.subscription-view .product-inline-msg {
   color: rgba(210, 210, 210, 0.95);
 }
 
-/* Impressum / Datenschutz: white page, site ink (body class from render) */
+/* Impressum / Datenschutz: same paper as home; site ink (body class from render) */
 body.legal-page-view,
 body.legal-page-view #app {
-  background: #fff;
+  background: var(--subscription-paper);
   color: var(--black);
 }
 
 body.legal-page-view .page-step.page-legal {
-  background: #fff;
+  background: var(--subscription-paper);
 }
 
 body.legal-page-view .legal-title {
