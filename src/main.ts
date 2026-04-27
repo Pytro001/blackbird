@@ -699,7 +699,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when your old one is empty</p>`
+    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
     : "";
   const buyLabel = isSubscription
     ? `${escapeHtml(subscriptionPriceDisplay)} monthly plan`
