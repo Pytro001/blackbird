@@ -163,17 +163,39 @@ body.subscription-view .product-shipping {
   gap: 0.4rem;
 }
 
-/* Primary CTA: slightly squarer pill, room for "9,99€ monthly plan" */
+/* Primary CTA: "9,99€ monthly plan" — large, white label, no hover color shift */
 body.subscription-view .btn-buy {
   width: 100%;
   border-radius: 12px;
-  padding: 0.6rem 1.1rem;
-  min-height: 52px;
-  font-size: clamp(0.86rem, 2.4vw, 0.98rem);
+  padding: 0.9rem 1.35rem;
+  min-height: 64px;
+  font-size: clamp(1.04rem, 2.9vw, 1.2rem);
   font-weight: 800;
   letter-spacing: 0.04em;
-  line-height: 1.25;
+  line-height: 1.2;
   text-align: center;
+  color: #fff;
+  background: #ff9e18;
+  transition: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.subscription-view .btn-buy:hover,
+body.subscription-view .btn-buy:focus-visible {
+  background: #ff9e18;
+  color: #fff;
+  filter: none;
+}
+
+body.subscription-view .btn-buy:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 3px;
+}
+
+body.subscription-view .btn-buy:active {
+  background: #ff9e18;
+  color: #fff;
+  transform: none;
 }
 
 body.subscription-view .product-subscription-lede {
