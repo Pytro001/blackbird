@@ -197,8 +197,8 @@ body.subscription-view .btn-onetime {
   min-height: 52px;
   border-radius: 12px;
   border: 1px solid var(--black);
-  background: transparent;
-  color: var(--black);
+  background: var(--black);
+  color: #fff;
   font-family: var(--font);
   font-size: clamp(1.02rem, 2.65vw, 1.1rem);
   line-height: 1.2;
@@ -213,14 +213,14 @@ body.subscription-view .btn-onetime {
 
 body.subscription-view .btn-onetime:hover,
 body.subscription-view .btn-onetime:focus-visible {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: var(--black);
-  color: var(--black);
+  background: #3f3a35;
+  border-color: #3f3a35;
+  color: #fff;
   outline: none;
 }
 
 body.subscription-view .btn-onetime:focus-visible {
-  outline: 2px solid rgba(46, 42, 38, 0.4);
+  outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
 }
 
@@ -850,7 +850,7 @@ body.subscription-view .product-inline-msg {
   body.subscription-view .product-layout--subscription {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: flex-start;
     justify-content: center;
     width: 100%;
@@ -858,10 +858,12 @@ body.subscription-view .product-inline-msg {
     margin: 0 auto;
     box-sizing: border-box;
     column-gap: clamp(1.5rem, 2.8vw, 2.5rem);
-    row-gap: 1.1rem;
+    row-gap: 0;
   }
 
+  /* Must not use width:100% here — that forces gallery + column to stack */
   body.subscription-view .product-shots-wrap {
+    width: auto;
     flex: 0 1 auto;
     min-width: 0;
     max-width: 100%;
@@ -869,6 +871,7 @@ body.subscription-view .product-inline-msg {
   }
 
   body.subscription-view .product-side {
+    width: auto;
     flex: 0 1 auto;
     min-width: 0;
     max-width: min(500px, 100%);
