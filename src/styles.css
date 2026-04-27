@@ -142,8 +142,8 @@ body.subscription-view .product-shipping__returns {
 
 /* Title only (price lives on the CTA); even vertical rhythm in the buy panel */
 body.subscription-view .product-identity--subscription {
-  margin-top: 0;
-  padding-top: 0.1rem;
+  margin: 0;
+  padding: 0;
   gap: 0;
 }
 
@@ -153,29 +153,91 @@ body.subscription-view .product-name--subscription {
   letter-spacing: 0.025em;
 }
 
-body.subscription-view .product-panel--buy {
-  gap: 0.65rem;
-  padding: 1.4rem 1.45rem 1.9rem;
+/* Bordered offer card: title → shipping copy → one-time (outline) → monthly (orange) → lede → WhatsApp */
+body.subscription-view .product-panel--buy-subscription {
+  gap: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
-body.subscription-view .product-shipping {
+body.subscription-view .product-offer-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
   margin: 0;
-  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.95rem 1.05rem 1.05rem;
+  border-radius: var(--radius);
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  background: transparent;
+  box-shadow: none;
 }
 
-/* Primary CTA: "9,99€ monthly plan" — large, white label, no hover color shift */
+body.subscription-view .product-shipping--subscription {
+  margin: 0;
+  padding: 0;
+  gap: 0.35rem;
+}
+
+body.subscription-view .product-wa-block {
+  margin: 0.1rem 0 0;
+}
+
+/* Ghost / outline row: same look as "How to use" */
+body.subscription-view .btn-onetime {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 0.95rem;
+  min-height: 46px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  background: transparent;
+  color: var(--black);
+  font: inherit;
+  font-size: clamp(0.82rem, 2.2vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+body.subscription-view .btn-onetime:hover,
+body.subscription-view .btn-onetime:focus-visible {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: var(--black);
+  outline: none;
+}
+
+body.subscription-view .btn-onetime:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.25);
+  outline-offset: 2px;
+}
+
+/* Monthly plan: compact, ink on orange, stable hover */
 body.subscription-view .btn-buy {
   width: 100%;
   border-radius: 12px;
-  padding: 0.9rem 1.35rem;
-  min-height: 64px;
-  font-size: clamp(1.04rem, 2.9vw, 1.2rem);
+  padding: 0.5rem 1rem;
+  min-height: 48px;
+  font-size: clamp(0.9rem, 2.4vw, 0.98rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
   text-align: center;
-  color: #fff;
+  color: var(--black);
   background: #ff9e18;
+  border: none;
   transition: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -183,18 +245,18 @@ body.subscription-view .btn-buy {
 body.subscription-view .btn-buy:hover,
 body.subscription-view .btn-buy:focus-visible {
   background: #ff9e18;
-  color: #fff;
+  color: var(--black);
   filter: none;
 }
 
 body.subscription-view .btn-buy:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 3px;
+  outline: 2px solid rgba(0, 0, 0, 0.28);
+  outline-offset: 2px;
 }
 
 body.subscription-view .btn-buy:active {
   background: #ff9e18;
-  color: #fff;
+  color: var(--black);
   transform: none;
 }
 

@@ -704,7 +704,53 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const buyLabel = isSubscription
     ? `${escapeHtml(subscriptionPriceDisplay)} monthly plan`
     : "Buy";
+  const oneTimeTestHref = stripePaymentLinkUrl();
+  const oneTimeTestLabel = `${escapeHtml(subscriptionPriceDisplay)} One Time Test`;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
+
+  const productBuyPanel = isSubscription
+    ? `          <div class="product-panel product-panel--buy product-panel--buy-subscription">
+            <div class="product-offer-card">
+              <div class="product-identity product-identity--subscription">
+                <h2 class="product-name product-name--subscription">Blackbird Men Dandruff Set</h2>
+              </div>
+              <div class="product-shipping product-shipping--subscription">
+                ${subscriptionShippingTopLine}
+                <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+              </div>
+              <a
+                class="btn-onetime"
+                href="${escapeHtml(oneTimeTestHref)}"
+                rel="noopener noreferrer"
+              >${oneTimeTestLabel}</a>
+              <a
+                class="btn-buy"
+                id="buy-btn"
+                href="${escapeHtml(checkoutHref)}"
+                rel="noopener noreferrer"
+              >${buyLabel}</a>
+              ${subscriptionCancelLede}
+              ${whatsAppBlockHtml()}
+            </div>
+          </div>`
+    : `          <div class="product-panel product-panel--buy">
+            <div class="product-identity">
+            <h2 class="product-name">Blackbird Men Dandruff Set</h2>
+            ${priceBlock}
+            </div>
+            <div class="product-shipping">
+              ${returnsLine}
+              ${subscriptionShippingTopLine}
+              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+            </div>
+            <a
+              class="btn-buy"
+              id="buy-btn"
+              href="${escapeHtml(checkoutHref)}"
+              rel="noopener noreferrer"
+            >${buyLabel}</a>
+            ${whatsAppBlockHtml()}
+          </div>`;
 
   return `
     <div class="${shellClass}">
@@ -735,25 +781,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
         </div>
 
         <aside class="product-side" aria-label="Product details">
-          <div class="product-panel product-panel--buy">
-            <div class="product-identity${isSubscription ? " product-identity--subscription" : ""}">
-            <h2 class="product-name${isSubscription ? " product-name--subscription" : ""}">Blackbird Men Dandruff Set</h2>
-            ${priceBlock}
-            </div>
-            <div class="product-shipping">
-              ${returnsLine}
-              ${subscriptionShippingTopLine}
-              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
-            </div>
-            <a
-              class="btn-buy"
-              id="buy-btn"
-              href="${escapeHtml(checkoutHref)}"
-              rel="noopener noreferrer"
-            >${buyLabel}</a>
-            ${subscriptionCancelLede}
-            ${whatsAppBlockHtml()}
-          </div>
+${productBuyPanel}
           <div class="product-panel product-panel--howto">
             <button type="button" class="btn-howto" id="product-howto-open">How to use BlackBird</button>
           </div>
