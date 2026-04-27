@@ -15,7 +15,7 @@
   --site-base: #2e2a26;
   --site-bg: var(--site-base);
   /* Light routes (/subscription, legal): warm paper, not flat white */
-  --subscription-paper: #f9f6f0;
+  --subscription-paper: #f3ede3;
   /* 5-point star; same shape for mote + pop (not circles) */
   --cosmos-star-shape: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 96%, 50% 75%, 21% 96%, 32% 57%, 2% 35%, 39% 35%);
   --muted: var(--gray-500);

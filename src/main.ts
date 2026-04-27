@@ -1237,7 +1237,7 @@ function render(): void {
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
     let chrome = "#2e2a26";
-    if (view === "subscription") chrome = "#f9f6f0";
+    if (view === "subscription") chrome = "#f3ede3";
     else if (view === "impressum" || view === "datenschutz") chrome = "#ffffff";
     themeColorMeta.setAttribute("content", chrome);
   }
