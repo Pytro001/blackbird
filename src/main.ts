@@ -689,16 +689,18 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const priceBlock = isSubscription
     ? `<div class="product-price-block product-price-block--subscription">
             <p class="product-price product-price--subscription">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">/ month</span></p>
-            <p class="product-subscription-lede">You can cancel your subscription anytime.</p>
           </div>`
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
+  const subscriptionCancelLede = isSubscription
+    ? `<p class="product-subscription-lede">You can cancel your subscription anytime.</p>`
+    : "";
   const returnsLine = isSubscription
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
     ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
     : "";
-  const buyLabel = isSubscription ? "Subscribe" : "Buy";
+  const buyLabel = isSubscription ? "Monthly Plan" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
   return `
@@ -744,6 +746,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
               href="${escapeHtml(checkoutHref)}"
               rel="noopener noreferrer"
             >${buyLabel}</a>
+            ${subscriptionCancelLede}
             ${whatsAppBlockHtml()}
           </div>
           <div class="product-panel product-panel--howto">
