@@ -989,6 +989,10 @@ function datenschutzHtml(): string {
       Wenn Sie über unsere Website einen Kauf tätigen, leiten wir Sie zur Zahlungsabwicklung an den Zahlungsdienstleister Stripe weiter. Dabei werden die zur Vertragsabwicklung erforderlichen Daten (z.&nbsp;B. Bestell- und Zahlungsdaten) verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertrag). Näheres zu Stripe finden Sie in der Datenschutzerklärung von Stripe:
       <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener noreferrer">stripe.com/de/privacy</a>.
     </p>
+    <h2 class="legal-h2">Rückerstattung</h2>
+    <p>
+      Eine Rückerstattung Ihrer Zahlung können Sie erhalten, sofern die dafür maßgeblichen gesetzlichen oder vertraglichen Voraussetzungen erfüllt sind (hierzu siehe <a href="${BASE_HREF}impressum#shop-agb">AGB</a> und <a href="${BASE_HREF}impressum#shop-widerruf">Widerrufsbelehrung</a> im Impressum). Zur Bearbeitung und Klärung von Rückerstattungsanträgen kontaktieren Sie bitte unseren Support: ${whatsappContactLinkHtml()}.
+    </p>
     <h2 class="legal-h2">WhatsApp</h2>
     <p>
       Wenn Sie über einen Link auf unserer Website WhatsApp (Meta) nutzen, gelten die dortigen Nutzungs- und Datenschutzbedingungen des jeweiligen Anbieters. Wir haben keinen Einfluss auf die Datenverarbeitung durch Meta/WhatsApp außerhalb unserer Website.
