@@ -182,6 +182,24 @@ body.subscription-view .product-offer-card .product-price--subscription-on-card 
   font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.15;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+body.subscription-view .product-offer-card .product-price--subscription-on-card .product-price__amount {
+  display: inline-block;
+}
+
+body.subscription-view .product-offer-card .product-price--subscription-on-card .product-price__period {
+  display: inline-block;
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(245, 245, 245, 0.7);
+  margin-left: 0.1rem;
+  white-space: nowrap;
 }
 
 body.subscription-view .product-offer-card .product-shipping--subscription .product-shipping__eta--note,

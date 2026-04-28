@@ -138,16 +138,16 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 }).format(PRODUCT_PRICE_EUR);
 
 /** Shown on `/` and `/subscription`; must match the Stripe subscription price in the dashboard. */
-const SUBSCRIPTION_PRICE_EUR = 12;
+const SUBSCRIPTION_PRICE_EUR = 12.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 })
   .format(SUBSCRIPTION_PRICE_EUR)
-  // de-DE inserts a space before €; keep "12€" for display
-  .replace(/[\s\u00a0\u202f]+€/g, "€");
+  // de-DE uses NBSP before €; keep "12,99 €" for display
+  .replace(/[\s\u00a0\u202f]+€/g, " €");
 
 type LandingMode = "purchase" | "subscription";
 
@@ -714,12 +714,12 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta product-shipping__eta--note">You get a new set when yours is empty</p>`
+    ? `<p class="product-shipping__eta product-shipping__eta--note"><span class="product-shipping__free">Free</span> new monthly set</p>`
     : "";
   const buyLabel = isSubscription ? "Subscribe" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
-    ? `<p class="product-price product-price--subscription-on-card">${escapeHtml(subscriptionPriceDisplay)}</p>`
+    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span><span class="product-price__period">/ month</span></p>`
     : "";
 
   const productBuyPanel = isSubscription
@@ -729,6 +729,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 <h2 class="product-name product-name--subscription">Blackbird Men Dandruff Set</h2>
                 ${subscriptionPriceOnCard}
               </div>
+              ${subscriptionCancelLede}
               <div class="product-shipping product-shipping--subscription">
                 ${subscriptionShippingTopLine}
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
@@ -739,7 +740,6 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 href="${escapeHtml(checkoutHref)}"
                 rel="noopener noreferrer"
               >${buyLabel}</a>
-              ${subscriptionCancelLede}
               ${whatsAppBlockHtml()}
             </div>
           </div>`
