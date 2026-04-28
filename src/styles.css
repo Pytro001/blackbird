@@ -1115,11 +1115,11 @@ body.subscription-view .cosmos-field__shoot {
   body.subscription-view .product-subscription-hero .product-gallery {
     flex: 1 1 auto;
     align-self: stretch;
-    width: min(820px, 78vw);
-    max-width: min(820px, 78vw);
+    width: min(1024px, 91vw);
+    max-width: min(1024px, 91vw);
     min-width: 0;
-    min-height: min(52vh, 720px);
-    height: 100%;
+    min-height: 0;
+    height: auto;
     box-sizing: border-box;
   }
 
@@ -1443,6 +1443,83 @@ body.subscription-view .product-gallery__stage {
   }
 }
 
+/* Subscription: vertical thumb rail (left) + 16:9 main — overrides generic gallery column / thumb row */
+@media (min-width: 840px) {
+  body.subscription-view .product-gallery {
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    max-width: none;
+    gap: clamp(0.55rem, 1vw, 0.9rem);
+  }
+
+  body.subscription-view .product-gallery__thumbs {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: auto;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding: 0;
+    gap: clamp(0.28rem, 0.5vw, 0.48rem);
+  }
+
+  body.subscription-view .product-gallery__thumb {
+    width: clamp(3rem, 3.6vw, 3.85rem);
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  body.subscription-view .product-gallery__main {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    align-self: stretch;
+  }
+
+  body.subscription-view .product-gallery__stage {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    flex: 0 0 auto;
+    height: auto !important;
+    min-height: 0;
+    max-height: none;
+  }
+
+  body.subscription-view .product-gallery__figure {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 839px) {
+  body.subscription-view .product-gallery__thumbs {
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: flex-start;
+    width: auto;
+    max-width: 100%;
+    overflow-x: visible;
+    gap: clamp(0.3rem, 2vw, 0.45rem);
+    padding: 0 0 0.5rem;
+  }
+
+  body.subscription-view .product-gallery__thumb {
+    width: clamp(3.2rem, 26vw, 4.75rem);
+  }
+
+  body.subscription-view .product-gallery__stage {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+  }
+}
+
 .product-gallery__stage:focus-visible {
   outline: none;
   box-shadow: inset 0 0 0 2px rgba(255, 158, 24, 0.55);
@@ -1464,6 +1541,13 @@ body.subscription-view .product-gallery__stage {
   .product-gallery__main-img {
     width: 100%;
     height: auto;
+  }
+
+  body.subscription-view .product-gallery__main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
   }
 }
 
