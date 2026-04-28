@@ -216,9 +216,17 @@ body.subscription-view .product-offer-card .product-price--subscription-on-card 
   white-space: nowrap;
 }
 
+body.subscription-view .product-subscription-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  min-width: 0;
+}
+
 body.subscription-view .product-offer-card .product-subscription-lede,
-body.subscription-view .product-offer-card .product-shipping--subscription .product-shipping__eta--note,
-body.subscription-view .product-offer-card .product-shipping--subscription .product-shipping__eta--arrival {
+body.subscription-view .product-offer-card .product-subscription-copy .product-shipping--subscription .product-shipping__eta--note,
+body.subscription-view .product-offer-card .product-subscription-copy .product-shipping--subscription .product-shipping__eta--arrival {
   color: var(--white-dim);
   font-size: clamp(0.82rem, 2.05vw, 0.88rem);
   font-weight: 400;
@@ -277,7 +285,7 @@ body.subscription-view .product-wa-qr-column {
 body.subscription-view .product-shipping--subscription {
   margin: 0;
   padding: 0;
-  gap: 0.35rem;
+  gap: 0.55rem;
 }
 
 body.subscription-view .product-wa-block {
@@ -296,6 +304,7 @@ body.subscription-view .product-offer-card > .btn-buy {
   letter-spacing: 0.03em;
   font-weight: 700;
   text-align: center;
+  text-transform: none;
   color: var(--black);
   background: var(--orange);
   border: none;

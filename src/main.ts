@@ -781,7 +781,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const subscriptionShippingTopLine = isSubscription
     ? `<p class="product-shipping__eta product-shipping__eta--note"><span class="product-shipping__free">Free</span> new monthly set</p>`
     : "";
-  const buyLabel = isSubscription ? "checkout" : "Buy";
+  const buyLabel = isSubscription ? "Checkout" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span><span class="product-price__period">/ month</span></p>`
@@ -794,10 +794,12 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 <h2 class="product-name product-name--subscription">blackbird Men Dandruff Set</h2>
                 ${subscriptionPriceOnCard}
               </div>
+              <div class="product-subscription-copy">
               ${subscriptionCancelLede}
               <div class="product-shipping product-shipping--subscription">
                 ${subscriptionShippingTopLine}
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
+              </div>
               </div>
               <a
                 class="btn-buy"
@@ -1534,7 +1536,9 @@ function bindProductShotsCarousel(): void {
   let index = 0;
 
   const show = (i: number): void => {
-    index = ((i % n) + n) % n;
+    if (!Number.isFinite(i) || n < 1) return;
+    const next = Math.max(0, Math.min(n - 1, Math.round(i)));
+    index = next;
     const slide = PRODUCT_CAROUSEL_SLIDES[index];
     mainImg.src = publicAssetUrl(slide.file);
     mainImg.alt = slide.alt;
@@ -1636,35 +1640,45 @@ function bindProductShotsCarousel(): void {
     { passive: false }
   );
 
-  /** Two-finger horizontal swipe on touch screens. */
+  /** Two-finger horizontal swipe on touch screens — at most one slide change per two-finger gesture. */
   let twoTouchMidX: number | null = null;
+  let twoTouchConsumed = false;
   stage.addEventListener(
     "touchstart",
     (e) => {
-      if (e.touches.length !== 2) twoTouchMidX = null;
-      else twoTouchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      if (e.touches.length === 2) {
+        twoTouchConsumed = false;
+        twoTouchMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      } else {
+        twoTouchMidX = null;
+        twoTouchConsumed = false;
+      }
     },
     { passive: true }
   );
   stage.addEventListener(
     "touchmove",
     (e) => {
-      if (n < 2 || e.touches.length !== 2 || twoTouchMidX === null) return;
+      if (n < 2 || e.touches.length !== 2 || twoTouchMidX === null || twoTouchConsumed) return;
       const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const dx = midX - twoTouchMidX;
       if (Math.abs(dx) < PRODUCT_GALLERY_TWO_TOUCH_MIN_PX) return;
       e.preventDefault();
       if (dx < 0) show(index + 1);
       else show(index - 1);
-      twoTouchMidX = midX;
+      twoTouchConsumed = true;
     },
     { passive: false }
   );
   stage.addEventListener("touchend", (e) => {
-    if (e.touches.length < 2) twoTouchMidX = null;
+    if (e.touches.length < 2) {
+      twoTouchMidX = null;
+      twoTouchConsumed = false;
+    }
   });
   stage.addEventListener("touchcancel", () => {
     twoTouchMidX = null;
+    twoTouchConsumed = false;
   });
 }
 
