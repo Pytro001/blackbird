@@ -183,9 +183,9 @@ let missionStarDocumentClickUnbind: (() => void) | undefined;
 const DEFAULT_STRIPE_PAYMENT_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
 
-/** Default home (`/`) is subscription; override with VITE_STRIPE_SUBSCRIPTION_LINK if needed. */
+/** Default home (`/`) Checkout uses same Stripe Payment Link as Buy unless overridden. */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
-  "https://buy.stripe.com/7sY6oI7OX0OW9rabXNfbq03";
+  "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
 
 function stripePaymentLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
