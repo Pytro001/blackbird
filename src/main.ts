@@ -92,7 +92,7 @@ function cosmosFieldPopstarsHtml(): string {
 
 /** Rounded + sparkles: short rise + fade (subscription page only, CSS) */
 const COSMOS_SPARKLE_N = 34;
-const COSMOS_SHOOTING_N = 2;
+const COSMOS_SHOOTING_N = 1;
 
 function rand01(): number {
   // True randomness per page load. Falls back to Math.random if crypto isn't available.
@@ -141,14 +141,19 @@ function cosmosFieldPlusSparklesHtml(): string {
     const r4 = rand01();
     const r5 = rand01();
 
-    // Start somewhere near the top; travel diagonally down-right.
-    const startX = 5 + r1 * 70;
+    // Start near the top; travel in either diagonal direction.
+    const dirX = rand01() < 0.5 ? -1 : 1;
+    const startX = dirX > 0 ? 6 + r1 * 58 : 42 + r1 * 52;
     const startY = 6 + Math.pow(r2, 1.4) * 34;
-    const durS = 10 + r3 * 14; // 10–24s
+
+    // Make them rarer: long cycle, short active window (CSS keyframes).
+    const durS = 22 + r3 * 26; // 22–48s
     const delayS = -(r4 * durS); // already in motion (random phase)
-    const dx = 360 + r5 * 520; // 360–880px
-    const dy = 180 + rand01() * 360; // 180–540px
-    const angle = 12 + rand01() * 20; // 12–32deg
+
+    const dx = dirX * (420 + r5 * 640); // ±(420–1060px)
+    // Slightly prefer downward travel, but allow some variation.
+    const dy = 140 + rand01() * 520; // 140–660px
+    const angle = (dirX > 0 ? 1 : -1) * (10 + rand01() * 26); // ±(10–36deg)
     const widthPx = 130 + rand01() * 150; // 130–280px
     const thickPx = 1.4 + rand01() * 1.4; // 1.4–2.8px
 
