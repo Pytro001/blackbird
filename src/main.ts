@@ -24,15 +24,15 @@ const MANUAL_PAGE_VER = "1";
 const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
   {
     file: "product-slide-01.png",
-    alt: "BLACKBIRD: Daily Wash, After Wash, and Before Sleep bottles",
+    alt: "blackbird: Daily Wash, After Wash, and Before Sleep bottles",
   },
   {
     file: "product-slide-02.png",
-    alt: "BLACKBIRD After Wash: daily flake-free spray",
+    alt: "blackbird After Wash: daily flake-free spray",
   },
   {
     file: "product-slide-03.png",
-    alt: "BLACKBIRD Before Sleep: overnight care spray",
+    alt: "blackbird Before Sleep: overnight care spray",
   },
 ];
 
@@ -223,7 +223,7 @@ const WHATSAPP_CONTACT_URL = "https://wa.me/4917644429908";
 
 /** Dermatologist Analysis WhatsApp (number + prefilled message). */
 const WHATSAPP_CHAT_URL =
-  "https://wa.me/4917644429908?text=Hi%2C%20this%20is%20the%20Dermatologist%20Analysis%20WhatsApp%20channel.%0AHere%20you%20can%20get%20an%20instant%20check%20to%20find%20out%20if%20you%20have%20oily%20or%20dry%20dandruff%2C%20so%20you%20get%20the%20right%20product%20for%20your%20scalp.%20Please%20send%203%20clear%20pictures%20of%20your%20head%20and%20scalp%20where%20the%20dandruff%20is%20visible%20in%20this%20chat.%0AYou%E2%80%99ll%20receive%20an%20immediate%20analysis%20from%20a%20dermatology-trained%20Teamember%20telling%20you%20exactly%20what%20type%20of%20dandruff%20you%20have.%0AFeel%20free%20to%20ask%20any%20other%20questions%20here%20too%20-%20just%20like%20you%20would%20to%20a%20friend.%0ABest%2C%20Your%20Blackbird%20Team";
+  "https://wa.me/4917644429908?text=Hi%2C%20this%20is%20the%20Dermatologist%20Analysis%20WhatsApp%20channel.%0AHere%20you%20can%20get%20an%20instant%20check%20to%20find%20out%20if%20you%20have%20oily%20or%20dry%20dandruff%2C%20so%20you%20get%20the%20right%20product%20for%20your%20scalp.%20Please%20send%203%20clear%20pictures%20of%20your%20head%20and%20scalp%20where%20the%20dandruff%20is%20visible%20in%20this%20chat.%0AYou%E2%80%99ll%20receive%20an%20immediate%20analysis%20from%20a%20dermatology-trained%20Teamember%20telling%20you%20exactly%20what%20type%20of%20dandruff%20you%20have.%0AFeel%20free%20to%20ask%20any%20other%20questions%20here%20too%20-%20just%20like%20you%20would%20to%20a%20friend.%0ABest%2C%20Your%20blackbird%20Team";
 
 function whatsappContactLinkHtml(): string {
   return `<a href="${escapeHtml(WHATSAPP_CONTACT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`;
@@ -249,7 +249,7 @@ function pdfManualModalHtml(): string {
   return `
     <div class="pdf-modal" id="pdf-manual-modal" hidden>
       <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="Close manual"></button>
-      <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="BlackBird user manual">
+      <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="blackbird user manual">
         <button type="button" class="pdf-modal__close" id="pdf-manual-close" aria-label="Close">
           <svg class="pdf-modal__close-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
             <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
@@ -259,7 +259,7 @@ function pdfManualModalHtml(): string {
           class="pdf-modal__embed"
           id="pdf-manual-embed"
           type="application/pdf"
-          title="BlackBird user manual"
+          title="blackbird user manual"
         />
         <p class="pdf-modal__pdf-actions">
           <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
@@ -657,6 +657,7 @@ function productGalleryHtml(): string {
 
   return `
         <div class="product-gallery" id="product-gallery">
+          <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
           <div class="product-gallery__main">
             <div
               class="product-gallery__stage"
@@ -676,7 +677,6 @@ function productGalleryHtml(): string {
                   fetchpriority="high"
                   draggable="false"
                 />
-                <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
               </figure>
             </div>
           </div>
@@ -725,7 +725,7 @@ function productFaqSectionHtml(mode: LandingMode): string {
           src="${publicAssetUrl("faq-four-bottles.png")}"
           width="1024"
           height="576"
-          alt="BLACKBIRD set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
+          alt="blackbird set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
           decoding="async"
           loading="lazy"
         />
@@ -781,7 +781,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const subscriptionShippingTopLine = isSubscription
     ? `<p class="product-shipping__eta product-shipping__eta--note"><span class="product-shipping__free">Free</span> new monthly set</p>`
     : "";
-  const buyLabel = isSubscription ? "Subscribe" : "Buy";
+  const buyLabel = isSubscription ? "checkout" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span><span class="product-price__period">/ month</span></p>`
@@ -791,7 +791,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? `          <div class="product-panel product-panel--buy product-panel--buy-subscription">
             <div class="product-offer-card">
               <div class="product-identity product-identity--subscription">
-                <h2 class="product-name product-name--subscription">Blackbird Men Dandruff Set</h2>
+                <h2 class="product-name product-name--subscription">blackbird Men Dandruff Set</h2>
                 ${subscriptionPriceOnCard}
               </div>
               ${subscriptionCancelLede}
@@ -810,7 +810,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
           </div>`
     : `          <div class="product-panel product-panel--buy">
             <div class="product-identity">
-            <h2 class="product-name">Blackbird Men Dandruff Set</h2>
+            <h2 class="product-name">blackbird Men Dandruff Set</h2>
             ${priceBlock}
             </div>
             <div class="product-shipping">
@@ -850,6 +850,9 @@ function homeHtml(mode: LandingMode = "subscription"): string {
 
     <div class="page-product" id="product">
       <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
+${
+  isSubscription
+    ? `        <div class="product-subscription-hero">
         <div class="product-shots-wrap">
           ${productGalleryHtml()}
         </div>
@@ -857,9 +860,21 @@ function homeHtml(mode: LandingMode = "subscription"): string {
         <aside class="product-side" aria-label="Product details">
 ${productBuyPanel}
           <div class="product-panel product-panel--howto">
-            <button type="button" class="btn-howto" id="product-howto-open">How to use BlackBird</button>
+            <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
           </div>
         </aside>
+        </div>`
+    : `        <div class="product-shots-wrap">
+          ${productGalleryHtml()}
+        </div>
+
+        <aside class="product-side" aria-label="Product details">
+${productBuyPanel}
+          <div class="product-panel product-panel--howto">
+            <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
+          </div>
+        </aside>`
+}
       </main>
     </div>
     ${productFaqSectionHtml(mode)}
@@ -1149,11 +1164,11 @@ function manualHtml(): string {
       </header>
       <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
         <div id="manual-book-host" class="manual-book-host"></div>
-        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use BlackBird: click anywhere to start">
+        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use blackbird: click anywhere to start">
           <img class="manual-intro__preview" src="${publicAssetUrl("manual/page-01.svg")}?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
           <div class="manual-intro__dim" aria-hidden="true"></div>
           <div class="manual-intro__copy">
-            <h2 class="manual-intro__title">How to use BlackBird</h2>
+            <h2 class="manual-intro__title">How to use blackbird</h2>
             <p class="manual-intro__hint">Click anywhere to start</p>
           </div>
         </div>
