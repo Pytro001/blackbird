@@ -1294,6 +1294,18 @@ body.subscription-view .product-gallery {
     justify-content: flex-start;
   }
 
+  .product-gallery__aspect {
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
   .product-gallery__figure {
     flex: 1 1 0;
     min-height: 0;
@@ -1322,24 +1334,52 @@ body.subscription-view .product-gallery {
 
 @media (min-width: 840px) {
   body.subscription-view .product-gallery__stage {
-    /* Make the stage the clipping mask for rounded corners. */
+    display: block;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto !important;
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0);
     box-sizing: border-box;
   }
 
-  /* Subscription: ensure the main product image never gets clipped. */
+  /* 16:9 via padding-bottom — avoids Chrome flex + aspect-ratio sizing bugs */
+  body.subscription-view .product-gallery__aspect {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    flex: none;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  body.subscription-view .product-gallery__figure {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    flex: none;
+  }
+
   body.subscription-view .product-gallery__main-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0);
     box-sizing: border-box;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    object-position: center !important;
   }
 }
 
@@ -1467,9 +1507,11 @@ body.subscription-view .product-gallery__stage {
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(3rem, 3.6vw, 3.85rem);
+    width: clamp(4.35rem, 5.4vw, 6rem);
+    min-width: 4rem;
     max-width: none;
     box-sizing: border-box;
+    padding: 8px;
   }
 
   body.subscription-view .product-gallery__main {
@@ -1479,26 +1521,17 @@ body.subscription-view .product-gallery__stage {
     height: auto;
     align-self: stretch;
   }
-
-  body.subscription-view .product-gallery__stage {
-    aspect-ratio: 16 / 9;
-    width: 100%;
-    flex: 0 0 auto;
-    height: auto !important;
-    min-height: 0;
-    max-height: none;
-  }
-
-  body.subscription-view .product-gallery__figure {
-    flex: 1 1 auto;
-    min-height: 0;
-    width: 100%;
-    height: 100%;
-    max-height: none;
-  }
 }
 
 @media (max-width: 839px) {
+  .product-gallery__aspect {
+    width: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
   body.subscription-view .product-gallery__thumbs {
     flex-direction: column;
     align-items: flex-start;
@@ -1506,17 +1539,52 @@ body.subscription-view .product-gallery__stage {
     width: auto;
     max-width: 100%;
     overflow-x: visible;
-    gap: clamp(0.3rem, 2vw, 0.45rem);
+    gap: clamp(0.35rem, 2.5vw, 0.55rem);
     padding: 0 0 0.5rem;
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(3.2rem, 26vw, 4.75rem);
+    width: clamp(4rem, 34vw, 6.5rem);
+    min-width: 3.75rem;
+    padding: 8px;
   }
 
   body.subscription-view .product-gallery__stage {
-    aspect-ratio: 16 / 9;
+    display: block;
     width: 100%;
+    overflow: hidden;
+  }
+
+  body.subscription-view .product-gallery__aspect {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    flex: none;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  body.subscription-view .product-gallery__figure {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  body.subscription-view .product-gallery__main-img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+    border-radius: var(--radius-lg);
   }
 }
 
@@ -1541,13 +1609,6 @@ body.subscription-view .product-gallery__stage {
   .product-gallery__main-img {
     width: 100%;
     height: auto;
-  }
-
-  body.subscription-view .product-gallery__main-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
   }
 }
 

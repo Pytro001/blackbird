@@ -675,19 +675,21 @@ function productGalleryHtml(): string {
               tabindex="0"
               aria-label="Product photos. Drag horizontally to change image, or use thumbnails."
             >
-              <figure class="product-gallery__figure">
-                <img
-                  id="product-gallery-main-img"
-                  class="product-gallery__main-img"
-                  src="${escapeHtml(firstSrc)}"
-                  width="1024"
-                  height="819"
-                  alt="${escapeHtml(first.alt)}"
-                  decoding="async"
-                  fetchpriority="high"
-                  draggable="false"
-                />
-              </figure>
+              <div class="product-gallery__aspect">
+                <figure class="product-gallery__figure">
+                  <img
+                    id="product-gallery-main-img"
+                    class="product-gallery__main-img"
+                    src="${escapeHtml(firstSrc)}"
+                    width="1024"
+                    height="819"
+                    alt="${escapeHtml(first.alt)}"
+                    decoding="async"
+                    fetchpriority="high"
+                    draggable="false"
+                  />
+                </figure>
+              </div>
             </div>
           </div>
         </div>`;
