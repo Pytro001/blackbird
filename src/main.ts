@@ -124,13 +124,15 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 }).format(PRODUCT_PRICE_EUR);
 
 /** Shown on `/` and `/subscription`; must match the Stripe subscription price in the dashboard. */
-const SUBSCRIPTION_PRICE_EUR = 9.99;
+const SUBSCRIPTION_PRICE_EUR = 12;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
 })
   .format(SUBSCRIPTION_PRICE_EUR)
-  // de-DE inserts a space before €; keep "9,99€" for display
+  // de-DE inserts a space before €; keep "12€" for display
   .replace(/[\s\u00a0\u202f]+€/g, "€");
 
 type LandingMode = "purchase" | "subscription";
@@ -699,14 +701,11 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta"><span class="product-shipping__free">Free</span> new set when empty</p>`
+    ? `<p class="product-shipping__eta">You get a new set when yours is empty</p>`
     : "";
   const buyLabel = isSubscription
     ? `${escapeHtml(subscriptionPriceDisplay)} Monthly Plan`
     : "Buy";
-  // One Time Test: fixed one-time payment link (same as DEFAULT_STRIPE_PAYMENT_LINK, not VITE)
-  const oneTimeTestHref = DEFAULT_STRIPE_PAYMENT_LINK;
-  const oneTimeTestLabel = `${escapeHtml(subscriptionPriceDisplay)} One Time Test`;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
   const productBuyPanel = isSubscription
@@ -719,11 +718,6 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 ${subscriptionShippingTopLine}
                 <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               </div>
-              <a
-                class="btn-onetime"
-                href="${escapeHtml(oneTimeTestHref)}"
-                rel="noopener noreferrer"
-              >${oneTimeTestLabel}</a>
               <a
                 class="btn-buy"
                 id="buy-btn"
@@ -1274,9 +1268,8 @@ function render(): void {
   document.body.classList.toggle("legal-page-view", view === "impressum" || view === "datenschutz");
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
-    let chrome = "#2e2a26";
-    if (view === "subscription" || view === "impressum" || view === "datenschutz")
-      chrome = "#f9f5ef";
+    const chrome =
+      view === "impressum" || view === "datenschutz" ? "#f9f5ef" : "#2e2a26";
     themeColorMeta.setAttribute("content", chrome);
   }
 

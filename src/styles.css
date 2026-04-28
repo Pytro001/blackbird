@@ -85,46 +85,45 @@ body {
   overflow-x: clip;
 }
 
-/* —— Default home (`/`) and subscription: warm paper, dark type (body.subscription-view) —— */
+/* —— Subscription: brand dark shell, white type, light borders (same rhythm as default home) —— */
 body.subscription-view,
 body.subscription-view #app {
-  background: var(--subscription-paper);
-  color: var(--black);
+  background: var(--site-base);
+  color: var(--white);
 }
 
 body.subscription-view .home-shell--subscription {
-  background: var(--subscription-paper);
+  background: var(--site-base);
 }
 
-/* Specks read on white */
 body.subscription-view .cosmos-field__mote {
-  background: rgba(0, 0, 0, 0.14);
-  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 0.55;
 }
 
 body.subscription-view .cosmos-field__popstar-inner {
-  background: rgba(0, 0, 0, 0.22);
+  background: rgba(255, 255, 255, 0.22);
 }
 
 body.subscription-view .hero-editorial__title {
-  color: var(--black);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  color: var(--white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 body.subscription-view .hero-editorial__script {
-  color: rgba(46, 42, 38, 0.78);
+  color: var(--white-dim);
 }
 
 body.subscription-view .btn-pill {
-  border-color: var(--black);
-  color: var(--black);
+  border-color: rgba(245, 245, 245, 0.65);
+  color: rgba(245, 245, 245, 0.95);
 }
 
 body.subscription-view .btn-pill:hover,
 body.subscription-view .btn-pill:focus-visible {
-  background: var(--black);
-  color: #f5f5f5;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  background: rgba(245, 245, 245, 0.95);
+  color: var(--black);
+  box-shadow: 0 0 0 1px rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .product-panel {
@@ -136,11 +135,11 @@ body.subscription-view .product-panel {
 
 body.subscription-view .product-name,
 body.subscription-view .product-shipping__eta,
-body.subscription-view .product-shipping__returns {
-  color: var(--black);
+body.subscription-view .product-shipping__returns,
+body.subscription-view .product-shipping__free {
+  color: rgba(245, 245, 245, 0.95);
 }
 
-/* Title only (price lives on the CTA); even vertical rhythm in the buy panel */
 body.subscription-view .product-identity--subscription {
   margin: 0;
   padding: 0;
@@ -153,7 +152,7 @@ body.subscription-view .product-name--subscription {
   letter-spacing: 0.025em;
 }
 
-/* Bordered offer card: title → shipping copy → one-time (outline) → monthly (orange) → lede → WhatsApp */
+/* Bordered offer card: title → shipping copy → monthly (orange) → lede → WhatsApp */
 body.subscription-view .product-panel--buy-subscription {
   gap: 0;
   padding: 0;
@@ -171,7 +170,7 @@ body.subscription-view .product-offer-card {
   min-width: 0;
   padding: 1.4rem 1.45rem 1.5rem;
   border-radius: var(--radius);
-  border: 1px solid rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(245, 245, 245, 0.22);
   background: transparent;
   box-shadow: none;
 }
@@ -186,45 +185,6 @@ body.subscription-view .product-wa-block {
   margin: 0.1rem 0 0;
 }
 
-body.subscription-view .btn-onetime {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 0;
-  padding: 0.58rem 1.05rem;
-  min-height: 52px;
-  border-radius: 12px;
-  border: 1px solid var(--black);
-  background: var(--black);
-  color: #fff;
-  font-family: var(--font);
-  font-size: clamp(1.02rem, 2.65vw, 1.1rem);
-  line-height: 1.2;
-  letter-spacing: 0.03em;
-  font-weight: 700;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
-}
-
-body.subscription-view .btn-onetime:hover,
-body.subscription-view .btn-onetime:focus-visible {
-  background: #3f3a35;
-  border-color: #3f3a35;
-  color: #fff;
-  outline: none;
-}
-
-body.subscription-view .btn-onetime:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.4);
-  outline-offset: 2px;
-}
-
-/* Monthly plan: same height & type as one-time, ink on orange */
 body.subscription-view .product-offer-card > .btn-buy {
   width: 100%;
   border-radius: 12px;
@@ -251,7 +211,7 @@ body.subscription-view .product-offer-card > .btn-buy:focus-visible {
 }
 
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
-  outline: 2px solid rgba(0, 0, 0, 0.28);
+  outline: 2px solid rgba(255, 255, 255, 0.45);
   outline-offset: 2px;
 }
 
@@ -262,26 +222,26 @@ body.subscription-view .product-offer-card > .btn-buy:active {
 }
 
 body.subscription-view .product-subscription-lede {
-  color: rgba(46, 42, 38, 0.85);
+  color: rgba(245, 245, 245, 0.78);
 }
 
 body.subscription-view .product-wa-headline {
-  color: rgba(46, 42, 38, 0.9);
+  color: rgba(245, 245, 245, 0.92);
 }
 
 body.subscription-view .product-wa-desc {
-  color: rgba(46, 42, 38, 0.72);
+  color: rgba(245, 245, 245, 0.72);
 }
 
 body.subscription-view .product-wa-link {
-  color: rgba(46, 42, 38, 0.92);
-  text-decoration-color: rgba(0, 0, 0, 0.28);
+  color: rgba(245, 245, 245, 0.95);
+  text-decoration-color: rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .product-wa-link:hover,
 body.subscription-view .product-wa-link:focus-visible {
-  color: var(--black);
-  text-decoration-color: rgba(0, 0, 0, 0.45);
+  color: var(--white);
+  text-decoration-color: rgba(245, 245, 245, 0.55);
 }
 
 body.subscription-view .product-wa-qr__img {
@@ -292,19 +252,19 @@ body.subscription-view .product-wa-qr__img {
 }
 
 body.subscription-view .btn-howto {
-  color: var(--black);
+  color: rgba(245, 245, 245, 0.95);
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(245, 245, 245, 0.28);
   box-shadow: none;
 }
 
 body.subscription-view .btn-howto:hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.3);
+  background: rgba(245, 245, 245, 0.08);
+  border-color: rgba(245, 245, 245, 0.45);
 }
 
 body.subscription-view .btn-howto:focus-visible {
-  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline: 2px solid rgba(245, 245, 245, 0.45);
   outline-offset: 2px;
 }
 
@@ -314,18 +274,18 @@ body.subscription-view .product-gallery__stage:focus-visible {
 
 body.subscription-view .product-faq__heading--script,
 body.subscription-view .product-education__title--script {
-  color: rgba(46, 42, 38, 0.9);
+  color: rgba(245, 245, 245, 0.92);
 }
 
 body.subscription-view .product-faq__img {
   border: none;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
 }
 
 body.subscription-view .product-faq__pin {
   color: rgba(255, 255, 255, 0.95);
   border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 body.subscription-view .product-faq__pin:hover,
@@ -334,82 +294,82 @@ body.subscription-view .product-faq__pin:focus-visible {
 }
 
 body.subscription-view .product-faq__pin[aria-expanded="true"] {
-  background: var(--black);
-  color: #fff;
+  background: rgba(245, 245, 245, 0.95);
+  color: var(--black);
 }
 
 body.subscription-view .product-faq__panel {
-  border: none;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(245, 245, 245, 0.18);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
 }
 
 body.subscription-view .product-faq__answer {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(245, 245, 245, 0.82);
 }
 
 body.subscription-view .product-education__lead,
 body.subscription-view .product-education__text,
 body.subscription-view .product-education__stats {
-  color: rgba(46, 42, 38, 0.92);
+  color: rgba(245, 245, 245, 0.9);
 }
 
 body.subscription-view .site-legal-footer__line {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(245, 245, 245, 0.72);
 }
 
 body.subscription-view .site-legal-footer__chunk a {
-  color: rgba(46, 42, 38, 0.92);
-  text-decoration-color: rgba(0, 0, 0, 0.3);
+  color: rgba(245, 245, 245, 0.92);
+  text-decoration-color: rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .site-legal-footer__chunk a:hover,
 body.subscription-view .site-legal-footer__chunk a:focus-visible {
-  color: var(--black);
+  color: var(--white);
 }
 
 body.subscription-view .site-legal-footer__nav a {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(245, 245, 245, 0.72);
 }
 
 body.subscription-view .site-legal-footer__nav a:hover,
 body.subscription-view .site-legal-footer__nav a:focus-visible {
-  color: var(--black);
+  color: var(--white);
 }
 
 body.subscription-view .site-legal-footer__sep {
-  color: rgba(0, 0, 0, 0.35);
+  color: rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .cosmos-void-trace {
-  color: rgba(0, 0, 0, 0.12);
+  color: rgba(245, 245, 245, 0.14);
 }
 
 body.subscription-view .mission-star {
-  color: rgba(0, 0, 0, 0.35);
+  color: rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .mission-star:hover {
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(245, 245, 245, 0.65);
 }
 
 body.subscription-view .mission-star:focus-visible {
-  color: var(--black);
-  outline: 1px solid rgba(0, 0, 0, 0.28);
+  color: var(--white);
+  outline: 1px solid rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .mission-star-bubble {
-  background: rgba(255, 255, 255, 0.65);
-  border: none;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(245, 245, 245, 0.22);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
 body.subscription-view .mission-star-bubble__text {
-  color: var(--black);
+  color: rgba(245, 245, 245, 0.92);
 }
 
 body.subscription-view .product-inline-msg {
-  color: #5a5a5a;
+  color: rgba(245, 245, 245, 0.55);
 }
 
 /* —— Backdrop: many star specks (clip-path) + soft pop “shine” (mission star: .mission-star-dock) —— */
