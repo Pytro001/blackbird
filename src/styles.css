@@ -1083,10 +1083,10 @@ body.subscription-view .cosmos-field__shoot {
     width: 100%;
     box-sizing: border-box;
     column-gap: clamp(1rem, 2.2vw, 1.65rem);
-    padding: clamp(1rem, 2.2vw, 1.35rem);
-    border: 1px solid rgba(245, 245, 245, 0.28);
-    border-radius: var(--radius-lg);
-    background: rgba(46, 46, 46, 0.92);
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
   }
 
   body.subscription-view .product-subscription-hero .product-shots-wrap {
@@ -1122,10 +1122,10 @@ body.subscription-view .cosmos-field__shoot {
     gap: clamp(1rem, 3vw, 1.35rem);
     width: 100%;
     box-sizing: border-box;
-    padding: clamp(0.85rem, 3vw, 1.1rem);
-    border: 1px solid rgba(245, 245, 245, 0.28);
-    border-radius: var(--radius-lg);
-    background: rgba(46, 46, 46, 0.92);
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
   }
 }
 .product-shots-wrap {
@@ -1234,6 +1234,12 @@ body.subscription-view .product-gallery {
     padding: 0;
   }
 
+  body.subscription-view .product-gallery__thumbs {
+    justify-content: center;
+    width: clamp(52px, 7vw, 72px);
+    min-width: 48px;
+  }
+
   .product-gallery__main {
     flex: 1 1 0;
     min-height: 0;
@@ -1320,18 +1326,6 @@ body.subscription-view .product-gallery__stage {
   padding: 0;
   overflow: visible;
   pointer-events: none;
-}
-
-/* Subscription: move thumbs outside the photo so rounded corners stay visible. */
-body.subscription-view .product-gallery {
-  overflow: visible;
-}
-
-body.subscription-view .product-gallery__thumbs {
-  --thumbSize: clamp(64px, 10vw, 88px);
-  width: var(--thumbSize);
-  top: clamp(0.5rem, 1.2vw, 0.85rem);
-  left: calc(-1 * (var(--thumbSize) + clamp(0.6rem, 1.4vw, 0.95rem)));
 }
 
 .product-gallery__thumbs .product-gallery__thumb {

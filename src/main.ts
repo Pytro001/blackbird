@@ -1327,6 +1327,9 @@ function render(): void {
 
   const view = pathToView();
   setDocumentLang(view);
+  /* Theme/layout flags must run before bindProduct(): gallery height uses subscription-view */
+  document.body.classList.toggle("subscription-view", view === "subscription");
+  document.body.classList.toggle("legal-page-view", view === "impressum" || view === "datenschutz");
 
   if (view === "product" || view === "subscription") {
     const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
@@ -1358,8 +1361,6 @@ function render(): void {
     root.innerHTML = datenschutzHtml();
   }
 
-  document.body.classList.toggle("subscription-view", view === "subscription");
-  document.body.classList.toggle("legal-page-view", view === "impressum" || view === "datenschutz");
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
     const chrome =
