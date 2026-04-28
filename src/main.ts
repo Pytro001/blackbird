@@ -1336,7 +1336,7 @@ function bindProductGalleryAsideHeight(): void {
     }
     const hSide = Math.round(side.offsetHeight);
     if (document.body.classList.contains("subscription-view")) {
-      const minPicture = Math.min(Math.round(window.innerHeight * 0.5), 720);
+      const minPicture = Math.min(Math.round(window.innerHeight * 0.55), 760);
       gallery.style.height = `${Math.max(hSide, minPicture)}px`;
     } else {
       gallery.style.height = `${hSide}px`;

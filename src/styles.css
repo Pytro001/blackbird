@@ -115,7 +115,13 @@ body.subscription-view .btn-pill {
   color: rgba(245, 245, 245, 0.95);
 }
 
-body.subscription-view .btn-pill:hover,
+body.subscription-view .btn-pill:hover {
+  background: transparent;
+  color: rgba(245, 245, 245, 0.95);
+  border-color: rgba(245, 245, 245, 0.65);
+  box-shadow: none;
+}
+
 body.subscription-view .btn-pill:focus-visible {
   background: rgba(245, 245, 245, 0.95);
   color: var(--black);
@@ -216,7 +222,11 @@ body.subscription-view .product-offer-card .product-wa-link {
   text-decoration-color: rgba(245, 245, 245, 0.45);
 }
 
-body.subscription-view .product-offer-card .product-wa-link:hover,
+body.subscription-view .product-offer-card .product-wa-link:hover {
+  color: var(--white);
+  text-decoration-color: rgba(245, 245, 245, 0.45);
+}
+
 body.subscription-view .product-offer-card .product-wa-link:focus-visible {
   color: var(--white);
   text-decoration-color: rgba(245, 245, 245, 0.65);
@@ -237,6 +247,7 @@ body.subscription-view .product-wa-block {
   margin: 0.1rem 0 0;
 }
 
+body.subscription-view .product-offer-card > a#buy-btn.btn-buy,
 body.subscription-view .product-offer-card > .btn-buy {
   width: 100%;
   border-radius: 999px;
@@ -251,24 +262,29 @@ body.subscription-view .product-offer-card > .btn-buy {
   color: var(--black);
   background: #ff6a00;
   border: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: none;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* No hover color change: keep CTA text brand black in every state */
+body.subscription-view .product-offer-card > a#buy-btn.btn-buy:hover,
 body.subscription-view .product-offer-card > .btn-buy:hover,
+body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
-  background: #ff7f1a;
+  background: #ff6a00;
   color: var(--black);
   filter: none;
 }
 
+body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
 }
 
+body.subscription-view .product-offer-card > a#buy-btn.btn-buy:active,
 body.subscription-view .product-offer-card > .btn-buy:active {
-  background: #e55f00;
+  background: #ff6a00;
   color: var(--black);
   transform: none;
 }
@@ -281,8 +297,9 @@ body.subscription-view .btn-howto {
 }
 
 body.subscription-view .btn-howto:hover {
-  background: rgba(245, 245, 245, 0.08);
-  border-color: rgba(245, 245, 245, 0.45);
+  color: rgba(245, 245, 245, 0.95);
+  background: transparent;
+  border-color: rgba(245, 245, 245, 0.28);
 }
 
 body.subscription-view .btn-howto:focus-visible {
@@ -310,7 +327,10 @@ body.subscription-view .product-faq__pin {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
-body.subscription-view .product-faq__pin:hover,
+body.subscription-view .product-faq__pin:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
 body.subscription-view .product-faq__pin:focus-visible {
   color: rgba(255, 255, 255, 0.95);
 }
@@ -345,18 +365,27 @@ body.subscription-view .site-legal-footer__chunk a {
   text-decoration-color: rgba(245, 245, 245, 0.35);
 }
 
-body.subscription-view .site-legal-footer__chunk a:hover,
+body.subscription-view .site-legal-footer__chunk a:hover {
+  color: rgba(245, 245, 245, 0.92);
+  text-decoration-color: rgba(245, 245, 245, 0.35);
+}
+
 body.subscription-view .site-legal-footer__chunk a:focus-visible {
   color: var(--white);
+  outline: none;
 }
 
 body.subscription-view .site-legal-footer__nav a {
   color: rgba(245, 245, 245, 0.72);
 }
 
-body.subscription-view .site-legal-footer__nav a:hover,
+body.subscription-view .site-legal-footer__nav a:hover {
+  color: rgba(245, 245, 245, 0.72);
+}
+
 body.subscription-view .site-legal-footer__nav a:focus-visible {
   color: var(--white);
+  outline: none;
 }
 
 body.subscription-view .site-legal-footer__sep {
@@ -372,7 +401,7 @@ body.subscription-view .mission-star {
 }
 
 body.subscription-view .mission-star:hover {
-  color: rgba(245, 245, 245, 0.65);
+  color: rgba(245, 245, 245, 0.35);
 }
 
 body.subscription-view .mission-star:focus-visible {
@@ -635,7 +664,7 @@ body.subscription-view .cosmos-field__spark {
 }
 
 .mission-star:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .mission-star:focus-visible {
@@ -784,11 +813,16 @@ body.subscription-view .cosmos-field__spark {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: none;
 }
 
-.btn-pill:hover,
+.btn-pill:hover {
+  background: transparent;
+  color: var(--white);
+  border-color: var(--white);
+  box-shadow: none;
+}
+
 .btn-pill:focus-visible {
   background: var(--white);
   color: var(--black);
@@ -902,6 +936,7 @@ body.subscription-view .cosmos-field__spark {
 /* Subscription: gallery + aside centered as a group; equal L/R from page padding; no thumb clipping */
 @media (min-width: 840px) {
   body.subscription-view .page-product {
+    --product-inline-pad: clamp(0.75rem, 2.5vw, 1.25rem);
     padding-top: max(1.75rem, 5.5vh);
     padding-bottom: max(2.75rem, 7vh);
   }
@@ -913,10 +948,10 @@ body.subscription-view .cosmos-field__spark {
     align-items: flex-start;
     justify-content: center;
     width: 100%;
-    max-width: 100%;
+    max-width: min(1440px, 100%);
     margin: 0 auto;
     box-sizing: border-box;
-    column-gap: clamp(1.5rem, 2.8vw, 2.5rem);
+    column-gap: clamp(1.25rem, 2.4vw, 2rem);
     row-gap: 0;
   }
 
@@ -930,14 +965,14 @@ body.subscription-view .cosmos-field__spark {
   }
 
   body.subscription-view .product-gallery {
-    min-width: min(58vw, 640px);
+    min-width: min(70vw, 800px);
   }
 
   body.subscription-view .product-side {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(400px, 100%);
+    max-width: min(360px, 100%);
   }
 }
 
@@ -952,6 +987,10 @@ body.subscription-view .cosmos-field__spark {
   width: 100%;
   max-width: min(560px, 100%);
   box-sizing: border-box;
+}
+
+body.subscription-view .product-gallery {
+  max-width: min(640px, 100%);
 }
 
 .product-gallery__main {
@@ -1042,11 +1081,21 @@ body.subscription-view .cosmos-field__spark {
 }
 
 @media (min-width: 840px) {
-  /* Thumbnails sit on the image; avoid clipping the stack on subscription */
-  body.subscription-view .product-gallery,
-  body.subscription-view .product-gallery__main {
-    overflow: visible;
+  body.subscription-view .product-gallery__stage {
+    overflow: hidden;
+    border-radius: var(--radius);
   }
+
+  body.subscription-view .product-gallery__main-img {
+    border-radius: 0;
+  }
+}
+
+body.subscription-view .product-gallery,
+body.subscription-view .product-gallery__main,
+body.subscription-view .product-gallery__stage {
+  overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .product-gallery__thumbs {
@@ -1093,10 +1142,14 @@ body.subscription-view .cosmos-field__spark {
   aspect-ratio: 80 / 64;
   object-fit: contain;
   vertical-align: top;
-  border-radius: 3px;
+  border-radius: 8px;
 }
 
-.product-gallery__thumb:hover,
+.product-gallery__thumb:hover:not(.is-active) {
+  opacity: 0.62;
+  filter: none;
+}
+
 .product-gallery__thumb:focus-visible {
   outline: none;
   opacity: 0.92;
@@ -1278,7 +1331,11 @@ body.subscription-view .cosmos-field__spark {
   text-underline-offset: 0.2em;
 }
 
-.pdf-modal__newtab:hover,
+.pdf-modal__newtab:hover {
+  color: rgba(245, 245, 245, 0.88);
+  text-decoration: underline;
+}
+
 .pdf-modal__newtab:focus-visible {
   color: var(--orange);
   outline: none;
@@ -1308,7 +1365,12 @@ body.subscription-view .cosmos-field__spark {
     transform 0.15s ease;
 }
 
-.pdf-modal__close:hover,
+.pdf-modal__close:hover {
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(245, 245, 245, 0.95);
+  transform: none;
+}
+
 .pdf-modal__close:focus-visible {
   background: rgba(0, 0, 0, 0.68);
   color: var(--white);
@@ -1317,7 +1379,7 @@ body.subscription-view .cosmos-field__spark {
 }
 
 .pdf-modal__close:active {
-  transform: scale(0.96);
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1426,7 +1488,12 @@ body.subscription-view .cosmos-field__spark {
     box-shadow 0.15s ease;
 }
 
-.product-faq__pin:hover,
+.product-faq__pin:hover {
+  background: rgba(255, 158, 24, 0.92);
+  transform: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
 .product-faq__pin:focus-visible {
   background: var(--orange);
   transform: scale(1.04);
@@ -1720,7 +1787,11 @@ body.subscription-view .cosmos-field__spark {
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
-.product-wa-link:hover,
+.product-wa-link:hover {
+  color: var(--gray-400);
+  text-decoration-color: rgba(176, 176, 176, 0.45);
+}
+
 .product-wa-link:focus-visible {
   color: var(--gray-500);
   text-decoration-color: rgba(138, 138, 138, 0.55);
@@ -1759,18 +1830,23 @@ body.subscription-view .cosmos-field__spark {
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: filter 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  transition: none;
 }
 
-.btn-buy:hover,
-.btn-buy:focus-visible {
-  background: #ffb03d;
+.btn-buy:hover {
+  background: #ff9e18;
   filter: none;
-  outline: none;
+}
+
+.btn-buy:focus-visible {
+  background: #ff9e18;
+  filter: none;
+  outline: 2px solid rgba(46, 42, 38, 0.45);
+  outline-offset: 2px;
 }
 
 .btn-buy:active {
-  transform: scale(0.99);
+  transform: none;
 }
 
 .btn-buy.is-loading {
@@ -1852,7 +1928,11 @@ body.subscription-view .cosmos-field__spark {
   word-break: break-word;
 }
 
-.site-legal-footer__chunk a:hover,
+.site-legal-footer__chunk a:hover {
+  color: rgba(195, 195, 195, 0.95);
+  text-decoration-color: rgba(140, 140, 140, 0.45);
+}
+
 .site-legal-footer__chunk a:focus-visible {
   color: var(--gray-400);
   outline: none;
@@ -1914,7 +1994,10 @@ body.subscription-view .cosmos-field__spark {
   transition: color 0.15s ease;
 }
 
-.site-legal-footer__nav a:hover,
+.site-legal-footer__nav a:hover {
+  color: rgba(185, 185, 185, 0.92);
+}
+
 .site-legal-footer__nav a:focus-visible {
   color: var(--gray-400);
   outline: none;
@@ -1985,7 +2068,10 @@ body.subscription-view .cosmos-field__spark {
   text-underline-offset: 0.15em;
 }
 
-.legal-prose a:hover,
+.legal-prose a:hover {
+  color: var(--gray-400);
+}
+
 .legal-prose a:focus-visible {
   color: var(--gray-500);
   outline: none;
@@ -2041,10 +2127,15 @@ body.legal-page-view .legal-prose a {
   text-decoration-color: rgba(46, 42, 38, 0.35);
 }
 
-body.legal-page-view .legal-prose a:hover,
+body.legal-page-view .legal-prose a:hover {
+  color: rgba(46, 42, 38, 0.9);
+  text-decoration-color: rgba(46, 42, 38, 0.35);
+}
+
 body.legal-page-view .legal-prose a:focus-visible {
   color: var(--black);
   text-decoration-color: rgba(46, 42, 38, 0.5);
+  outline: none;
 }
 
 body.legal-page-view .legal-pre {
@@ -2057,9 +2148,13 @@ body.legal-page-view .manual-back {
   color: rgba(46, 42, 38, 0.85);
 }
 
-body.legal-page-view .manual-back:hover,
+body.legal-page-view .manual-back:hover {
+  color: rgba(46, 42, 38, 0.85);
+}
+
 body.legal-page-view .manual-back:focus-visible {
   color: var(--black);
+  outline: none;
 }
 
 body.legal-page-view .site-legal-footer__line {
@@ -2071,18 +2166,27 @@ body.legal-page-view .site-legal-footer__chunk a {
   text-decoration-color: rgba(46, 42, 38, 0.3);
 }
 
-body.legal-page-view .site-legal-footer__chunk a:hover,
+body.legal-page-view .site-legal-footer__chunk a:hover {
+  color: rgba(46, 42, 38, 0.92);
+  text-decoration-color: rgba(46, 42, 38, 0.3);
+}
+
 body.legal-page-view .site-legal-footer__chunk a:focus-visible {
   color: var(--black);
+  outline: none;
 }
 
 body.legal-page-view .site-legal-footer__nav a {
   color: rgba(46, 42, 38, 0.78);
 }
 
-body.legal-page-view .site-legal-footer__nav a:hover,
+body.legal-page-view .site-legal-footer__nav a:hover {
+  color: rgba(46, 42, 38, 0.78);
+}
+
 body.legal-page-view .site-legal-footer__nav a:focus-visible {
   color: var(--black);
+  outline: none;
 }
 
 body.legal-page-view .site-legal-footer__sep {
@@ -2154,7 +2258,10 @@ body.legal-page-view .site-legal-footer__sep {
   text-underline-offset: 0.15em;
 }
 
-.manual-back:hover,
+.manual-back:hover {
+  color: var(--gray-400);
+}
+
 .manual-back:focus-visible {
   color: var(--gray-500);
   outline: none;
@@ -2294,7 +2401,12 @@ body.legal-page-view .site-legal-footer__sep {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.manual-end__cta:hover,
+.manual-end__cta:hover {
+  background: transparent;
+  color: var(--white);
+  border-color: var(--white);
+}
+
 .manual-end__cta:focus-visible {
   background: var(--white);
   color: var(--black);
