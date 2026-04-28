@@ -1049,14 +1049,14 @@ body.subscription-view .cosmos-field__shoot {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: center;
     /* Center the gallery + offer card as one unit (avoid stretching that pushes the card right). */
     width: fit-content;
     max-width: 100%;
     margin: 0 auto;
     box-sizing: border-box;
-    column-gap: clamp(1.25rem, 2.4vw, 2rem);
+    column-gap: clamp(1.5rem, 2.8vw, 2.25rem);
     row-gap: 0;
   }
 
@@ -1070,17 +1070,17 @@ body.subscription-view .cosmos-field__shoot {
   }
 
   body.subscription-view .product-gallery {
-    /* Let the gallery shrink so the offer card doesn't get pushed off to the right. */
+    /* Balanced: big photo + readable offer card, centered as a unit. */
     min-width: 0;
-    width: min(640px, 62vw);
-    max-width: min(640px, 62vw);
+    width: min(660px, 64vw);
+    max-width: min(660px, 64vw);
   }
 
   body.subscription-view .product-side {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(360px, 100%);
+    max-width: min(380px, 100%);
   }
 }
 
@@ -1194,8 +1194,9 @@ body.subscription-view .product-gallery {
     border-radius: var(--radius);
   }
 
+  /* Rounded photo on subscription too (matches stage). */
   body.subscription-view .product-gallery__main-img {
-    border-radius: 0;
+    border-radius: var(--radius);
   }
 }
 
@@ -1224,8 +1225,7 @@ body.subscription-view .product-gallery__stage {
   display: flex;
   flex-direction: column;
   gap: clamp(0.2rem, 0.6vw, 0.55rem);
-  width: clamp(1.75rem, 14%, 5rem);
-  min-width: 1.5rem;
+  width: clamp(64px, 10vw, 88px);
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -1243,8 +1243,10 @@ body.subscription-view .product-gallery__stage {
   margin: 0;
   padding: 0;
   border: none;
-  border-radius: 0;
-  background: transparent;
+  aspect-ratio: 80 / 64;
+  border-radius: 10px;
+  background: rgba(20, 20, 20, 0.18);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   overflow: hidden;
   touch-action: manipulation;
@@ -1256,11 +1258,10 @@ body.subscription-view .product-gallery__stage {
 .product-gallery__thumb img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 80 / 64;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   vertical-align: top;
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 .product-gallery__thumb:hover:not(.is-active) {
