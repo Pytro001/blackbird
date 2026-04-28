@@ -203,7 +203,7 @@ const productPriceDisplay = new Intl.NumberFormat("de-DE", {
 }).format(PRODUCT_PRICE_EUR);
 
 /** Shown on `/` and `/subscription`; must match the Stripe subscription price in the dashboard. */
-const SUBSCRIPTION_PRICE_EUR = 12.99;
+const SUBSCRIPTION_PRICE_EUR = 14.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
@@ -211,7 +211,17 @@ const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   maximumFractionDigits: 2,
 })
   .format(SUBSCRIPTION_PRICE_EUR)
-  // de-DE uses NBSP before €; keep "12,99 €" for display
+  // de-DE uses NBSP before €; keep "14,99 €" for display
+  .replace(/[\s\u00a0\u202f]+€/g, " €");
+
+const SUBSCRIPTION_REFILL_AFTER_EUR = 9.99;
+const subscriptionRefillAfterDisplay = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+  .format(SUBSCRIPTION_REFILL_AFTER_EUR)
   .replace(/[\s\u00a0\u202f]+€/g, " €");
 
 type LandingMode = "purchase" | "subscription";
@@ -573,7 +583,7 @@ const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
   question: "Subscription",
   pinLabel: "Subscription",
   answer:
-    "Your scalp should have consistency. When your bottles run empty, we send the next full set. You can cancel your subscription anytime.",
+    "Your scalp should have consistency. When your bottles run empty, we send the next full set.",
   pinTop: "63%",
   pinLeft: "80%",
   panel: "above",
@@ -772,19 +782,14 @@ function homeHtml(mode: LandingMode = "subscription"): string {
   const priceBlock = isSubscription
     ? ""
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
-  const subscriptionCancelLede = isSubscription
-    ? `<p class="product-subscription-lede">You can cancel your subscription anytime.</p>`
-    : "";
   const returnsLine = isSubscription
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
-  const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta product-shipping__eta--note"><span class="product-shipping__free">Free</span> new monthly set</p>`
-    : "";
   const buyLabel = isSubscription ? "Checkout" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
-    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span><span class="product-price__period">/ month</span></p>`
+    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
+              <p class="product-subscription-refill">Every refill after ${escapeHtml(subscriptionRefillAfterDisplay)}</p>`
     : "";
 
   const productBuyPanel = isSubscription
@@ -795,9 +800,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 ${subscriptionPriceOnCard}
               </div>
               <div class="product-subscription-copy">
-              ${subscriptionCancelLede}
               <div class="product-shipping product-shipping--subscription">
-                ${subscriptionShippingTopLine}
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               </div>
@@ -817,7 +820,6 @@ function homeHtml(mode: LandingMode = "subscription"): string {
             </div>
             <div class="product-shipping">
               ${returnsLine}
-              ${subscriptionShippingTopLine}
               <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
             </div>
             <a
@@ -1417,13 +1419,13 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
-    const hSide = Math.round(side.offsetHeight);
     if (document.body.classList.contains("subscription-view")) {
-      const minPicture = Math.min(Math.round(window.innerHeight * 0.55), 760);
-      gallery.style.height = `${Math.max(hSide, minPicture)}px`;
-    } else {
-      gallery.style.height = `${hSide}px`;
+      gallery.style.removeProperty("height");
+      gallery.style.removeProperty("width");
+      return;
     }
+    const hSide = Math.round(side.offsetHeight);
+    gallery.style.height = `${hSide}px`;
     gallery.style.removeProperty("width");
   };
 
