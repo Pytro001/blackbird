@@ -284,8 +284,8 @@ body.subscription-view .product-offer-card > .btn-buy {
   color: var(--black);
   background: var(--orange);
   border: none;
-  box-shadow: 0 10px 26px rgba(255, 158, 24, 0.22);
-  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: none;
+  transition: filter 0.15s ease, transform 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -297,7 +297,7 @@ body.subscription-view .product-offer-card > .btn-buy:focus-visible {
   background: var(--orange);
   color: var(--black);
   filter: brightness(1.03) saturate(1.05);
-  box-shadow: 0 12px 30px rgba(255, 158, 24, 0.28);
+  box-shadow: none;
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
@@ -312,7 +312,7 @@ body.subscription-view .product-offer-card > .btn-buy:active {
   color: var(--black);
   transform: translateY(1px);
   filter: brightness(0.99);
-  box-shadow: 0 8px 18px rgba(255, 158, 24, 0.22);
+  box-shadow: none;
 }
 
 body.subscription-view .btn-howto {
