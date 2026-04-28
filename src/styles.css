@@ -282,20 +282,22 @@ body.subscription-view .product-offer-card > .btn-buy {
   font-weight: 700;
   text-align: center;
   color: var(--black);
-  background: #ff6a00;
+  background: var(--orange);
   border: none;
-  transition: none;
+  box-shadow: 0 10px 26px rgba(255, 158, 24, 0.22);
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* No hover color change: keep CTA text brand black in every state */
+/* Keep CTA text brand black in every state */
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:hover,
 body.subscription-view .product-offer-card > .btn-buy:hover,
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
-  background: #ff6a00;
+  background: var(--orange);
   color: var(--black);
-  filter: none;
+  filter: brightness(1.03) saturate(1.05);
+  box-shadow: 0 12px 30px rgba(255, 158, 24, 0.28);
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
@@ -306,9 +308,11 @@ body.subscription-view .product-offer-card > .btn-buy:focus-visible {
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:active,
 body.subscription-view .product-offer-card > .btn-buy:active {
-  background: #ff6a00;
+  background: var(--orange);
   color: var(--black);
-  transform: none;
+  transform: translateY(1px);
+  filter: brightness(0.99);
+  box-shadow: 0 8px 18px rgba(255, 158, 24, 0.22);
 }
 
 body.subscription-view .btn-howto {
@@ -1060,7 +1064,10 @@ body.subscription-view .cosmos-field__shoot {
   }
 
   body.subscription-view .product-gallery {
-    min-width: min(70vw, 800px);
+    /* Let the gallery shrink so the offer card doesn't get pushed off to the right. */
+    min-width: 0;
+    width: min(640px, 62vw);
+    max-width: min(640px, 62vw);
   }
 
   body.subscription-view .product-side {
@@ -1183,6 +1190,16 @@ body.subscription-view .product-gallery {
 
   body.subscription-view .product-gallery__main-img {
     border-radius: 0;
+  }
+}
+
+@media (min-width: 840px) {
+  /* Subscription: ensure the main product image never gets clipped. */
+  body.subscription-view .product-gallery__main-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
   }
 }
 
