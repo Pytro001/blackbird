@@ -149,6 +149,9 @@ body.subscription-view .product-name--subscription {
   font-size: clamp(1.2rem, 3.2vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: 0.025em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Bordered offer card: title → shipping copy → monthly (orange) → lede → WhatsApp */
@@ -230,6 +233,9 @@ body.subscription-view .product-offer-card .product-wa-headline {
   color: var(--white);
   font-weight: 500;
   font-size: clamp(0.9rem, 2.4vw, 1rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 body.subscription-view .product-offer-card .product-wa-desc {
@@ -962,8 +968,8 @@ body.subscription-view .cosmos-field__shoot {
 .product-wa-row {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  gap: 0.95rem;
+  align-items: center;
+  gap: 1.1rem;
 }
 
 .product-wa-text {
@@ -976,10 +982,11 @@ body.subscription-view .cosmos-field__shoot {
 
 .product-wa-qr-column {
   flex: 0 0 auto;
-  width: clamp(64px, 18vw, 88px);
-  min-width: 56px;
+  width: clamp(84px, 14vw, 104px);
+  min-width: 84px;
+  aspect-ratio: 1 / 1;
   display: none;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
 }
 
@@ -1080,7 +1087,7 @@ body.subscription-view .cosmos-field__shoot {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(380px, 100%);
+    max-width: min(420px, 100%);
   }
 }
 
@@ -1190,6 +1197,7 @@ body.subscription-view .product-gallery {
 
 @media (min-width: 840px) {
   body.subscription-view .product-gallery__stage {
+    /* Make the stage the clipping mask for rounded corners. */
     overflow: hidden;
     border-radius: var(--radius);
   }
@@ -1287,6 +1295,7 @@ body.subscription-view .product-gallery__stage {
 .product-gallery__figure {
   margin: 0;
   padding: 0;
+  border-radius: inherit;
 }
 
 .product-gallery__main-img {
@@ -1923,7 +1932,7 @@ body.subscription-view .product-gallery__stage {
   height: 100%;
   max-height: 100%;
   object-fit: contain;
-  object-position: center right;
+  object-position: center;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: var(--white);
