@@ -1350,18 +1350,15 @@ body.subscription-view .product-gallery__stage {
   border-radius: var(--radius-lg);
 }
 
-/* Thumbnails: keep them aligned, but don’t cover the photo corners. */
+/* Thumbnail strip: flex-direction and width are set per breakpoint (see below) so they are not overridden. */
 .product-gallery__thumbs {
   position: relative;
   z-index: 2;
   display: flex;
   flex-shrink: 0;
-  flex-direction: column;
   gap: clamp(0.2rem, 0.6vw, 0.55rem);
-  width: clamp(64px, 10vw, 88px);
   margin: 0;
   padding: 0;
-  overflow: visible;
   pointer-events: none;
 }
 
@@ -1374,7 +1371,6 @@ body.subscription-view .product-gallery__stage {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
   margin: 0;
   padding: 6px;
   border: none;
@@ -1412,6 +1408,39 @@ body.subscription-view .product-gallery__stage {
 .product-gallery__thumb.is-active {
   opacity: 1;
   filter: brightness(1.12) contrast(1.02);
+}
+
+/* Thumb strip direction + preview sizes — placed after base `.product-gallery__thumb` so cascade wins over legacy rules. */
+@media (max-width: 839px) {
+  .product-gallery__thumbs {
+    flex-direction: row;
+    width: 100%;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 840px) {
+  .product-gallery__thumbs {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    flex: 0 0 auto;
+    min-width: 0;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .product-gallery__thumb {
+    width: clamp(2.65rem, 3.5vw, 3.35rem);
+    max-width: 3.75rem;
+    box-sizing: border-box;
+  }
+
+  body.subscription-view .product-gallery__thumbs {
+    flex: 0 0 auto;
+  }
 }
 
 .product-gallery__stage:focus-visible {
