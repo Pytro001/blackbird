@@ -90,6 +90,20 @@ function cosmosFieldPopstarsHtml(): string {
   ).join("\n");
 }
 
+/** Rounded + sparkles: short rise + fade (subscription page only, CSS) */
+const COSMOS_SPARKLE_N = 112;
+function cosmosFieldPlusSparklesHtml(): string {
+  return Array.from({ length: COSMOS_SPARKLE_N }, (_, i) => {
+    const left = 0.4 + (i * 19.1 + (i * i) % 29) % 99;
+    const top = 0.2 + (i * 16.3 + (i * 7) % 23) % 99;
+    const delayS = (i * 0.13 + (i % 11) * 0.19) % 3.3;
+    const durS = 0.75 + (i * 0.11) % 0.6;
+    const armPx = 3.5 + (i % 7) * 0.65;
+    const thickPx = 0.9 + (i % 4) * 0.2;
+    return `      <div class="cosmos-field__spark" style="--sx:${left}%;--sy:${top}%;--s-arm:${armPx.toFixed(2)}px;--s-thick:${thickPx.toFixed(2)}px;--s-delay:${delayS.toFixed(2)}s;--s-dur:${durS.toFixed(2)}s" aria-hidden="true"></div>`;
+  }).join("\n");
+}
+
 let manualPageFlip: PageFlip | null = null;
 
 /** Scroll position before PDF modal body lock; restored on animated close. */
@@ -355,7 +369,7 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
     ? todayLabelForLocale(locale)
     : new Intl.DateTimeFormat(locale, { timeZone, weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
-  return `<span class="product-shipping__free">Free</span> Delivery <strong class="product-shipping__eta-datetime">${escapeHtml(tail)}</strong>`;
+  return `<span class="product-shipping__free">Free</span> Delivery <span class="product-shipping__eta-datetime">${escapeHtml(tail)}</span>`;
 }
 
 function updateProductShippingEta(): void {
@@ -371,8 +385,7 @@ function whatsAppBlockHtml(): string {
                 <div class="product-wa-text">
                   <p class="product-wa-headline">Get a free Dermatologist Check</p>
                   <p class="product-wa-desc">
-                    Our set is for dry flakes, if you are not<br />
-                    sure if you have dry or oily flakes<br />
+                    Our set is for dry flakes, if you are not sure if you have dry or oily flakes
                     <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a> us.
                   </p>
                 </div>
@@ -701,22 +714,24 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     ? ""
     : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
   const subscriptionShippingTopLine = isSubscription
-    ? `<p class="product-shipping__eta">You get a new set when yours is empty</p>`
+    ? `<p class="product-shipping__eta product-shipping__eta--note">You get a new set when yours is empty</p>`
     : "";
-  const buyLabel = isSubscription
-    ? `${escapeHtml(subscriptionPriceDisplay)} Monthly Plan`
-    : "Buy";
+  const buyLabel = isSubscription ? "Subscribe" : "Buy";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
+  const subscriptionPriceOnCard = isSubscription
+    ? `<p class="product-price product-price--subscription-on-card">${escapeHtml(subscriptionPriceDisplay)}</p>`
+    : "";
 
   const productBuyPanel = isSubscription
     ? `          <div class="product-panel product-panel--buy product-panel--buy-subscription">
             <div class="product-offer-card">
               <div class="product-identity product-identity--subscription">
                 <h2 class="product-name product-name--subscription">Blackbird Men Dandruff Set</h2>
+                ${subscriptionPriceOnCard}
               </div>
               <div class="product-shipping product-shipping--subscription">
                 ${subscriptionShippingTopLine}
-                <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+                <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               <a
                 class="btn-buy"
@@ -752,6 +767,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     <div class="cosmos-field" aria-hidden="true">
       ${cosmosFieldDustMotesHtml()}
       ${cosmosFieldPopstarsHtml()}
+      ${cosmosFieldPlusSparklesHtml()}
     </div>
     <div class="skip-links" role="navigation" aria-label="Skip links">
       <a href="#education" class="skip-link">Skip to Education</a>
@@ -759,9 +775,7 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     </div>
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
-        <h1 class="hero-editorial__title">
-          blackbird<sup class="hero-editorial__reg" aria-label="registered">®</sup>
-        </h1>
+        <h1 class="hero-editorial__title">blackbird</h1>
       </div>
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">get flake free</p>
@@ -1269,7 +1283,11 @@ function render(): void {
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (themeColorMeta) {
     const chrome =
-      view === "impressum" || view === "datenschutz" ? "#f9f5ef" : "#2e2a26";
+      view === "impressum" || view === "datenschutz"
+        ? "#f9f5ef"
+        : view === "subscription"
+          ? "#000000"
+          : "#2e2a26";
     themeColorMeta.setAttribute("content", chrome);
   }
 
@@ -1316,7 +1334,13 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
-    gallery.style.height = `${Math.round(side.offsetHeight)}px`;
+    const hSide = Math.round(side.offsetHeight);
+    if (document.body.classList.contains("subscription-view")) {
+      const minPicture = Math.min(Math.round(window.innerHeight * 0.5), 720);
+      gallery.style.height = `${Math.max(hSide, minPicture)}px`;
+    } else {
+      gallery.style.height = `${hSide}px`;
+    }
     gallery.style.removeProperty("width");
   };
 

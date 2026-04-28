@@ -85,24 +85,20 @@ body {
   overflow-x: clip;
 }
 
-/* —— Subscription: brand dark shell, white type, light borders (same rhythm as default home) —— */
+/* —— Subscription: true black, white type, + sparkles (motes/pop replaced by .cosmos-field__spark) —— */
 body.subscription-view,
 body.subscription-view #app {
-  background: var(--site-base);
+  background: #000;
   color: var(--white);
 }
 
 body.subscription-view .home-shell--subscription {
-  background: var(--site-base);
+  background: #000;
 }
 
-body.subscription-view .cosmos-field__mote {
-  background: rgba(255, 255, 255, 0.12);
-  opacity: 0.55;
-}
-
-body.subscription-view .cosmos-field__popstar-inner {
-  background: rgba(255, 255, 255, 0.22);
+body.subscription-view .cosmos-field__mote,
+body.subscription-view .cosmos-field__popstar {
+  display: none;
 }
 
 body.subscription-view .hero-editorial__title {
@@ -133,17 +129,10 @@ body.subscription-view .product-panel {
   box-shadow: none;
 }
 
-body.subscription-view .product-name,
-body.subscription-view .product-shipping__eta,
-body.subscription-view .product-shipping__returns,
-body.subscription-view .product-shipping__free {
-  color: rgba(245, 245, 245, 0.95);
-}
-
 body.subscription-view .product-identity--subscription {
   margin: 0;
   padding: 0;
-  gap: 0;
+  gap: 0.35rem;
 }
 
 body.subscription-view .product-name--subscription {
@@ -170,9 +159,72 @@ body.subscription-view .product-offer-card {
   min-width: 0;
   padding: 1.4rem 1.45rem 1.5rem;
   border-radius: var(--radius);
-  border: 1px solid rgba(245, 245, 245, 0.22);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #2e2e2e;
+  color: var(--white);
   box-shadow: none;
+}
+
+body.subscription-view .product-offer-card .product-name--subscription {
+  color: var(--white);
+}
+
+body.subscription-view .product-offer-card .product-price--subscription-on-card {
+  margin: 0;
+  color: var(--white);
+  font-size: clamp(1.35rem, 3.8vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+body.subscription-view .product-offer-card .product-shipping--subscription .product-shipping__eta--note,
+body.subscription-view .product-offer-card .product-shipping--subscription .product-shipping__eta--arrival {
+  color: var(--white-dim);
+  font-size: clamp(0.72rem, 1.85vw, 0.8rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  max-width: none;
+}
+
+body.subscription-view .product-offer-card .product-shipping__free,
+body.subscription-view .product-offer-card .product-shipping__eta-datetime {
+  font-weight: 400;
+  color: inherit;
+}
+
+body.subscription-view .product-offer-card .product-subscription-lede {
+  color: rgba(245, 245, 245, 0.85);
+}
+
+body.subscription-view .product-offer-card .product-wa-headline {
+  color: var(--white);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 2.4vw, 1rem);
+}
+
+body.subscription-view .product-offer-card .product-wa-desc {
+  color: rgba(245, 245, 245, 0.9);
+  font-weight: 400;
+  font-size: clamp(0.78rem, 2.05vw, 0.88rem);
+}
+
+body.subscription-view .product-offer-card .product-wa-link {
+  color: var(--white);
+  font-weight: 400;
+  text-decoration-color: rgba(245, 245, 245, 0.45);
+}
+
+body.subscription-view .product-offer-card .product-wa-link:hover,
+body.subscription-view .product-offer-card .product-wa-link:focus-visible {
+  color: var(--white);
+  text-decoration-color: rgba(245, 245, 245, 0.65);
+}
+
+body.subscription-view .product-offer-card .product-wa-qr__img {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: var(--white);
 }
 
 body.subscription-view .product-shipping--subscription {
@@ -187,8 +239,8 @@ body.subscription-view .product-wa-block {
 
 body.subscription-view .product-offer-card > .btn-buy {
   width: 100%;
-  border-radius: 12px;
-  padding: 0.58rem 1.05rem;
+  border-radius: 999px;
+  padding: 0.58rem 1.25rem;
   min-height: 52px;
   font-family: var(--font);
   font-size: clamp(1.02rem, 2.65vw, 1.1rem);
@@ -197,58 +249,28 @@ body.subscription-view .product-offer-card > .btn-buy {
   font-weight: 700;
   text-align: center;
   color: var(--black);
-  background: #ff9e18;
+  background: #ff6a00;
   border: none;
-  transition: none;
+  transition: background 0.15s ease, color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 body.subscription-view .product-offer-card > .btn-buy:hover,
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
-  background: #ff9e18;
+  background: #ff7f1a;
   color: var(--black);
   filter: none;
 }
 
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
 }
 
 body.subscription-view .product-offer-card > .btn-buy:active {
-  background: #ff9e18;
+  background: #e55f00;
   color: var(--black);
   transform: none;
-}
-
-body.subscription-view .product-subscription-lede {
-  color: rgba(245, 245, 245, 0.78);
-}
-
-body.subscription-view .product-wa-headline {
-  color: rgba(245, 245, 245, 0.92);
-}
-
-body.subscription-view .product-wa-desc {
-  color: rgba(245, 245, 245, 0.72);
-}
-
-body.subscription-view .product-wa-link {
-  color: rgba(245, 245, 245, 0.95);
-  text-decoration-color: rgba(245, 245, 245, 0.35);
-}
-
-body.subscription-view .product-wa-link:hover,
-body.subscription-view .product-wa-link:focus-visible {
-  color: var(--white);
-  text-decoration-color: rgba(245, 245, 245, 0.55);
-}
-
-body.subscription-view .product-wa-qr__img {
-  border: none;
-  box-shadow: none;
-  outline: none;
-  background: transparent;
 }
 
 body.subscription-view .btn-howto {
@@ -423,6 +445,84 @@ body.subscription-view .product-inline-msg {
   animation-delay: var(--sd, 0s);
 }
 
+/* Rounded + sparkles: subscription only (body.subscription-view toggles .cosmos-field__spark) */
+.cosmos-field__spark {
+  display: none;
+  position: absolute;
+  left: var(--sx, 50%);
+  top: var(--sy, 0);
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  will-change: transform, opacity, filter;
+}
+
+body.subscription-view .cosmos-field__spark {
+  display: block;
+  animation: cosmos-spark-rise var(--s-dur, 1.05s) ease-out infinite;
+  animation-delay: var(--s-delay, 0s);
+}
+
+.cosmos-field__spark::before,
+.cosmos-field__spark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 99px;
+  transform: translate(-50%, -50%);
+}
+
+.cosmos-field__spark::before {
+  width: var(--s-arm, 5px);
+  height: var(--s-thick, 1.1px);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.95) 45% 55%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.55), 0 0 7px rgba(255, 255, 255, 0.25);
+}
+
+.cosmos-field__spark::after {
+  width: var(--s-thick, 1.1px);
+  height: var(--s-arm, 5px);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.95) 45% 55%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.55), 0 0 7px rgba(255, 255, 255, 0.25);
+}
+
+@keyframes cosmos-spark-rise {
+  0% {
+    transform: translate(-50%, -50%) translateY(2px) scale(0.35);
+    opacity: 0;
+  }
+  7% {
+    opacity: 0.55;
+  }
+  18% {
+    transform: translate(-50%, -50%) translateY(-5px) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) brightness(1.1);
+  }
+  32% {
+    transform: translate(-50%, -50%) translateY(-9px) scale(0.92);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(-20px) scale(0.45);
+    opacity: 0;
+    filter: none;
+  }
+}
+
 @keyframes cosmos-popstar-shine {
   0%,
   5%,
@@ -457,6 +557,16 @@ body.subscription-view .product-inline-msg {
     animation: none;
     transform: scale(0.4);
     opacity: 0.1;
+  }
+
+  body.subscription-view .cosmos-field__spark {
+    animation: none;
+    opacity: 0.3;
+  }
+
+  body.subscription-view .cosmos-field__spark::before,
+  body.subscription-view .cosmos-field__spark::after {
+    opacity: 0.4;
   }
 }
 
@@ -629,17 +739,6 @@ body.subscription-view .product-inline-msg {
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
   position: relative;
   z-index: 1;
-}
-
-.hero-editorial__reg {
-  font-size: 0.22em;
-  font-weight: 600;
-  line-height: 0;
-  vertical-align: super;
-  position: relative;
-  top: -0.65em;
-  margin-left: 0.06em;
-  opacity: 0.9;
 }
 
 .hero-editorial__bottom {
@@ -824,17 +923,21 @@ body.subscription-view .product-inline-msg {
   /* Must not use width:100% here — that forces gallery + column to stack */
   body.subscription-view .product-shots-wrap {
     width: auto;
-    flex: 0 1 auto;
+    flex: 1 1 0;
     min-width: 0;
     max-width: 100%;
     justify-content: center;
+  }
+
+  body.subscription-view .product-gallery {
+    min-width: min(58vw, 640px);
   }
 
   body.subscription-view .product-side {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(500px, 100%);
+    max-width: min(400px, 100%);
   }
 }
 
