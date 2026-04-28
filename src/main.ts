@@ -94,18 +94,23 @@ function cosmosFieldPopstarsHtml(): string {
 const COSMOS_SPARKLE_N = 34;
 const COSMOS_SHOOTING_N = 2;
 
-function pseudoRand01(seed: number): number {
-  // Deterministic hash → [0,1). Stable across renders; avoids “evenly spaced” look.
-  const x = Math.sin(seed * 12_989.123) * 43_758.5453;
-  return x - Math.floor(x);
+function rand01(): number {
+  // True randomness per page load. Falls back to Math.random if crypto isn't available.
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    const u = new Uint32Array(1);
+    crypto.getRandomValues(u);
+    // 2^32 → [0, 1)
+    return u[0] / 4294967296;
+  }
+  return Math.random();
 }
 
 function cosmosFieldPlusSparklesHtml(): string {
-  const sparks = Array.from({ length: COSMOS_SPARKLE_N }, (_, i) => {
-    const r1 = pseudoRand01(i + 1.2);
-    const r2 = pseudoRand01(i + 83.7);
-    const r3 = pseudoRand01(i + 911.4);
-    const r4 = pseudoRand01(i + 19.05);
+  const sparks = Array.from({ length: COSMOS_SPARKLE_N }, () => {
+    const r1 = rand01();
+    const r2 = rand01();
+    const r3 = rand01();
+    const r4 = rand01();
 
     // Slightly bias toward upper half so content area isn’t constantly twinkling.
     const left = 2 + r1 * 96;
@@ -113,35 +118,47 @@ function cosmosFieldPlusSparklesHtml(): string {
 
     // Make it “occasionally” sparkle: long duration with short active window in keyframes.
     const durS = 8.5 + r3 * 10.5; // 8.5–19s
-    const delayS = r4 * 6.0; // de-sync starts
+    // Negative delay so field looks “already running” (no synchronized start on load).
+    const delayS = -(r4 * durS);
 
-    const armPx = 3.2 + pseudoRand01(i + 201.1) * 3.9; // 3.2–7.1
-    const thickPx = 0.85 + pseudoRand01(i + 333.8) * 0.55; // 0.85–1.4
+    const armPx = 3.2 + rand01() * 3.9; // 3.2–7.1
+    const thickPx = 0.85 + rand01() * 0.55; // 0.85–1.4
+    const alpha = 0.28 + rand01() * 0.52; // overall brightness variance
 
     return `      <div class="cosmos-field__spark" style="--sx:${left.toFixed(
       2
     )}%;--sy:${top.toFixed(2)}%;--s-arm:${armPx.toFixed(2)}px;--s-thick:${thickPx.toFixed(
       2
-    )}px;--s-delay:${delayS.toFixed(2)}s;--s-dur:${durS.toFixed(2)}s" aria-hidden="true"></div>`;
+    )}px;--s-alpha:${alpha.toFixed(3)};--s-delay:${delayS.toFixed(2)}s;--s-dur:${durS.toFixed(
+      2
+    )}s" aria-hidden="true"></div>`;
   }).join("\n");
 
-  const shooting = Array.from({ length: COSMOS_SHOOTING_N }, (_, i) => {
-    const r1 = pseudoRand01(i + 44.1);
-    const r2 = pseudoRand01(i + 77.2);
-    const r3 = pseudoRand01(i + 108.3);
-    const r4 = pseudoRand01(i + 205.4);
+  const shooting = Array.from({ length: COSMOS_SHOOTING_N }, () => {
+    const r1 = rand01();
+    const r2 = rand01();
+    const r3 = rand01();
+    const r4 = rand01();
+    const r5 = rand01();
 
     // Start somewhere near the top; travel diagonally down-right.
     const startX = 5 + r1 * 70;
     const startY = 6 + Math.pow(r2, 1.4) * 34;
-    const delayS = 3 + r3 * 12; // 3–15s
-    const durS = 10 + r4 * 10; // 10–20s
+    const durS = 10 + r3 * 14; // 10–24s
+    const delayS = -(r4 * durS); // already in motion (random phase)
+    const dx = 360 + r5 * 520; // 360–880px
+    const dy = 180 + rand01() * 360; // 180–540px
+    const angle = 12 + rand01() * 20; // 12–32deg
+    const widthPx = 130 + rand01() * 150; // 130–280px
+    const thickPx = 1.4 + rand01() * 1.4; // 1.4–2.8px
 
     return `      <div class="cosmos-field__shoot" style="--tx:${startX.toFixed(
       2
     )}%;--ty:${startY.toFixed(2)}%;--t-delay:${delayS.toFixed(2)}s;--t-dur:${durS.toFixed(
       2
-    )}s" aria-hidden="true"></div>`;
+    )}s;--t-dx:${dx.toFixed(0)}px;--t-dy:${dy.toFixed(0)}px;--t-ang:${angle.toFixed(
+      1
+    )}deg;--t-w:${widthPx.toFixed(0)}px;--t-thick:${thickPx.toFixed(2)}px" aria-hidden="true"></div>`;
   }).join("\n");
 
   return `${sparks}\n${shooting}`;
