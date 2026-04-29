@@ -132,6 +132,10 @@ body.subscription-view .hero-editorial__script {
   color: var(--white-dim);
 }
 
+body.subscription-view .hero-editorial__bottom {
+  gap: clamp(0.55rem, 1.8vw, 0.85rem);
+}
+
 body.subscription-view .btn-pill {
   border-color: rgba(245, 245, 245, 0.65);
   color: rgba(245, 245, 245, 0.95);
@@ -196,12 +200,14 @@ body.subscription-view .buy-stack--subscription {
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  padding: 0;
+  padding: clamp(1.25rem, 2.4vw, 1.65rem);
   box-sizing: border-box;
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  border-radius: var(--buy-card-radius);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(14, 14, 14, 0.94);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 28px 64px rgba(0, 0, 0, 0.45);
   flex: 1 1 auto;
 }
 
@@ -215,14 +221,15 @@ body.subscription-view .buy-stack--subscription .buy-sheet--offer-sub {
 
 body.subscription-view .buy-stack--subscription .buy-sheet--howto {
   width: 100%;
-  align-items: stretch;
+  align-items: center;
   align-self: stretch;
   padding-top: 0;
   margin-top: 0.35rem;
 }
 
 body.subscription-view .buy-stack--subscription .btn-howto {
-  width: 100%;
+  width: auto;
+  max-width: min(420px, 100%);
   box-sizing: border-box;
   justify-content: center;
 }
@@ -332,16 +339,13 @@ body.subscription-view .product-shipping--subscription {
   gap: 0.55rem;
 }
 
-body.subscription-view .product-wa-block {
-  margin-top: 0.25rem;
-  padding: 1rem 1.05rem;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: var(--buy-card-radius-inner);
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.055),
-    transparent 55%
-  );
+body.subscription-view .buy-stack--subscription .product-wa-block {
+  margin-top: clamp(1rem, 2.2vw, 1.2rem);
+  padding: clamp(0.85rem, 2vw, 1rem) 0 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
 }
 
 body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy,
@@ -392,31 +396,37 @@ body.subscription-view .buy-sheet--offer-sub > .btn-buy:active {
 }
 
 body.subscription-view .btn-howto {
-  background: none;
-  border: none;
-  padding: 0;
-  min-height: unset;
-  font-size: clamp(0.75rem, 1.8vw, 0.83rem);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: rgba(210, 210, 210, 0.72);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(210, 210, 210, 0.3);
-  cursor: pointer;
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
   width: auto;
-  box-shadow: none;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 245, 245, 0.55);
+  background: transparent;
+  font-size: clamp(0.7rem, 1.85vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(232, 232, 232, 0.9);
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
 body.subscription-view .btn-howto:hover {
-  color: rgba(220, 220, 220, 0.9);
-  background: none;
-  border: none;
-  text-decoration-color: rgba(220, 220, 220, 0.6);
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.72);
 }
 
 body.subscription-view .btn-howto:focus-visible {
-  outline: 2px solid rgba(245, 245, 245, 0.35);
+  outline: 2px solid rgba(245, 245, 245, 0.4);
   outline-offset: 3px;
 }
 
@@ -1185,7 +1195,7 @@ body.subscription-view .cosmos-field__shoot {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
@@ -1205,10 +1215,10 @@ body.subscription-view .cosmos-field__shoot {
   }
 
   body.subscription-view .product-hero--subscription .product-gallery {
-    flex: 1 1 auto;
-    align-self: stretch;
-    width: min(1024px, 91vw);
-    max-width: min(1024px, 91vw);
+    flex: 0 1 auto;
+    align-self: flex-start;
+    width: min(600px, 52vw);
+    max-width: min(600px, 52vw);
     min-width: 0;
     min-height: 0;
     height: auto;
@@ -1219,8 +1229,8 @@ body.subscription-view .cosmos-field__shoot {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(390px, 100%);
-    align-self: stretch;
+    max-width: min(368px, 38vw);
+    align-self: center;
     display: flex;
     flex-direction: column;
   }

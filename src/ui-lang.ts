@@ -37,6 +37,7 @@ const copy = {
     thumbAriaConnector: "of",
 
     heroScript: "get flake free",
+    heroCtaNow: "NOW",
     skipEducation: "Skip to Education",
     skipLegalNav: "Skip links",
     skipLegalFooter: "Skip to legal information",
@@ -122,6 +123,7 @@ const copy = {
     thumbAriaConnector: "von",
 
     heroScript: "werde schuppenfrei",
+    heroCtaNow: "JETZT",
     skipEducation: "Zu Education springen",
     skipLegalNav: "Sprungmarken",
     skipLegalFooter: "Zu rechtlichen Hinweisen springen",
