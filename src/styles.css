@@ -284,8 +284,8 @@ body.subscription-view .buy-sheet--offer-sub .product-subscription-copy .product
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__free {
-  font-weight: 600;
-  color: #f0f0f0;
+  font-weight: 400;
+  color: rgba(200, 200, 200, 0.92);
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__eta-datetime {
