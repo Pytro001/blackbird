@@ -23,6 +23,11 @@
   --result-no: var(--gray-400);
   --radius: 12px;
   --radius-lg: 18px;
+  --buy-card-radius: 24px;
+  --buy-card-radius-inner: 16px;
+  --buy-card-surface: #141414;
+  --buy-card-border: rgba(255, 255, 255, 0.08);
+  --buy-card-inset: rgba(255, 255, 255, 0.045);
   /* Hero gallery image box (1024×658 sources); padding-bottom % */
   --subscription-gallery-aspect-pad: calc(658 / 1024 * 100%);
   /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
@@ -87,6 +92,17 @@ body {
   overflow-x: clip;
 }
 
+/* Purchase route: same true-black shell as subscription (FAQ/education sections follow below) */
+body:not(.subscription-view),
+body:not(.subscription-view) #app {
+  background: #000;
+  color: var(--white);
+}
+
+body:not(.subscription-view) .home-shell {
+  background: #000;
+}
+
 /* —— Subscription: true black, white type, + sparkles (motes/pop replaced by .cosmos-field__spark) —— */
 body.subscription-view,
 body.subscription-view #app {
@@ -148,25 +164,28 @@ body.subscription-view .product-identity--subscription {
 }
 
 body.subscription-view .product-name--subscription {
-  font-size: clamp(1.08rem, 2.6vw, 1.28rem);
-  line-height: 1.2;
-  letter-spacing: 0.025em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: clamp(1.1rem, 2.7vw, 1.35rem);
+  font-weight: 650;
+  line-height: 1.22;
+  letter-spacing: 0.02em;
+  white-space: normal;
 }
 
-/* Bordered offer card: title → shipping → CTA — stack lives in buy-stack */
+body.subscription-view .buy-sheet--offer-sub .product-name--subscription {
+  max-width: 18ch;
+}
+
+/* Bordered offer card: title → shipping → CTA — stacked inside framed .product-hero */
 body.subscription-view .buy-sheet--offer-sub {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: clamp(1rem, 2.2vw, 1.2rem);
   margin: 0;
   min-width: 0;
-  padding: 1.4rem 1.45rem 1.5rem;
-  border-radius: var(--radius);
+  padding: clamp(1.2rem, 2.8vw, 1.55rem);
+  border-radius: var(--buy-card-radius-inner);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(10, 10, 10, 0.78);
+  background: rgba(8, 8, 8, 0.45);
   color: var(--white);
   box-shadow: none;
 }
@@ -174,17 +193,17 @@ body.subscription-view .buy-sheet--offer-sub {
 body.subscription-view .buy-stack--subscription {
   display: flex;
   flex-direction: column;
-  gap: 1.05rem;
+  gap: 1.15rem;
   margin: 0;
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  padding: 1.9rem 1.5rem 1.75rem;
+  padding: 0;
   box-sizing: border-box;
-  border-radius: var(--radius);
-  border: 1px solid rgba(82, 82, 82, 0.9);
-  background: rgba(16, 16, 16, 0.96);
-  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   flex: 1 1 auto;
 }
 
@@ -198,13 +217,16 @@ body.subscription-view .buy-stack--subscription .buy-sheet--offer-sub {
 
 body.subscription-view .buy-stack--subscription .buy-sheet--howto {
   width: 100%;
-  align-items: flex-start;
-  padding-top: 0.75rem;
+  align-items: stretch;
+  align-self: stretch;
+  padding-top: 0;
+  margin-top: 0.35rem;
 }
 
 body.subscription-view .buy-stack--subscription .btn-howto {
   width: 100%;
   box-sizing: border-box;
+  justify-content: center;
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-name--subscription {
@@ -229,13 +251,13 @@ body.subscription-view .buy-sheet--offer-sub .product-price--subscription-on-car
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-subscription-refill {
-  margin: 0.45rem 0 0;
+  margin: 0.5rem 0 0;
   padding: 0;
-  color: var(--white-dim);
-  font-size: clamp(0.9rem, 2.2vw, 0.98rem);
+  color: rgba(180, 180, 180, 0.95);
+  font-size: clamp(0.86rem, 2.05vw, 0.94rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.4;
+  letter-spacing: 0.012em;
+  line-height: 1.42;
   max-width: none;
 }
 
@@ -248,40 +270,42 @@ body.subscription-view .product-subscription-copy {
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-subscription-copy .product-shipping--subscription .product-shipping__eta--arrival {
-  color: var(--white-dim);
-  font-size: clamp(0.9rem, 2.2vw, 0.98rem);
+  color: rgba(200, 200, 200, 0.92);
+  font-size: clamp(0.84rem, 2.05vw, 0.92rem);
   font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.45;
+  letter-spacing: 0.012em;
+  line-height: 1.5;
   max-width: none;
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__free {
   font-weight: 600;
-  color: var(--white);
+  color: #f0f0f0;
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__eta-datetime {
   font-weight: 600;
-  color: var(--white);
+  color: #f5f5f5;
 }
 
 body.subscription-view .product-wa-headline {
-  color: var(--white);
-  font-weight: 500;
-  font-size: clamp(0.9rem, 2.4vw, 1rem);
+  color: #fefefe;
+  font-weight: 600;
+  font-size: clamp(0.88rem, 2.2vw, 0.98rem);
+  letter-spacing: 0.01em;
 }
 
 body.subscription-view .product-wa-desc {
-  color: rgba(245, 245, 245, 0.9);
+  color: rgba(178, 178, 178, 0.98);
   font-weight: 400;
-  font-size: clamp(0.78rem, 2.05vw, 0.88rem);
+  font-size: clamp(0.76rem, 1.95vw, 0.86rem);
+  line-height: 1.45;
 }
 
 body.subscription-view .product-wa-link {
-  color: var(--white);
-  font-weight: 400;
-  text-decoration-color: rgba(245, 245, 245, 0.45);
+  color: #e8e8e8;
+  font-weight: 500;
+  text-decoration-color: rgba(232, 232, 232, 0.4);
 }
 
 body.subscription-view .product-wa-link:hover {
@@ -311,11 +335,15 @@ body.subscription-view .product-shipping--subscription {
 }
 
 body.subscription-view .product-wa-block {
-  margin-top: auto;
-  padding: 0.85rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
+  margin-top: 0.25rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--buy-card-radius-inner);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.055),
+    transparent 55%
+  );
 }
 
 body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy,
@@ -1085,6 +1113,17 @@ body.subscription-view .cosmos-field__shoot {
   flex-direction: column;
   gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--buy-card-radius);
+  border: 1px solid var(--buy-card-border);
+  background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 48%
+    ),
+    var(--buy-card-surface);
+  padding: clamp(1.15rem, 2.5vw, 1.75rem);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
 }
 
 @media (min-width: 840px) {
@@ -1135,11 +1174,7 @@ body.subscription-view .cosmos-field__shoot {
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    column-gap: clamp(0.45rem, 1vw, 0.85rem);
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
+    column-gap: clamp(0.75rem, 1.5vw, 1.25rem);
   }
 
   body.subscription-view .product-hero--subscription .product-hero__media {
@@ -1184,10 +1219,6 @@ body.subscription-view .cosmos-field__shoot {
     gap: clamp(1.2rem, 3.5vw, 1.65rem);
     width: 100%;
     box-sizing: border-box;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
   }
 
   body.subscription-view .product-side {
@@ -1770,6 +1801,42 @@ body.subscription-view .product-gallery__thumb img {
   align-items: flex-start;
 }
 
+body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) {
+  gap: clamp(1rem, 2.6vw, 1.35rem);
+  padding: clamp(1.35rem, 3vw, 1.7rem);
+  border-radius: var(--buy-card-radius-inner);
+  border-color: rgba(255, 255, 255, 0.075);
+  background: rgba(12, 12, 12, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) > .btn-buy,
+body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) > a#buy-btn.btn-buy {
+  width: 100%;
+  justify-content: center;
+  align-self: stretch;
+}
+
+body:not(.subscription-view) .buy-sheet .product-wa-block {
+  margin-top: clamp(0.25rem, 1.2vw, 0.55rem);
+  padding: clamp(0.85rem, 2vw, 1.05rem);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+body:not(.subscription-view) .buy-sheet .product-wa-headline {
+  color: rgba(252, 252, 252, 0.94);
+}
+
+body:not(.subscription-view) .buy-sheet .product-wa-desc {
+  color: rgba(200, 200, 200, 0.82);
+}
+
+body:not(.subscription-view) .buy-sheet .product-wa-link {
+  color: rgba(235, 235, 235, 0.95);
+}
+
 .btn-howto {
   width: auto;
   max-width: 100%;
@@ -1793,6 +1860,35 @@ body.subscription-view .product-gallery__thumb img {
 .btn-howto:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.38);
   outline-offset: 2px;
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto {
+  width: auto;
+  max-width: 100%;
+  background: none;
+  border: none;
+  padding: 0.35rem 0;
+  min-height: unset;
+  margin: 0;
+  font-size: clamp(0.76rem, 1.9vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(200, 200, 200, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(200, 200, 200, 0.32);
+  box-shadow: none;
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto:hover {
+  color: rgba(230, 230, 230, 0.95);
+  border: none;
+  background: none;
+  text-decoration-color: rgba(230, 230, 230, 0.55);
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
+  outline-color: rgba(240, 240, 240, 0.45);
 }
 
 /* How-to manual: darkened site, native PDF in iframe; backdrop tap closes */
