@@ -358,7 +358,7 @@ body.subscription-view .buy-stack--subscription .product-wa-block {
 
 body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy,
 body.subscription-view .buy-sheet--offer-sub > .btn-buy {
-  margin-top: clamp(0.45rem, 1.35vw, 0.85rem);
+  margin-top: clamp(0.85rem, 2vw, 1.25rem);
   width: 100%;
   border-radius: 999px;
   padding: 0.58rem 1.25rem;
@@ -3242,10 +3242,6 @@ body.subscription-view .product-gallery__slide-img.image-zoomable {
   }
 
   body.subscription-view .product-gallery__slide-img.image-zoomable {
-    cursor: zoom-in;
-  }
-
-  .product-faq__img.image-zoomable {
     cursor: zoom-in;
   }
 }

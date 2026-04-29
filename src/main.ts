@@ -771,7 +771,7 @@ function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
       <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">${escapeHtml(t.faqHeading)}</h2>
       <div class="product-faq__figure">
         <img
-          class="product-faq__img image-zoomable"
+          class="product-faq__img"
           src="${publicAssetUrl("faq-four-bottles.png")}"
           width="1024"
           height="576"
