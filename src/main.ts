@@ -882,12 +882,12 @@ ${howtoBlock}
         <h1 class="hero-editorial__title">blackbird</h1>
       </div>
       <div class="hero-editorial__bottom">
+        <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
         ${
           isSubscription
             ? `<button type="button" class="btn-pill hero-cta-now" id="cta-now">${escapeHtml(t.heroCtaNow)}</button>`
             : ""
         }
-        <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
       </div>
     </section>
 
