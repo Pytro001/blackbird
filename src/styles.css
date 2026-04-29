@@ -141,8 +141,9 @@ body.subscription-view .product-panel {
 
 body.subscription-view .product-identity--subscription {
   margin: 0;
-  padding: 0;
+  padding: 0 0 0.85rem;
   gap: 0.65rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 body.subscription-view .product-name--subscription {
@@ -187,12 +188,12 @@ body.subscription-view .product-side-card {
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  padding: 1.9rem 1.45rem 1.75rem;
+  padding: 1.9rem 1.5rem 1.75rem;
   box-sizing: border-box;
   border-radius: var(--radius);
-  border: 1px solid rgba(58, 58, 58, 0.95);
-  background: rgba(20, 20, 20, 0.92);
-  box-shadow: none;
+  border: 1px solid rgba(82, 82, 82, 0.9);
+  background: rgba(16, 16, 16, 0.96);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
   flex: 1 1 auto;
 }
 
@@ -208,7 +209,8 @@ body.subscription-view .product-side-card .product-panel--howto {
   width: 100%;
   align-items: flex-start;
   margin-top: auto;
-  padding-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 body.subscription-view .product-side-card .btn-howto {
@@ -265,10 +267,14 @@ body.subscription-view .product-offer-card .product-subscription-copy .product-s
   max-width: none;
 }
 
-body.subscription-view .product-offer-card .product-shipping__free,
+body.subscription-view .product-offer-card .product-shipping__free {
+  font-weight: 600;
+  color: var(--white);
+}
+
 body.subscription-view .product-offer-card .product-shipping__eta-datetime {
-  font-weight: 400;
-  color: inherit;
+  font-weight: 600;
+  color: var(--white);
 }
 
 body.subscription-view .product-wa-headline {
@@ -321,9 +327,9 @@ body.subscription-view .product-shipping--subscription {
 body.subscription-view .product-wa-block {
   margin: 0;
   padding: 0.85rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 158, 24, 0.22);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 158, 24, 0.05);
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy,
@@ -342,8 +348,8 @@ body.subscription-view .product-offer-card > .btn-buy {
   color: var(--black);
   background: var(--orange);
   border: none;
-  box-shadow: none;
-  transition: filter 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 2px 14px rgba(255, 158, 24, 0.25);
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -354,8 +360,8 @@ body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
 body.subscription-view .product-offer-card > .btn-buy:focus-visible {
   background: var(--orange);
   color: var(--black);
-  filter: brightness(1.03) saturate(1.05);
-  box-shadow: none;
+  filter: brightness(1.05) saturate(1.06);
+  box-shadow: 0 4px 20px rgba(255, 158, 24, 0.35);
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
@@ -378,13 +384,13 @@ body.subscription-view .btn-howto {
   border: none;
   padding: 0;
   min-height: unset;
-  font-size: clamp(0.72rem, 1.7vw, 0.8rem);
+  font-size: clamp(0.75rem, 1.8vw, 0.83rem);
   font-weight: 400;
   letter-spacing: 0.01em;
-  color: rgba(200, 200, 200, 0.65);
+  color: rgba(210, 210, 210, 0.72);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(200, 200, 200, 0.35);
+  text-decoration-color: rgba(210, 210, 210, 0.3);
   cursor: pointer;
   width: auto;
   box-shadow: none;
@@ -1392,8 +1398,9 @@ body.subscription-view .product-gallery {
     max-height: none;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     box-sizing: border-box;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
   }
 
   /* 14:9 via padding-bottom — avoids Chrome flex + aspect-ratio sizing bugs */
@@ -1581,6 +1588,19 @@ body.subscription-view .product-gallery__thumb img {
     box-sizing: border-box;
     padding: 4px;
     border-radius: var(--radius);
+    opacity: 0.78;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  body.subscription-view .product-gallery__thumb.is-active {
+    opacity: 1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.55);
+  }
+
+  body.subscription-view .product-gallery__thumb:hover:not(.is-active) {
+    opacity: 0.92;
   }
 
   body.subscription-view .product-gallery__main {
