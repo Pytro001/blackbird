@@ -583,14 +583,17 @@ function productFaqAnswerHtml(answer: string): string {
     .join("");
 }
 
-function productGalleryHtml(lang: UiLang, thumbsInsideStage = false): string {
+function productGalleryHtml(lang: UiLang, thumbsInsideStage = false, showThumbs = true): string {
   const t = strings(lang);
   const slides = carouselSlides(lang);
   const n = slides.length;
-  const thumbs = slides.map((slide, i) => {
-    const src = publicAssetUrl(slide.file);
-    const ariaThumb = `${t.galleryThumbAria} ${i + 1} ${t.thumbAriaConnector} ${n}`;
-    return `
+  const thumbs =
+    slides.length > 0 && showThumbs
+      ? slides
+          .map((slide, i) => {
+            const src = publicAssetUrl(slide.file);
+            const ariaThumb = `${t.galleryThumbAria} ${i + 1} ${t.thumbAriaConnector} ${n}`;
+            return `
             <button
               type="button"
               class="product-gallery__thumb${i === 0 ? " is-active" : ""}"
@@ -607,22 +610,30 @@ function productGalleryHtml(lang: UiLang, thumbsInsideStage = false): string {
                 loading="${i === 0 ? "eager" : "lazy"}"
               />
             </button>`;
-  }).join("");
+          })
+          .join("")
+      : "";
 
   const first = slides[0];
   const firstSrc = publicAssetUrl(first.file);
-  const thumbsHtml = `<div class="product-gallery__thumbs" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbs}</div>`;
+  const thumbsHtml = showThumbs
+    ? `<div class="product-gallery__thumbs" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbs}</div>`
+    : "";
+
+  const stageClass = showThumbs
+    ? "product-gallery__stage"
+    : "product-gallery__stage product-gallery__stage--no-thumbs";
 
   return `
         <div class="product-gallery" id="product-gallery">
           <div class="product-gallery__main">
             <div
-              class="product-gallery__stage"
+              class="${stageClass}"
               id="product-gallery-stage"
               tabindex="0"
               aria-label="${escapeHtml(t.galleryStageAria)}"
             >
-              ${thumbsInsideStage ? thumbsHtml : ""}
+              ${thumbsInsideStage && showThumbs ? thumbsHtml : ""}
               <div class="product-gallery__aspect">
                 <figure class="product-gallery__figure">
                   <img
@@ -640,7 +651,7 @@ function productGalleryHtml(lang: UiLang, thumbsInsideStage = false): string {
               </div>
             </div>
           </div>
-          ${thumbsInsideStage ? "" : thumbsHtml}
+          ${!thumbsInsideStage && showThumbs ? thumbsHtml : ""}
         </div>`;
 }
 
@@ -816,7 +827,7 @@ ${howtoBlock}
       <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
         <div class="product-hero${isSubscription ? " product-hero--subscription" : ""}">
         <div class="product-hero__media">
-          ${productGalleryHtml(lang, true)}
+          ${productGalleryHtml(lang, !isSubscription, !isSubscription)}
         </div>
 ${productHeroAside}
         </div>
@@ -1498,7 +1509,7 @@ function bindProductShotsCarousel(): void {
   const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
   const stage = document.getElementById("product-gallery-stage");
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
-  if (!mainImg || !stage || thumbs.length < 1) return;
+  if (!mainImg || !stage) return;
 
   const slides = carouselSlides(detectUiLang());
   const n = slides.length;
