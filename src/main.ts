@@ -682,7 +682,7 @@ function productGalleryHtml(): string {
                     class="product-gallery__main-img"
                     src="${escapeHtml(firstSrc)}"
                     width="1024"
-                    height="819"
+                    height="576"
                     alt="${escapeHtml(first.alt)}"
                     decoding="async"
                     fetchpriority="high"

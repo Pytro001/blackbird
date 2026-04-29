@@ -1351,6 +1351,7 @@ body.subscription-view .product-gallery {
 
   /* 16:9 via padding-bottom — avoids Chrome flex + aspect-ratio sizing bugs */
   body.subscription-view .product-gallery__aspect {
+    display: block;
     position: relative;
     width: 100%;
     height: 0;
@@ -1378,11 +1379,11 @@ body.subscription-view .product-gallery {
 
   body.subscription-view .product-gallery__main-img {
     display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
     object-position: center;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0);
@@ -1427,7 +1428,7 @@ body.subscription-view .product-gallery__main {
   padding: 6px;
   border: none;
   aspect-ratio: 80 / 64;
-  border-radius: var(--radius-lg);
+  border-radius: 9999px;
   background: rgba(20, 20, 20, 0.18);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
   cursor: pointer;
@@ -1444,7 +1445,7 @@ body.subscription-view .product-gallery__main {
   height: 100%;
   object-fit: contain;
   vertical-align: top;
-  border-radius: calc(var(--radius-lg) - 6px);
+  border-radius: inherit;
 }
 
 .product-gallery__thumb:hover:not(.is-active) {
@@ -1571,6 +1572,7 @@ body.subscription-view .product-gallery__main {
   }
 
   body.subscription-view .product-gallery__aspect {
+    display: block;
     position: relative;
     width: 100%;
     height: 0;
@@ -1593,11 +1595,11 @@ body.subscription-view .product-gallery__main {
 
   body.subscription-view .product-gallery__main-img {
     display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
     object-position: center;
     border-radius: var(--radius-lg);
   }
@@ -1624,6 +1626,12 @@ body.subscription-view .product-gallery__main {
   .product-gallery__main-img {
     width: 100%;
     height: auto;
+  }
+
+  body.subscription-view .product-gallery__main-img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
   }
 }
 
