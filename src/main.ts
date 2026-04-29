@@ -1,5 +1,12 @@
 import { PageFlip } from "page-flip";
 
+import {
+  detectUiLang,
+  localizedFaqItems,
+  strings,
+  type UiLang,
+} from "./ui-lang";
+
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
   if (!(el instanceof HTMLDivElement)) throw new Error("#app missing");
@@ -20,21 +27,14 @@ function publicAssetUrl(path: string): string {
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
-/** Product image carousel: three slides (files in public/). */
-const PRODUCT_CAROUSEL_SLIDES: readonly { file: string; alt: string }[] = [
-  {
-    file: "product-slide-01.png",
-    alt: "blackbird: Daily Wash, After Wash, and Before Sleep bottles",
-  },
-  {
-    file: "product-slide-02.png",
-    alt: "blackbird After Wash: daily flake-free spray",
-  },
-  {
-    file: "product-slide-03.png",
-    alt: "blackbird Before Sleep: overnight care spray",
-  },
-];
+function carouselSlides(lang: UiLang): readonly { file: string; alt: string }[] {
+  const t = strings(lang);
+  return [
+    { file: "product-slide-01.png", alt: t.carouselAlt1 },
+    { file: "product-slide-02.png", alt: t.carouselAlt2 },
+    { file: "product-slide-03.png", alt: t.carouselAlt3 },
+  ];
+}
 
 /** 5-point star (clip-path), not circles — many quiet static specks (separate from the click star) */
 function cosmosFieldDustMotesHtml(): string {
@@ -256,12 +256,13 @@ function pdfManualAbsoluteUrl(): string {
   return new URL(path, window.location.origin).href;
 }
 
-function pdfManualModalHtml(): string {
+function pdfManualModalHtml(lang: UiLang): string {
+  const t = strings(lang);
   return `
     <div class="pdf-modal" id="pdf-manual-modal" hidden>
-      <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="Close manual"></button>
-      <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="blackbird user manual">
-        <button type="button" class="pdf-modal__close" id="pdf-manual-close" aria-label="Close">
+      <button type="button" class="pdf-modal__backdrop" id="pdf-manual-backdrop" aria-label="${escapeHtml(t.pdfBackdropClose)}"></button>
+      <div class="pdf-modal__sheet" role="dialog" aria-modal="true" aria-label="${escapeHtml(t.pdfDialogAria)}">
+        <button type="button" class="pdf-modal__close" id="pdf-manual-close" aria-label="${escapeHtml(t.pdfCloseBtn)}">
           <svg class="pdf-modal__close-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
             <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
           </svg>
@@ -270,11 +271,11 @@ function pdfManualModalHtml(): string {
           class="pdf-modal__embed"
           id="pdf-manual-embed"
           type="application/pdf"
-          title="blackbird user manual"
+          title="${escapeHtml(t.pdfManualTitleEmbed)}"
         />
         <p class="pdf-modal__pdf-actions">
           <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
-            >Open manual in new tab</a>
+            >${escapeHtml(t.pdfOpenNewTab)}</a>
         </p>
       </div>
     </div>`;
@@ -434,8 +435,8 @@ function formatArrivalDatePartInViewerLocale(
   }).format(d);
 }
 
-/** e.g. “Free Delivery Heute 22 Uhr, 22. April” in DE, “Free Delivery 今天 …” in zh, etc. */
-function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
+/** e.g. Free Delivery + date in visitor locale, or German “Kostenlos Versand …”. */
+function formatShippingArrivalLineHtml(lang: UiLang, nowMs: number = Date.now()): string {
   const { locale, timeZone } = viewerLocaleAndTimeZone();
   const now = new Date(nowMs);
   const arrival = new Date(nowMs + SHIPPING_ETA_LEAD_HOURS * 60 * 60 * 1000);
@@ -445,24 +446,29 @@ function formatShippingArrivalLineHtml(nowMs: number = Date.now()): string {
     ? todayLabelForLocale(locale)
     : new Intl.DateTimeFormat(locale, { timeZone, weekday: "long" }).format(arrival);
   const tail = `${dayWord} ${timeStr}, ${calPart}`;
-  return `<span class="product-shipping__free">Free</span> Delivery <span class="product-shipping__eta-datetime">${escapeHtml(tail)}</span>`;
+  const lead =
+    lang === "de"
+      ? '<span class="product-shipping__free">Kostenlos</span> Versand '
+      : '<span class="product-shipping__free">Free</span> Delivery ';
+  return `${lead}<span class="product-shipping__eta-datetime">${escapeHtml(tail)}</span>`;
 }
 
 function updateProductShippingEta(): void {
   const el = document.querySelector("#product-shipping-eta");
   if (!el) return;
-  el.innerHTML = formatShippingArrivalLineHtml();
+  el.innerHTML = formatShippingArrivalLineHtml(detectUiLang());
 }
 
-function whatsAppBlockHtml(): string {
+function whatsAppBlockHtml(lang: UiLang): string {
+  const t = strings(lang);
   return `
             <div class="product-wa-block" id="hair-analysis">
               <div class="product-wa-row">
                 <div class="product-wa-text">
-                  <p class="product-wa-headline">Get a free Dermatologist Check</p>
+                  <p class="product-wa-headline">${escapeHtml(t.whatsappBlockHeadline)}</p>
                   <p class="product-wa-desc">
-                    Our set is for dry flakes, if you are not sure if you have dry or oily flakes
-                    <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a> us.
+                    ${escapeHtml(t.whatsappBlockLeadBefore)}
+                    <a class="product-wa-link" href="${escapeHtml(WHATSAPP_CHAT_URL)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>${escapeHtml(t.whatsappBlockLeadAfter)}
                   </p>
                 </div>
                 <div class="product-wa-qr-column" aria-hidden="true">
@@ -534,69 +540,6 @@ function scrollToHashSection(): void {
   }
 }
 
-type ProductFaqPanelPlace = "above" | "below" | "left" | "right";
-
-type ProductFaqItem = {
-  id: string;
-  question: string;
-  pinLabel: string;
-  answer: string;
-  pinTop: string;
-  pinLeft: string;
-  panel: ProductFaqPanelPlace;
-};
-
-const PRODUCT_FAQ_ITEMS: readonly ProductFaqItem[] = [
-  {
-    id: "what-is",
-    question: "What is this?",
-    pinLabel: "What is this?",
-    answer:
-      "After my flight I opened my bag and found shampoo all over it. Never again.\n\nWe installed pump locks. Twist it to shut the spray when you are traveling.",
-    pinTop: "47%",
-    pinLeft: "23%",
-    panel: "below",
-  },
-  {
-    id: "two-bottles",
-    question: "Why two daily washes?",
-    pinLabel: "Why two daily washes?",
-    answer:
-      "Airport security once threw my shampoo away. Never again.\n\nBoth are 100ml, you can take them wherever you want.",
-    pinTop: "28%",
-    pinLeft: "38%",
-    panel: "above",
-  },
-  {
-    id: "why-spray",
-    question: "Why spray?",
-    pinLabel: "Why spray?",
-    answer:
-      "Spray gets the formula straight to your scalp. Same motion as hairspray and done in seconds.",
-    pinTop: "30%",
-    pinLeft: "77%",
-    panel: "above",
-  },
-];
-
-const PRODUCT_FAQ_SUBSCRIPTION_ITEM: ProductFaqItem = {
-  id: "subscription",
-  question: "Subscription",
-  pinLabel: "Subscription",
-  answer:
-    "Your scalp should have consistency. When your bottles run empty, we send the next full set.",
-  pinTop: "63%",
-  pinLeft: "80%",
-  panel: "above",
-};
-
-function productFaqItemsForMode(mode: LandingMode): readonly ProductFaqItem[] {
-  if (mode === "subscription") {
-    return [...PRODUCT_FAQ_ITEMS, PRODUCT_FAQ_SUBSCRIPTION_ITEM];
-  }
-  return PRODUCT_FAQ_ITEMS;
-}
-
 function closeAllProductFaqPanels(faq: HTMLElement): void {
   faq.querySelectorAll<HTMLButtonElement>(".product-faq__pin").forEach((btn) => {
     btn.setAttribute("aria-expanded", "false");
@@ -640,16 +583,19 @@ function productFaqAnswerHtml(answer: string): string {
     .join("");
 }
 
-function productGalleryHtml(thumbsInsideStage = false): string {
-  const n = PRODUCT_CAROUSEL_SLIDES.length;
-  const thumbs = PRODUCT_CAROUSEL_SLIDES.map((slide, i) => {
+function productGalleryHtml(lang: UiLang, thumbsInsideStage = false): string {
+  const t = strings(lang);
+  const slides = carouselSlides(lang);
+  const n = slides.length;
+  const thumbs = slides.map((slide, i) => {
     const src = publicAssetUrl(slide.file);
+    const ariaThumb = `${t.galleryThumbAria} ${i + 1} ${t.thumbAriaConnector} ${n}`;
     return `
             <button
               type="button"
               class="product-gallery__thumb${i === 0 ? " is-active" : ""}"
               data-gallery-index="${i}"
-              aria-label="${escapeHtml(`Product photo ${i + 1} of ${n}`)}"
+              aria-label="${escapeHtml(ariaThumb)}"
               aria-current="${i === 0 ? "true" : "false"}"
             >
               <img
@@ -663,9 +609,9 @@ function productGalleryHtml(thumbsInsideStage = false): string {
             </button>`;
   }).join("");
 
-  const first = PRODUCT_CAROUSEL_SLIDES[0];
+  const first = slides[0];
   const firstSrc = publicAssetUrl(first.file);
-  const thumbsHtml = `<div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>`;
+  const thumbsHtml = `<div class="product-gallery__thumbs" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbs}</div>`;
 
   return `
         <div class="product-gallery" id="product-gallery">
@@ -674,7 +620,7 @@ function productGalleryHtml(thumbsInsideStage = false): string {
               class="product-gallery__stage"
               id="product-gallery-stage"
               tabindex="0"
-              aria-label="Product photos. Drag horizontally to change image, or use thumbnails."
+              aria-label="${escapeHtml(t.galleryStageAria)}"
             >
               ${thumbsInsideStage ? thumbsHtml : ""}
               <div class="product-gallery__aspect">
@@ -698,8 +644,9 @@ function productGalleryHtml(thumbsInsideStage = false): string {
         </div>`;
 }
 
-function productFaqSectionHtml(mode: LandingMode): string {
-  const items = productFaqItemsForMode(mode);
+function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
+  const items = localizedFaqItems(mode === "subscription" ? "subscription" : "purchase", lang);
+  const t = strings(lang);
   const spots = items.map((item) => {
     const panelId = `product-faq-panel-${item.id}`;
     const btnId = `product-faq-btn-${item.id}`;
@@ -733,14 +680,14 @@ function productFaqSectionHtml(mode: LandingMode): string {
 
   return `
     <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
-      <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">FAQ</h2>
+      <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">${escapeHtml(t.faqHeading)}</h2>
       <div class="product-faq__figure">
         <img
           class="product-faq__img"
           src="${publicAssetUrl("faq-four-bottles.png")}"
           width="1024"
           height="576"
-          alt="blackbird set: two Daily Wash bottles, After Wash spray, and Before Sleep spray"
+          alt="${escapeHtml(t.faqImageAlt)}"
           decoding="async"
           loading="lazy"
         />
@@ -749,7 +696,8 @@ function productFaqSectionHtml(mode: LandingMode): string {
     </section>`;
 }
 
-function productEducationSectionHtml(): string {
+function productEducationSectionHtml(lang: UiLang): string {
+  const t = strings(lang);
   return `
     <section
       class="product-education"
@@ -757,31 +705,32 @@ function productEducationSectionHtml(): string {
       tabindex="-1"
       aria-labelledby="education-heading"
     >
-      <h2 id="education-heading" class="product-education__title product-education__title--script">Education</h2>
+      <h2 id="education-heading" class="product-education__title product-education__title--script">${escapeHtml(t.educationHeading)}</h2>
       <p class="product-education__lead">
-        There are two types of dandruff: oily and dry. You need to know which one you have to select the right products.
+        ${escapeHtml(t.educationLead)}
       </p>
       <div class="product-education__grid">
         <div class="product-education__card">
-          <h3 class="product-education__sub">Oily flakes</h3>
+          <h3 class="product-education__sub">${escapeHtml(t.educationOilyTitle)}</h3>
           <p class="product-education__text">
-            These are yellowish, greasy, and sticky. They stay on your scalp and hair. Your scalp makes too much oil and yeast grows too much.
+            ${escapeHtml(t.educationOilyText)}
           </p>
         </div>
         <div class="product-education__card">
-          <h3 class="product-education__sub">Dry flakes</h3>
+          <h3 class="product-education__sub">${escapeHtml(t.educationDryTitle)}</h3>
           <p class="product-education__text">
-            These are small white flakes that fall easily. Your scalp feels tight and itchy. Your scalp does not make enough oil and becomes too dry.
+            ${escapeHtml(t.educationDryText)}
           </p>
         </div>
       </div>
       <p class="product-education__stats">
-        Roughly 50% of adults experience dandruff at some point in their lives. In other words, one out of every two people you meet has likely dealt with it. Dandruff tends to appear after puberty and can persist throughout adulthood, often peaking between the ages of 20 and 40. The condition is slightly more common in men.
+        ${escapeHtml(t.educationStats)}
       </p>
     </section>`;
 }
 
-function homeHtml(mode: LandingMode = "subscription"): string {
+function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
+  const t = strings(lang);
   const isSubscription = mode === "subscription";
   const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
   const priceBlock = isSubscription
@@ -789,19 +738,19 @@ function homeHtml(mode: LandingMode = "subscription"): string {
     : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
   const returnsLine = isSubscription
     ? ""
-    : `<p class="product-shipping__returns"><span class="product-shipping__free">Free</span> 30 Days Return</p>`;
-  const buyLabel = isSubscription ? "Checkout" : "Buy";
+    : `<p class="product-shipping__returns">${t.returnLine}</p>`;
+  const buyLabel = isSubscription ? t.checkout : t.buy;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
-              <p class="product-subscription-refill">Every refill after ${escapeHtml(subscriptionRefillAfterDisplay)}</p>`
+              <p class="product-subscription-refill">${escapeHtml(t.refillAfterPrefix)} ${escapeHtml(subscriptionRefillAfterDisplay)}</p>`
     : "";
 
   const productBuyPanel = isSubscription
     ? `          <div class="product-panel product-panel--buy product-panel--buy-subscription">
             <div class="product-offer-card">
               <div class="product-identity product-identity--subscription">
-                <h2 class="product-name product-name--subscription">blackbird Men Dandruff Set</h2>
+                <h2 class="product-name product-name--subscription">${escapeHtml(t.productName)}</h2>
                 ${subscriptionPriceOnCard}
               </div>
               <div class="product-subscription-copy">
@@ -814,12 +763,12 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 id="buy-btn"
                 href="${escapeHtml(checkoutHref)}"
                 rel="noopener noreferrer"
-              >${buyLabel}</a>
+              >${escapeHtml(buyLabel)}</a>
             </div>
           </div>`
     : `          <div class="product-panel product-panel--buy">
             <div class="product-identity">
-            <h2 class="product-name">blackbird Men Dandruff Set</h2>
+            <h2 class="product-name">${escapeHtml(t.productName)}</h2>
             ${priceBlock}
             </div>
             <div class="product-shipping">
@@ -831,8 +780,8 @@ function homeHtml(mode: LandingMode = "subscription"): string {
               id="buy-btn"
               href="${escapeHtml(checkoutHref)}"
               rel="noopener noreferrer"
-            >${buyLabel}</a>
-            ${whatsAppBlockHtml()}
+            >${escapeHtml(buyLabel)}</a>
+            ${whatsAppBlockHtml(lang)}
           </div>`;
 
   return `
@@ -842,17 +791,17 @@ function homeHtml(mode: LandingMode = "subscription"): string {
       ${cosmosFieldPopstarsHtml()}
       ${cosmosFieldPlusSparklesHtml()}
     </div>
-    <div class="skip-links" role="navigation" aria-label="Skip links">
-      <a href="#education" class="skip-link">Skip to Education</a>
-      <a href="#site-footer" class="skip-link">Skip to legal information</a>
+    <div class="skip-links" role="navigation" aria-label="${escapeHtml(t.skipLegalNav)}">
+      <a href="#education" class="skip-link">${escapeHtml(t.skipEducation)}</a>
+      <a href="#site-footer" class="skip-link">${escapeHtml(t.skipLegalFooter)}</a>
     </div>
     <section class="hero-editorial">
       <div class="hero-editorial__title-wrap">
         <h1 class="hero-editorial__title">blackbird</h1>
       </div>
       <div class="hero-editorial__bottom">
-        <p class="hero-editorial__script">get flake free</p>
-        <button type="button" class="btn-pill" id="cta-now">Now</button>
+        <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
+        <button type="button" class="btn-pill" id="cta-now">${escapeHtml(t.heroNow)}</button>
       </div>
     </section>
 
@@ -862,36 +811,36 @@ ${
   isSubscription
     ? `        <div class="product-subscription-hero">
         <div class="product-shots-wrap">
-          ${productGalleryHtml(true)}
+          ${productGalleryHtml(lang, true)}
         </div>
 
-        <aside class="product-side" aria-label="Product details">
+        <aside class="product-side" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
           <div class="product-side-card">
 ${productBuyPanel}
-            ${whatsAppBlockHtml()}
+            ${whatsAppBlockHtml(lang)}
             <div class="product-panel product-panel--howto">
-              <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
+              <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
             </div>
           </div>
         </aside>
         </div>`
     : `        <div class="product-shots-wrap">
-          ${productGalleryHtml()}
+          ${productGalleryHtml(lang)}
         </div>
 
-        <aside class="product-side" aria-label="Product details">
+        <aside class="product-side" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
 ${productBuyPanel}
           <div class="product-panel product-panel--howto">
-            <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
+            <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
           </div>
         </aside>`
 }
       </main>
     </div>
-    ${productFaqSectionHtml(mode)}
-    ${productEducationSectionHtml()}
-    ${siteLegalFooterHtml()}
-    ${pdfManualModalHtml()}
+    ${productFaqSectionHtml(mode, lang)}
+    ${productEducationSectionHtml(lang)}
+    ${siteLegalFooterHtml(lang)}
+    ${pdfManualModalHtml(lang)}
     <div class="mission-star-dock" id="mission-star-dock">
       <div
         class="mission-star-bubble"
@@ -901,14 +850,14 @@ ${productBuyPanel}
         hidden
       >
         <p class="mission-star-bubble__text">
-          Every purchase helps two German guys to build tech to help humanity explore the universe.
+          ${escapeHtml(t.missionBubble)}
         </p>
       </div>
       <button
         type="button"
         class="mission-star"
         id="mission-star"
-        aria-label="Show a message from the team"
+        aria-label="${escapeHtml(t.missionStarAria)}"
         aria-expanded="false"
         aria-controls="mission-star-bubble"
       >
@@ -919,13 +868,14 @@ ${productBuyPanel}
   `;
 }
 
-function thanksHtml(): string {
+function thanksHtml(lang: UiLang): string {
+  const t = strings(lang);
   return `
     <div class="page-step page-thanks">
       <main class="step-main">
-        <h2 class="step-title">Thank you</h2>
-        <p class="step-lede">Your order is confirmed.</p>
-        <button type="button" class="btn-pill" id="thanks-home">Home</button>
+        <h2 class="step-title">${escapeHtml(t.thanksTitle)}</h2>
+        <p class="step-lede">${escapeHtml(t.thanksLede)}</p>
+        <button type="button" class="btn-pill" id="thanks-home">${escapeHtml(t.thanksHome)}</button>
       </main>
     </div>
   `;
@@ -944,23 +894,25 @@ function legalPageShell(title: string, body: string): string {
     </div>`;
 }
 
-function legalSupportFooterChunkHtml(): string {
+function legalSupportFooterChunkHtml(lang: UiLang): string {
+  const t = strings(lang);
   const iconSrc = escapeHtml(publicAssetUrl("whatsapp-icon.png"));
-  return `<span class="site-legal-footer__chunk site-legal-footer__chunk--support">Any open questions? Message our support on ${whatsappContactLinkHtml()} <img src="${iconSrc}" alt="" width="20" height="20" class="site-legal-footer__wa-icon" decoding="async" loading="lazy" /></span>`;
+  return `<span class="site-legal-footer__chunk site-legal-footer__chunk--support">${escapeHtml(t.footerSupportBefore)}${whatsappContactLinkHtml()} <img src="${iconSrc}" alt="" width="20" height="20" class="site-legal-footer__wa-icon" decoding="async" loading="lazy" /></span>`;
 }
 
-function siteLegalFooterHtml(): string {
+function siteLegalFooterHtml(lang: UiLang): string {
+  const t = strings(lang);
   const i = `${BASE_HREF}impressum`;
   const d = `${BASE_HREF}datenschutz`;
   return `
-    <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="Rechtliches">
+    <footer class="site-legal-footer" id="site-footer" tabindex="-1" aria-label="${escapeHtml(t.footerMetaAria)}">
       <p class="cosmos-void-trace" aria-hidden="true" title="Hello, empty space">·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·&nbsp;·</p>
       <div class="site-legal-footer__line site-legal-footer__line--meta">
-        ${legalSupportFooterChunkHtml()}
+        ${legalSupportFooterChunkHtml(lang)}
       </div>
-      <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="Rechtliche Hinweise">
-        <a href="${i}">Impressum</a>
-        <a href="${d}">Datenschutz</a>
+      <nav class="site-legal-footer__line site-legal-footer__nav" aria-label="${escapeHtml(t.footerNavAria)}">
+        <a href="${i}">${escapeHtml(t.legalFooterImpressum)}</a>
+        <a href="${d}">${escapeHtml(t.legalFooterPrivacy)}</a>
       </nav>
     </footer>`;
 }
@@ -1167,26 +1119,27 @@ function destroyManualPageFlip(): void {
   manualPageFlip = null;
 }
 
-function manualHtml(): string {
+function manualHtml(lang: UiLang): string {
+  const t = strings(lang);
   return `
     <div class="manual-page">
       <header class="manual-header">
-        <a href="${BASE_HREF}" class="manual-back">Back</a>
+        <a href="${BASE_HREF}" class="manual-back">${escapeHtml(t.manualBack)}</a>
       </header>
-      <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="Usage comic, click to turn pages">
+      <div class="manual-stage" id="manual-stage" tabindex="0" aria-label="${escapeHtml(t.manualStageAria)}">
         <div id="manual-book-host" class="manual-book-host"></div>
-        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="How to use blackbird: click anywhere to start">
+        <div class="manual-intro" id="manual-intro" role="button" tabindex="0" aria-label="${escapeHtml(t.manualIntroAria)}">
           <img class="manual-intro__preview" src="${publicAssetUrl("manual/page-01.svg")}?v=${MANUAL_PAGE_VER}" alt="" width="600" height="800" decoding="async" />
           <div class="manual-intro__dim" aria-hidden="true"></div>
           <div class="manual-intro__copy">
-            <h2 class="manual-intro__title">How to use blackbird</h2>
-            <p class="manual-intro__hint">Click anywhere to start</p>
+            <h2 class="manual-intro__title">${escapeHtml(t.manualIntroTitle)}</h2>
+            <p class="manual-intro__hint">${escapeHtml(t.manualIntroHint)}</p>
           </div>
         </div>
         <div class="manual-end" id="manual-end" hidden>
-          <p class="manual-end__lede">Ready to try blackbird®?</p>
-          <a class="manual-end__cta" href="${BASE_HREF}product">Get your set</a>
-          <button type="button" class="manual-end__again btn-pill" id="manual-restart">Start again</button>
+          <p class="manual-end__lede">${escapeHtml(t.manualEndLede)}</p>
+          <a class="manual-end__cta" href="${BASE_HREF}product">${escapeHtml(t.manualEndCta)}</a>
+          <button type="button" class="manual-end__again btn-pill" id="manual-restart">${escapeHtml(t.manualRestart)}</button>
         </div>
         <div class="manual-progress" id="manual-progress" aria-live="polite" hidden>1 / 7</div>
       </div>
@@ -1213,7 +1166,7 @@ function installManualEndTapOnce(): void {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "manual-end-tap";
-  btn.setAttribute("aria-label", "Continue");
+  btn.setAttribute("aria-label", strings(detectUiLang()).manualEndTapAria);
   stage.appendChild(btn);
   btn.addEventListener(
     "click",
@@ -1302,16 +1255,17 @@ function bindManual(): void {
     destroyManualPageFlip();
     removeManualEndTap();
     history.replaceState(null, "", `${BASE_HREF}how-to-use`);
-    root.innerHTML = manualHtml();
+    root.innerHTML = manualHtml(detectUiLang());
     bindManual();
   });
 
   document.getElementById("manual-stage")?.addEventListener("keydown", manualStageKeydown);
 }
 
-function setDocumentLang(view: View): void {
-  const de = view === "impressum" || view === "datenschutz";
-  document.documentElement.lang = de ? "de" : "en";
+function setDocumentLang(view: View, uiLang: UiLang): void {
+  const legalGerman = view === "impressum" || view === "datenschutz";
+  document.documentElement.lang =
+    legalGerman ? "de" : uiLang === "de" ? "de" : "en";
 }
 
 function render(): void {
@@ -1339,14 +1293,15 @@ function render(): void {
   }
 
   const view = pathToView();
-  setDocumentLang(view);
+  const uiLang = detectUiLang();
+  setDocumentLang(view, uiLang);
   /* Theme/layout flags must run before bindProduct(): gallery height uses subscription-view */
   document.body.classList.toggle("subscription-view", view === "subscription");
   document.body.classList.toggle("legal-page-view", view === "impressum" || view === "datenschutz");
 
   if (view === "product" || view === "subscription") {
     const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
-    root.innerHTML = homeHtml(landingMode);
+    root.innerHTML = homeHtml(uiLang, landingMode);
     bindLanding();
     bindProduct();
     const scrollProduct =
@@ -1361,10 +1316,10 @@ function render(): void {
       requestAnimationFrame(() => scrollToHashSection());
     }
   } else if (view === "manual") {
-    root.innerHTML = manualHtml();
+    root.innerHTML = manualHtml(uiLang);
     bindManual();
   } else if (view === "thanks") {
-    root.innerHTML = thanksHtml();
+    root.innerHTML = thanksHtml(uiLang);
   } else if (view === "impressum") {
     root.innerHTML = impressumHtml();
     if (location.hash === "#shop-agb" || location.hash === "#shop-widerruf") {
@@ -1559,14 +1514,15 @@ function bindProductShotsCarousel(): void {
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
   if (!mainImg || !stage || thumbs.length < 1) return;
 
-  const n = PRODUCT_CAROUSEL_SLIDES.length;
+  const slides = carouselSlides(detectUiLang());
+  const n = slides.length;
   let index = 0;
 
   const show = (i: number): void => {
     if (!Number.isFinite(i) || n < 1) return;
     const next = Math.max(0, Math.min(n - 1, Math.round(i)));
     index = next;
-    const slide = PRODUCT_CAROUSEL_SLIDES[index];
+    const slide = slides[index];
     mainImg.src = publicAssetUrl(slide.file);
     mainImg.alt = slide.alt;
     thumbs.forEach((btn, j) => {
