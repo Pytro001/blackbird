@@ -2059,6 +2059,18 @@ body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
   }
 }
 
+@media (max-width: 520px) {
+  .product-faq__heading--script {
+    font-size: clamp(2.05rem, 9.2vw, 2.55rem);
+    line-height: 1.08;
+  }
+
+  .product-education__title--script {
+    font-size: clamp(1.75rem, 8vw, 2.15rem);
+    line-height: 1.12;
+  }
+}
+
 .product-faq__figure {
   position: relative;
   max-width: min(960px, 100%);
