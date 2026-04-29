@@ -1603,7 +1603,7 @@ function bindProductGalleryThumbPeek(): void {
   let hideTimer: number | undefined;
   let pressShowAt = 0;
   const initialHideMs = 2800;
-  const afterReleaseHideMs = 420;
+  const afterReleaseHideMs = 1420;
   const minVisibleAfterPressMs = 320;
 
   const clearHide = (): void => {
