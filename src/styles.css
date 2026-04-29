@@ -3203,6 +3203,104 @@ body.legal-page-view .site-legal-footer__sep {
   border: 0;
 }
 
+/* Tap / click to open full-screen zoom (phone + desktop); pinch & scroll inside */
+img.image-zoomable {
+  cursor: zoom-in;
+}
+
+.product-gallery__slide-img.image-zoomable,
+.product-gallery__main-img.image-zoomable {
+  pointer-events: auto;
+}
+
+body.subscription-view .product-gallery__slide-img.image-zoomable {
+  pointer-events: auto;
+  cursor: zoom-in;
+}
+
+.product-faq__img.image-zoomable {
+  cursor: zoom-in;
+}
+
+.image-zoom-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10100;
+}
+
+.image-zoom-lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: rgba(0, 0, 0, 0.9);
+  cursor: zoom-out;
+}
+
+.image-zoom-lightbox__shell {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+    max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+  pointer-events: none;
+}
+
+.image-zoom-lightbox__close {
+  position: absolute;
+  top: max(0.5rem, env(safe-area-inset-top));
+  right: max(0.5rem, env(safe-area-inset-right));
+  z-index: 2;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.65);
+  color: var(--white);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.image-zoom-lightbox__close:hover {
+  background: rgba(40, 40, 40, 0.85);
+}
+
+.image-zoom-lightbox__scroll {
+  pointer-events: auto;
+  max-width: min(96vw, 100%);
+  max-height: min(90dvh, 100%);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y pinch-zoom;
+  border-radius: clamp(6px, 1vw, 10px);
+}
+
+.image-zoom-lightbox__img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: none;
+  margin: 0 auto;
+}
+
+@media (max-width: 839px) {
+  .image-zoom-lightbox__scroll {
+    max-height: min(88dvh, 100%);
+  }
+}
+
 @media (max-width: 360px) {
   .hero-editorial__script {
     white-space: normal;

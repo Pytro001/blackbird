@@ -196,6 +196,7 @@ let shippingEtaRefreshTimer: number | undefined;
 let productGalleryAsideHeightCleanup: (() => void) | undefined;
 let missionStarDocumentClickUnbind: (() => void) | undefined;
 let productFaqDocumentClickUnbind: (() => void) | undefined;
+let imageZoomClickBound = false;
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -663,7 +664,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                         return `
                     <figure class="product-gallery__slide-figure">
                       <img
-                        class="product-gallery__slide-img"
+                        class="product-gallery__slide-img image-zoomable"
                         src="${escapeHtml(srcSlide)}"
                         width="1024"
                         height="658"
@@ -686,7 +687,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                 <figure class="product-gallery__figure">
                   <img
                     id="product-gallery-main-img"
-                    class="product-gallery__main-img"
+                    class="product-gallery__main-img image-zoomable"
                     src="${escapeHtml(firstSrc)}"
                     width="1024"
                     height="658"
@@ -762,7 +763,7 @@ function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
       <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">${escapeHtml(t.faqHeading)}</h2>
       <div class="product-faq__figure">
         <img
-          class="product-faq__img"
+          class="product-faq__img image-zoomable"
           src="${publicAssetUrl("faq-four-bottles.png")}"
           width="1024"
           height="576"
@@ -1421,6 +1422,65 @@ function render(): void {
   if (view === "thanks") bindThanks();
 }
 
+function ensureImageZoomLightbox(): void {
+  if (document.getElementById("image-zoom-lightbox")) return;
+  const t = strings(detectUiLang());
+  const wrap = document.createElement("div");
+  wrap.id = "image-zoom-lightbox";
+  wrap.className = "image-zoom-lightbox";
+  wrap.setAttribute("hidden", "");
+  wrap.setAttribute("role", "dialog");
+  wrap.setAttribute("aria-modal", "true");
+  wrap.innerHTML = `
+    <button type="button" class="image-zoom-lightbox__backdrop" aria-label="${escapeHtml(t.pdfCloseBtn)}"></button>
+    <div class="image-zoom-lightbox__shell">
+      <button type="button" class="image-zoom-lightbox__close" aria-label="${escapeHtml(t.pdfCloseBtn)}">×</button>
+      <div class="image-zoom-lightbox__scroll">
+        <img id="image-zoom-lightbox-img" class="image-zoom-lightbox__img" alt="" decoding="async" />
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  wrap.querySelector(".image-zoom-lightbox__backdrop")?.addEventListener("click", closeImageZoomLightbox);
+  wrap.querySelector(".image-zoom-lightbox__close")?.addEventListener("click", closeImageZoomLightbox);
+}
+
+function openImageZoomLightbox(src: string, alt: string): void {
+  ensureImageZoomLightbox();
+  const root = document.getElementById("image-zoom-lightbox");
+  const img = document.getElementById("image-zoom-lightbox-img") as HTMLImageElement | null;
+  if (!root || !img) return;
+  img.src = src;
+  img.alt = alt;
+  root.removeAttribute("hidden");
+  document.body.style.overflow = "hidden";
+  (root.querySelector(".image-zoom-lightbox__close") as HTMLButtonElement | null)?.focus();
+}
+
+function closeImageZoomLightbox(): void {
+  const root = document.getElementById("image-zoom-lightbox");
+  if (root) root.setAttribute("hidden", "");
+  document.body.style.overflow = "";
+}
+
+function onImageZoomLightboxClick(e: MouseEvent): void {
+  const t = e.target;
+  if (!(t instanceof Element)) return;
+  if (t.closest("#image-zoom-lightbox")) return;
+  const imgEl = t.closest("img.image-zoomable");
+  if (!imgEl || !(imgEl instanceof HTMLImageElement)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  openImageZoomLightbox(imgEl.currentSrc || imgEl.src, imgEl.alt || "");
+}
+
+function bindImageZoomLightbox(): void {
+  ensureImageZoomLightbox();
+  if (imageZoomClickBound) return;
+  imageZoomClickBound = true;
+  document.body.addEventListener("click", onImageZoomLightboxClick);
+}
+
 function bindProduct(): void {
   document.getElementById("cta-now")?.addEventListener("click", () => {
     scrollToProduct("smooth");
@@ -1440,6 +1500,7 @@ function bindProduct(): void {
 
   bindProductShotsCarousel();
   bindProductGalleryAsideHeight();
+  bindImageZoomLightbox();
   bindProductFaq();
   bindMissionStar();
   updateProductShippingEta();
@@ -1775,6 +1836,12 @@ window.addEventListener("hashchange", () => {
 
 document.addEventListener("keydown", (e: KeyboardEvent) => {
   if (e.key !== "Escape") return;
+  const zoomLb = document.getElementById("image-zoom-lightbox");
+  if (zoomLb && !zoomLb.hasAttribute("hidden")) {
+    e.preventDefault();
+    closeImageZoomLightbox();
+    return;
+  }
   if (closeMissionStarBubble()) {
     e.preventDefault();
     return;
