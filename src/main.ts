@@ -178,6 +178,7 @@ let pdfModalCloseTimer: number | undefined;
 let shippingEtaRefreshTimer: number | undefined;
 let productGalleryAsideHeightCleanup: (() => void) | undefined;
 let missionStarDocumentClickUnbind: (() => void) | undefined;
+let productFaqDocumentClickUnbind: (() => void) | undefined;
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -1319,6 +1320,8 @@ function render(): void {
   removeManualEndTap();
   missionStarDocumentClickUnbind?.();
   missionStarDocumentClickUnbind = undefined;
+  productFaqDocumentClickUnbind?.();
+  productFaqDocumentClickUnbind = undefined;
   const path = getAppPath();
   const wasEmailPath = path === "/email";
   if (wasEmailPath) {
@@ -1504,6 +1507,8 @@ function bindMissionStar(): void {
 }
 
 function bindProductFaq(): void {
+  productFaqDocumentClickUnbind?.();
+  productFaqDocumentClickUnbind = undefined;
   const faq = document.getElementById("product-faq");
   if (!faq) return;
   faq.addEventListener("click", (e: Event) => {
@@ -1521,6 +1526,20 @@ function bindProductFaq(): void {
       clampFaqPanelToViewport(panel);
     }
   });
+
+  const onDocumentClick = (e: MouseEvent): void => {
+    if (!faq.querySelector('.product-faq__pin[aria-expanded="true"]')) return;
+    const t = e.target;
+    if (t == null || !(t instanceof Node)) return;
+    const el = t instanceof Element ? t : t.parentElement;
+    if (!el) return;
+    if (el.closest(".product-faq__pin") || el.closest(".product-faq__panel")) return;
+    closeAllProductFaqPanels(faq);
+  };
+  document.addEventListener("click", onDocumentClick);
+  productFaqDocumentClickUnbind = () => {
+    document.removeEventListener("click", onDocumentClick);
+  };
 }
 
 const PRODUCT_GALLERY_SWIPE_MIN_PX = 48;
