@@ -640,7 +640,7 @@ function productFaqAnswerHtml(answer: string): string {
     .join("");
 }
 
-function productGalleryHtml(): string {
+function productGalleryHtml(thumbsInsideStage = false): string {
   const n = PRODUCT_CAROUSEL_SLIDES.length;
   const thumbs = PRODUCT_CAROUSEL_SLIDES.map((slide, i) => {
     const src = publicAssetUrl(slide.file);
@@ -665,10 +665,10 @@ function productGalleryHtml(): string {
 
   const first = PRODUCT_CAROUSEL_SLIDES[0];
   const firstSrc = publicAssetUrl(first.file);
+  const thumbsHtml = `<div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>`;
 
   return `
         <div class="product-gallery" id="product-gallery">
-          <div class="product-gallery__thumbs" role="list" aria-label="Product photo thumbnails">${thumbs}</div>
           <div class="product-gallery__main">
             <div
               class="product-gallery__stage"
@@ -676,6 +676,7 @@ function productGalleryHtml(): string {
               tabindex="0"
               aria-label="Product photos. Drag horizontally to change image, or use thumbnails."
             >
+              ${thumbsInsideStage ? thumbsHtml : ""}
               <div class="product-gallery__aspect">
                 <figure class="product-gallery__figure">
                   <img
@@ -693,6 +694,7 @@ function productGalleryHtml(): string {
               </div>
             </div>
           </div>
+          ${thumbsInsideStage ? "" : thumbsHtml}
         </div>`;
 }
 
@@ -813,7 +815,6 @@ function homeHtml(mode: LandingMode = "subscription"): string {
                 href="${escapeHtml(checkoutHref)}"
                 rel="noopener noreferrer"
               >${buyLabel}</a>
-              ${whatsAppBlockHtml()}
             </div>
           </div>`
     : `          <div class="product-panel product-panel--buy">
@@ -861,12 +862,13 @@ ${
   isSubscription
     ? `        <div class="product-subscription-hero">
         <div class="product-shots-wrap">
-          ${productGalleryHtml()}
+          ${productGalleryHtml(true)}
         </div>
 
         <aside class="product-side" aria-label="Product details">
           <div class="product-side-card">
 ${productBuyPanel}
+            ${whatsAppBlockHtml()}
             <div class="product-panel product-panel--howto">
               <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
             </div>

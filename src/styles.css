@@ -146,7 +146,7 @@ body.subscription-view .product-identity--subscription {
 }
 
 body.subscription-view .product-name--subscription {
-  font-size: clamp(1.0rem, 2.5vw, 1.2rem);
+  font-size: clamp(1.08rem, 2.6vw, 1.28rem);
   line-height: 1.2;
   letter-spacing: 0.025em;
   white-space: nowrap;
@@ -271,7 +271,7 @@ body.subscription-view .product-offer-card .product-shipping__eta-datetime {
   color: inherit;
 }
 
-body.subscription-view .product-offer-card .product-wa-headline {
+body.subscription-view .product-wa-headline {
   color: var(--white);
   font-weight: 500;
   font-size: clamp(0.9rem, 2.4vw, 1rem);
@@ -280,29 +280,29 @@ body.subscription-view .product-offer-card .product-wa-headline {
   text-overflow: ellipsis;
 }
 
-body.subscription-view .product-offer-card .product-wa-desc {
+body.subscription-view .product-wa-desc {
   color: rgba(245, 245, 245, 0.9);
   font-weight: 400;
   font-size: clamp(0.78rem, 2.05vw, 0.88rem);
 }
 
-body.subscription-view .product-offer-card .product-wa-link {
+body.subscription-view .product-wa-link {
   color: var(--white);
   font-weight: 400;
   text-decoration-color: rgba(245, 245, 245, 0.45);
 }
 
-body.subscription-view .product-offer-card .product-wa-link:hover {
+body.subscription-view .product-wa-link:hover {
   color: var(--white);
   text-decoration-color: rgba(245, 245, 245, 0.45);
 }
 
-body.subscription-view .product-offer-card .product-wa-link:focus-visible {
+body.subscription-view .product-wa-link:focus-visible {
   color: var(--white);
   text-decoration-color: rgba(245, 245, 245, 0.65);
 }
 
-body.subscription-view .product-offer-card .product-wa-qr__img {
+body.subscription-view .product-wa-qr__img {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: var(--white);
 }
@@ -1381,6 +1381,7 @@ body.subscription-view .product-gallery {
 @media (min-width: 840px) {
   body.subscription-view .product-gallery__stage {
     display: block;
+    position: relative;
     width: 100%;
     /* Do not flex-grow: a tall aside stretches the gallery column; growing the stage
        breaks the padding-bottom 14:9 box and leaves a huge empty band under the image. */
