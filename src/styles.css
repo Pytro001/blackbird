@@ -1414,7 +1414,6 @@ body.subscription-view .product-gallery {
   left: 50%;
   top: auto;
   right: auto;
-  transform: translateX(-50%);
   z-index: 7;
   flex-direction: row;
   align-items: center;
@@ -1422,6 +1421,25 @@ body.subscription-view .product-gallery {
   width: auto;
   max-width: calc(100% - 1.25rem);
   max-height: none;
+  transition:
+    opacity 0.38s cubic-bezier(0.32, 0.72, 0.25, 1),
+    transform 0.38s cubic-bezier(0.32, 0.72, 0.25, 1);
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px);
+  pointer-events: none;
+}
+
+.product-gallery__stage > .product-gallery__thumbs--subscription.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* Hidden strip must not intercept taps meant for the image (children default to pointer-events: auto). */
+.product-gallery__stage
+  > .product-gallery__thumbs--subscription:not(.is-visible)
+  .product-gallery__thumb {
+  pointer-events: none;
 }
 
 @media (min-width: 840px) {
@@ -1838,6 +1856,11 @@ body.subscription-view .product-gallery__thumb img {
 
 @media (prefers-reduced-motion: reduce) {
   body.subscription-view .product-gallery__track--smooth {
+    transition-duration: 0.06ms;
+    transition-timing-function: linear;
+  }
+
+  .product-gallery__stage > .product-gallery__thumbs--subscription {
     transition-duration: 0.06ms;
     transition-timing-function: linear;
   }

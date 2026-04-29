@@ -194,6 +194,7 @@ let pdfModalBodyLocked = false;
 let pdfModalCloseTimer: number | undefined;
 let shippingEtaRefreshTimer: number | undefined;
 let productGalleryAsideHeightCleanup: (() => void) | undefined;
+let productGalleryThumbPeekCleanup: (() => void) | undefined;
 let missionStarDocumentClickUnbind: (() => void) | undefined;
 let productFaqDocumentClickUnbind: (() => void) | undefined;
 let imageZoomClickBound = false;
@@ -635,7 +636,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
       : "";
 
   const thumbsClass =
-    `product-gallery__thumbs${o.thumbsVariant === "subscription" ? " product-gallery__thumbs--subscription" : ""}`.trim();
+    `product-gallery__thumbs${o.thumbsVariant === "subscription" ? " product-gallery__thumbs--subscription is-visible" : ""}`.trim();
   const thumbsHtml = o.showThumbs
     ? `<div class="${thumbsClass}" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbButtons}</div>`
     : "";
@@ -1353,6 +1354,8 @@ function render(): void {
   shippingEtaRefreshTimer = undefined;
   productGalleryAsideHeightCleanup?.();
   productGalleryAsideHeightCleanup = undefined;
+  productGalleryThumbPeekCleanup?.();
+  productGalleryThumbPeekCleanup = undefined;
   closePdfManualModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
@@ -1500,6 +1503,7 @@ function bindProduct(): void {
 
   bindProductShotsCarousel();
   bindProductGalleryAsideHeight();
+  bindProductGalleryThumbPeek();
   bindImageZoomLightbox();
   bindProductFaq();
   bindMissionStar();
@@ -1552,6 +1556,68 @@ function bindProductGalleryAsideHeight(): void {
     gallery.style.removeProperty("height");
     gallery.style.removeProperty("width"); // clear any leftover from earlier versions
     gallery.classList.remove("product-gallery--match-aside");
+  };
+}
+
+/** Subscription: thumbs peek on load, hide until pointer down; show while interacting, hide after release. */
+function bindProductGalleryThumbPeek(): void {
+  productGalleryThumbPeekCleanup?.();
+  const thumbs = document.querySelector<HTMLElement>(
+    ".product-gallery__thumbs--subscription",
+  );
+  const stage = document.getElementById("product-gallery-stage");
+  if (!thumbs || !stage) return;
+
+  let hideTimer: number | undefined;
+  let pressShowAt = 0;
+  const initialHideMs = 2800;
+  const afterReleaseHideMs = 420;
+  const minVisibleAfterPressMs = 320;
+
+  const clearHide = (): void => {
+    if (hideTimer !== undefined) {
+      window.clearTimeout(hideTimer);
+      hideTimer = undefined;
+    }
+  };
+
+  const show = (): void => {
+    thumbs.classList.add("is-visible");
+  };
+
+  const scheduleHide = (delay: number): void => {
+    clearHide();
+    hideTimer = window.setTimeout(() => {
+      hideTimer = undefined;
+      thumbs.classList.remove("is-visible");
+    }, delay);
+  };
+
+  const onPointerDown = (): void => {
+    pressShowAt = performance.now();
+    clearHide();
+    show();
+  };
+
+  const onPointerUp = (): void => {
+    const elapsed = performance.now() - pressShowAt;
+    const wait =
+      Math.max(0, minVisibleAfterPressMs - elapsed) + afterReleaseHideMs;
+    scheduleHide(wait);
+  };
+
+  scheduleHide(initialHideMs);
+
+  const opts = { capture: true } as const;
+  stage.addEventListener("pointerdown", onPointerDown, opts);
+  stage.addEventListener("pointerup", onPointerUp, opts);
+  stage.addEventListener("pointercancel", onPointerUp, opts);
+
+  productGalleryThumbPeekCleanup = () => {
+    clearHide();
+    stage.removeEventListener("pointerdown", onPointerDown, opts);
+    stage.removeEventListener("pointerup", onPointerUp, opts);
+    stage.removeEventListener("pointercancel", onPointerUp, opts);
   };
 }
 
