@@ -26,9 +26,12 @@ const copy = {
     dermatologistAriaLabel: "Dermatologist check via WhatsApp",
 
     carouselAlt1:
-      "blackbird: Daily Wash, After Wash, and Before Sleep bottles",
+      "blackbird Men lineup: Daily Wash, Before Sleep, After Wash bottles",
     carouselAlt2: "blackbird After Wash: daily flake-free spray",
-    carouselAlt3: "blackbird Before Sleep: overnight care spray",
+    carouselAlt3:
+      "blackbird Daily Wash pair: two flake-free shampoo pump bottles",
+    carouselAlt4:
+      "blackbird brand frame: Before Sleep Overnight care typography",
 
     galleryThumbnailsAria: "Product photo thumbnails",
     galleryStageAria:
@@ -112,9 +115,11 @@ const copy = {
     dermatologistAriaLabel: "Hautärztlicher Check über WhatsApp",
 
     carouselAlt1:
-      "blackbird: Daily Wash, After Wash und Before Sleep Flaschen",
+      "blackbird Men Reihe: Daily Wash, Before Sleep und After Wash",
     carouselAlt2: "blackbird After Wash: tägliches Anti-Schuppen-Spray",
-    carouselAlt3: "blackbird Before Sleep: Pflege über Nacht",
+    carouselAlt3:
+      "blackbird Daily Wash Duo: zwei tägliche Anti-Schuppen-Shampoo-Pumpflaschen",
+    carouselAlt4: "blackbird Markenmotiv Before Sleep Typography",
 
     galleryThumbnailsAria: "Produktfotos (Vorschau)",
     galleryStageAria:

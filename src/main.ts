@@ -33,6 +33,7 @@ function carouselSlides(lang: UiLang): readonly { file: string; alt: string }[] 
     { file: "product-slide-01.png", alt: t.carouselAlt1 },
     { file: "product-slide-02.png", alt: t.carouselAlt2 },
     { file: "product-slide-03.png", alt: t.carouselAlt3 },
+    { file: "product-slide-04.png", alt: t.carouselAlt4 },
   ];
 }
 
