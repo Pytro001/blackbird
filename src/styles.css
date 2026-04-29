@@ -23,6 +23,8 @@
   --result-no: var(--gray-400);
   --radius: 12px;
   --radius-lg: 18px;
+  /* Hero gallery image box (1024×658 sources); padding-bottom % */
+  --subscription-gallery-aspect-pad: calc(658 / 1024 * 100%);
   /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
   --font: "Diatype", "Inter", system-ui, -apple-system, sans-serif;
   /* Hero “blackbird” wordmark — previous site font */
@@ -1183,7 +1185,7 @@ body.subscription-view .cosmos-field__shoot {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(1rem, 3vw, 1.35rem);
+    gap: clamp(1.2rem, 3.5vw, 1.65rem);
     width: 100%;
     box-sizing: border-box;
     padding: 0;
@@ -1191,7 +1193,14 @@ body.subscription-view .cosmos-field__shoot {
     border-radius: 0;
     background: transparent;
   }
+
+  body.subscription-view .product-side {
+    max-width: 100%;
+    width: 100%;
+    align-self: stretch;
+  }
 }
+
 .product-shots-wrap {
   min-width: 0;
   width: 100%;
@@ -1241,7 +1250,7 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 body.subscription-view .product-gallery {
-  max-width: min(640px, 100%);
+  max-width: 100%;
 }
 
 @media (min-width: 840px) {
@@ -1380,11 +1389,12 @@ body.subscription-view .product-gallery {
 
 @media (min-width: 840px) {
   body.subscription-view .product-gallery__stage {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
     position: relative;
     width: 100%;
-    /* Do not flex-grow: a tall aside stretches the gallery column; growing the stage
-       breaks the padding-bottom 14:9 box and leaves a huge empty band under the image. */
     flex: 0 0 auto;
     flex-grow: 0 !important;
     min-height: 0;
@@ -1397,17 +1407,40 @@ body.subscription-view .product-gallery {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
   }
 
-  /* Exact 1024×658 AR via padding-bottom — avoids Chrome flex + aspect-ratio sizing bugs */
+  body.subscription-view .product-gallery__thumbs {
+    order: 2;
+    position: static;
+    left: auto;
+    top: auto;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex: 0 0 auto;
+    min-width: 0;
+    padding: 0.35rem 0.5rem 0.55rem;
+    gap: clamp(0.45rem, 1vw, 0.65rem);
+    overflow-x: auto;
+    overflow-y: visible;
+    z-index: 2;
+    pointer-events: none;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
   body.subscription-view .product-gallery__aspect {
+    order: 1;
     display: block;
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: calc(658 / 1024 * 100%);
+    padding-bottom: var(--subscription-gallery-aspect-pad);
     flex: none;
     flex-shrink: 0;
     overflow: hidden;
-    border-radius: inherit;
+    border-radius: 0;
     contain: layout style;
   }
 
@@ -1435,6 +1468,43 @@ body.subscription-view .product-gallery {
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0);
     box-sizing: border-box;
+  }
+
+  body.subscription-view .product-gallery__thumb {
+    flex-shrink: 0;
+    width: clamp(3rem, 4.8vw, 4.35rem);
+    max-width: none;
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: var(--radius);
+    opacity: 0.85;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  body.subscription-view .product-gallery__thumb.is-active {
+    opacity: 1;
+    box-shadow:
+      0 4px 14px rgba(0, 0, 0, 0.42),
+      0 0 0 2px rgba(255, 255, 255, 0.45);
+  }
+
+  body.subscription-view .product-gallery__thumb:hover:not(.is-active) {
+    opacity: 0.95;
+  }
+
+  body.subscription-view .product-gallery__main {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    align-self: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -1542,13 +1612,6 @@ body.subscription-view .product-gallery__thumb img {
     box-sizing: border-box;
   }
 
-  body.subscription-view .product-gallery__thumbs {
-    flex: 0 0 auto;
-  }
-}
-
-/* Subscription: thumbs overlaid on left of image — gallery fills full width */
-@media (min-width: 840px) {
   body.subscription-view .product-gallery {
     flex-direction: column;
     align-items: stretch;
@@ -1556,55 +1619,6 @@ body.subscription-view .product-gallery__thumb img {
     width: 100%;
     max-width: none;
     gap: 0;
-  }
-
-  body.subscription-view .product-gallery__thumbs {
-    position: absolute;
-    left: 0.75rem;
-    top: 0.75rem;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    width: auto;
-    flex: none;
-    z-index: 3;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: visible;
-    padding: 0;
-    gap: 0.5rem;
-  }
-
-  body.subscription-view .product-gallery__thumb {
-    width: clamp(3.8rem, 5.2vw, 5.5rem);
-    min-width: 3.8rem;
-    max-width: none;
-    box-sizing: border-box;
-    padding: 4px;
-    border-radius: var(--radius);
-    opacity: 0.78;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: opacity 0.15s ease, box-shadow 0.15s ease;
-  }
-
-  body.subscription-view .product-gallery__thumb.is-active {
-    opacity: 1;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.55);
-  }
-
-  body.subscription-view .product-gallery__thumb:hover:not(.is-active) {
-    opacity: 0.92;
-  }
-
-  body.subscription-view .product-gallery__main {
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 0;
-    height: auto;
-    align-self: stretch;
-    justify-content: flex-start;
-    width: 100%;
-    max-width: 100%;
   }
 }
 
@@ -1617,27 +1631,48 @@ body.subscription-view .product-gallery__thumb img {
     flex-direction: column;
   }
 
+  body.subscription-view .product-gallery__stage {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-sizing: border-box;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
+  }
+
   body.subscription-view .product-gallery__thumbs {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    z-index: 3;
     flex-direction: column;
+    flex-wrap: nowrap;
     align-items: flex-start;
     align-self: flex-start;
     width: auto;
-    max-width: 100%;
-    overflow-x: visible;
-    gap: clamp(0.35rem, 2.5vw, 0.55rem);
-    padding: 0 0 0.5rem;
+    max-width: min(42%, calc(100% - 1.3rem));
+    margin: 0;
+    padding: 0;
+    gap: 0.4rem;
+    overflow: visible;
+    pointer-events: none;
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(4.5rem, 40vw, 7.5rem);
-    min-width: 4.25rem;
-    padding: 9px;
+    width: clamp(2.75rem, 20vw, 3.65rem);
+    min-width: 44px;
+    min-height: 44px;
+    max-width: none;
+    box-sizing: border-box;
+    padding: 5px;
+    opacity: 0.9;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.14);
   }
 
-  body.subscription-view .product-gallery__stage {
-    display: block;
-    width: 100%;
-    overflow: hidden;
+  body.subscription-view .product-gallery__thumb.is-active {
+    opacity: 1;
   }
 
   body.subscription-view .product-gallery__aspect {
@@ -1645,7 +1680,7 @@ body.subscription-view .product-gallery__thumb img {
     position: relative;
     width: 100%;
     height: 0;
-    padding-bottom: calc(658 / 1024 * 100%);
+    padding-bottom: var(--subscription-gallery-aspect-pad);
     flex: none;
     overflow: hidden;
     border-radius: inherit;
