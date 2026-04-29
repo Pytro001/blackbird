@@ -1149,7 +1149,7 @@ body.subscription-view .cosmos-field__shoot {
     grid-template-columns: max-content max-content;
     justify-content: center;
     align-items: start;
-    gap: clamp(2rem, 4.5vw, 3rem);
+    gap: clamp(1.15rem, 2.4vw, 1.65rem);
     width: auto;
     max-width: 100%;
     margin-inline: auto;
@@ -1162,6 +1162,7 @@ body.subscription-view .cosmos-field__shoot {
 
   .product-hero:not(.product-hero--subscription) > .product-side {
     align-self: start;
+    margin-top: clamp(1.35rem, 3.5vw, 2.25rem);
   }
 }
 
@@ -1272,6 +1273,12 @@ body.subscription-view .cosmos-field__shoot {
   box-sizing: border-box;
 }
 
+@media (min-width: 840px) {
+  body:not(.subscription-view) .product-gallery {
+    max-width: min(760px, 66vw);
+  }
+}
+
 body.subscription-view .product-gallery {
   max-width: 100%;
 }
@@ -1309,18 +1316,19 @@ body.subscription-view .product-gallery {
   top: clamp(0.45rem, 1.2vw, 0.85rem);
   left: clamp(0.45rem, 1.2vw, 0.85rem);
   z-index: 5;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   align-self: flex-start;
   width: auto;
-  max-width: min(75%, calc(100% - 0.9rem));
+  max-width: min(34%, calc(100% - 0.9rem));
+  max-height: min(70%, calc(100% - 0.9rem));
   margin: 0;
   padding: 0;
-  gap: clamp(0.3rem, 0.9vw, 0.5rem);
-  overflow-x: auto;
-  overflow-y: visible;
+  gap: clamp(0.3rem, 0.9vw, 0.45rem);
+  overflow-x: hidden;
+  overflow-y: auto;
   background: transparent;
 }
 
@@ -1336,7 +1344,7 @@ body.subscription-view .product-gallery {
 
   .product-gallery {
     flex: 0 0 auto;
-    width: max-content;
+    width: 100%;
     height: auto;
     max-width: none;
     display: flex;
@@ -1348,31 +1356,10 @@ body.subscription-view .product-gallery {
     border-radius: 0;
   }
 
-  .product-gallery__thumbs {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    min-width: 0;
-    gap: clamp(0.35rem, 0.75vw, 0.55rem);
-    overflow-x: auto;
-    overflow-y: visible;
-    padding: 0 0 0.15rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-
-  body.subscription-view .product-gallery__thumbs {
-    justify-content: flex-start;
-    width: 100%;
-  }
-
   .product-gallery__thumb {
     flex: 0 0 auto;
-    width: clamp(3.1rem, 4.2vw, 4rem);
-    max-width: 25%;
+    width: clamp(2.55rem, 3.2vw, 3.15rem);
+    max-width: none;
   }
 
   .product-gallery__main {
@@ -1573,7 +1560,7 @@ body.subscription-view .product-gallery__main {
   align-items: center;
   justify-content: center;
   margin: 0;
-  padding: 6px;
+  padding: 4px;
   border: none;
   aspect-ratio: 80 / 64;
   border-radius: var(--radius);
