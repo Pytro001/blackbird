@@ -1107,8 +1107,8 @@ body.subscription-view .cosmos-field__shoot {
     max-width: 100%;
     justify-content: center;
     align-self: stretch;
+    align-items: flex-start;
     display: flex;
-    align-items: stretch;
     min-height: 0;
   }
 
@@ -1336,9 +1336,13 @@ body.subscription-view .product-gallery {
   body.subscription-view .product-gallery__stage {
     display: block;
     width: 100%;
-    flex: 1 1 auto;
+    /* Do not flex-grow: a tall aside stretches the gallery column; growing the stage
+       breaks the padding-bottom 16:9 box and leaves a huge empty band under the image. */
+    flex: 0 0 auto;
+    flex-grow: 0 !important;
     min-height: 0;
     height: auto !important;
+    max-height: none;
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0);
@@ -1352,8 +1356,11 @@ body.subscription-view .product-gallery {
     height: 0;
     padding-bottom: 56.25%;
     flex: none;
+    flex-shrink: 0;
     overflow: hidden;
     border-radius: inherit;
+    /* Keeps % padding tied to this box width, not an over-tall flex ancestor */
+    contain: layout style;
   }
 
   body.subscription-view .product-gallery__figure {
@@ -1384,9 +1391,14 @@ body.subscription-view .product-gallery {
 }
 
 body.subscription-view .product-gallery,
-body.subscription-view .product-gallery__main,
 body.subscription-view .product-gallery__stage {
   overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+/* Main column may be shorter than the aside; allow inner 16:9 box to size naturally */
+body.subscription-view .product-gallery__main {
+  overflow: visible;
   border-radius: var(--radius-lg);
 }
 
@@ -1487,10 +1499,10 @@ body.subscription-view .product-gallery__stage {
 @media (min-width: 840px) {
   body.subscription-view .product-gallery {
     flex-direction: row;
-    align-items: stretch;
+    align-items: flex-start;
     width: 100%;
     max-width: none;
-    gap: clamp(0.55rem, 1vw, 0.9rem);
+    gap: clamp(0.65rem, 1.15vw, 1rem);
   }
 
   body.subscription-view .product-gallery__thumbs {
@@ -1503,15 +1515,15 @@ body.subscription-view .product-gallery__stage {
     overflow-x: visible;
     overflow-y: visible;
     padding: 0;
-    gap: clamp(0.28rem, 0.5vw, 0.48rem);
+    gap: clamp(0.4rem, 0.65vw, 0.55rem);
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(4.35rem, 5.4vw, 6rem);
-    min-width: 4rem;
+    width: clamp(5.25rem, 6.5vw, 7.25rem);
+    min-width: 5rem;
     max-width: none;
     box-sizing: border-box;
-    padding: 8px;
+    padding: 9px;
   }
 
   body.subscription-view .product-gallery__main {
@@ -1519,7 +1531,10 @@ body.subscription-view .product-gallery__stage {
     min-width: 0;
     min-height: 0;
     height: auto;
-    align-self: stretch;
+    align-self: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
   }
 }
 
@@ -1544,9 +1559,9 @@ body.subscription-view .product-gallery__stage {
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(4rem, 34vw, 6.5rem);
-    min-width: 3.75rem;
-    padding: 8px;
+    width: clamp(4.5rem, 40vw, 7.5rem);
+    min-width: 4.25rem;
+    padding: 9px;
   }
 
   body.subscription-view .product-gallery__stage {
