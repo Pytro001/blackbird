@@ -747,8 +747,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
     : "";
 
   const productBuyPanel = isSubscription
-    ? `          <div class="product-panel product-panel--buy product-panel--buy-subscription">
-            <div class="product-offer-card">
+    ? `          <section class="buy-sheet buy-sheet--offer-sub">
               <div class="product-identity product-identity--subscription">
                 <h2 class="product-name product-name--subscription">${escapeHtml(t.productName)}</h2>
                 ${subscriptionPriceOnCard}
@@ -758,31 +757,35 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               </div>
-              <a
-                class="btn-buy"
-                id="buy-btn"
-                href="${escapeHtml(checkoutHref)}"
-                rel="noopener noreferrer"
-              >${escapeHtml(buyLabel)}</a>
-            </div>
-          </div>`
-    : `          <div class="product-panel product-panel--buy">
-            <div class="product-identity">
-            <h2 class="product-name">${escapeHtml(t.productName)}</h2>
-            ${priceBlock}
-            </div>
-            <div class="product-shipping">
-              ${returnsLine}
-              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
-            </div>
-            <a
-              class="btn-buy"
-              id="buy-btn"
-              href="${escapeHtml(checkoutHref)}"
-              rel="noopener noreferrer"
-            >${escapeHtml(buyLabel)}</a>
+              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
+            </section>`
+    : `          <section class="buy-sheet">
+              <h2 class="product-name">${escapeHtml(t.productName)}</h2>
+              ${priceBlock}
+              <div class="product-shipping">
+                ${returnsLine}
+                <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+              </div>
+              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
+              ${whatsAppBlockHtml(lang)}
+            </section>`;
+
+  const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
+              <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
+            </div>`;
+
+  const productHeroAside = isSubscription
+    ? `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
+          <div class="buy-stack buy-stack--subscription">
+${productBuyPanel}
             ${whatsAppBlockHtml(lang)}
-          </div>`;
+${howtoBlock}
+          </div>
+        </aside>`
+    : `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
+${productBuyPanel}
+${howtoBlock}
+        </aside>`;
 
   return `
     <div class="${shellClass}">
@@ -807,34 +810,12 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
 
     <div class="page-product" id="product">
       <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
-${
-  isSubscription
-    ? `        <div class="product-subscription-hero">
-        <div class="product-shots-wrap">
-          ${productGalleryHtml(lang, true)}
+        <div class="product-hero${isSubscription ? " product-hero--subscription" : ""}">
+        <div class="product-hero__media">
+          ${productGalleryHtml(lang, isSubscription)}
         </div>
-
-        <aside class="product-side" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
-          <div class="product-side-card">
-${productBuyPanel}
-            ${whatsAppBlockHtml(lang)}
-            <div class="product-panel product-panel--howto">
-              <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
-            </div>
-          </div>
-        </aside>
-        </div>`
-    : `        <div class="product-shots-wrap">
-          ${productGalleryHtml(lang)}
+${productHeroAside}
         </div>
-
-        <aside class="product-side" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
-${productBuyPanel}
-          <div class="product-panel product-panel--howto">
-            <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
-          </div>
-        </aside>`
-}
       </main>
     </div>
     ${productFaqSectionHtml(mode, lang)}

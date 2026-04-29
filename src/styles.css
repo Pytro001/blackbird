@@ -134,7 +134,7 @@ body.subscription-view .btn-pill:focus-visible {
   box-shadow: 0 0 0 1px rgba(245, 245, 245, 0.35);
 }
 
-body.subscription-view .product-panel {
+body.subscription-view .buy-sheet {
   border: none;
   background: transparent;
   backdrop-filter: none;
@@ -156,17 +156,8 @@ body.subscription-view .product-name--subscription {
   text-overflow: ellipsis;
 }
 
-/* Bordered offer card: title → shipping copy → monthly (orange) → lede → WhatsApp */
-body.subscription-view .product-panel--buy-subscription {
-  gap: 0;
-  padding: 0;
-  border: none;
-  background: transparent;
-  backdrop-filter: none;
-  box-shadow: none;
-}
-
-body.subscription-view .product-offer-card {
+/* Bordered offer card: title → shipping → CTA — stack lives in buy-stack */
+body.subscription-view .buy-sheet--offer-sub {
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -180,8 +171,7 @@ body.subscription-view .product-offer-card {
   box-shadow: none;
 }
 
-/* Single framed card (subscription hero): buy block + how-to in one dark panel */
-body.subscription-view .product-side-card {
+body.subscription-view .buy-stack--subscription {
   display: flex;
   flex-direction: column;
   gap: 1.05rem;
@@ -198,7 +188,7 @@ body.subscription-view .product-side-card {
   flex: 1 1 auto;
 }
 
-body.subscription-view .product-side-card .product-offer-card {
+body.subscription-view .buy-stack--subscription .buy-sheet--offer-sub {
   border: none;
   background: transparent;
   padding: 0;
@@ -206,22 +196,22 @@ body.subscription-view .product-side-card .product-offer-card {
   box-shadow: none;
 }
 
-body.subscription-view .product-side-card .product-panel--howto {
+body.subscription-view .buy-stack--subscription .buy-sheet--howto {
   width: 100%;
   align-items: flex-start;
   padding-top: 0.75rem;
 }
 
-body.subscription-view .product-side-card .btn-howto {
+body.subscription-view .buy-stack--subscription .btn-howto {
   width: 100%;
   box-sizing: border-box;
 }
 
-body.subscription-view .product-offer-card .product-name--subscription {
+body.subscription-view .buy-sheet--offer-sub .product-name--subscription {
   color: var(--white);
 }
 
-body.subscription-view .product-offer-card .product-price--subscription-on-card {
+body.subscription-view .buy-sheet--offer-sub .product-price--subscription-on-card {
   margin: 0;
   color: var(--white);
   font-size: clamp(1.35rem, 3.8vw, 1.75rem);
@@ -234,11 +224,11 @@ body.subscription-view .product-offer-card .product-price--subscription-on-card 
   gap: 0.35rem;
 }
 
-body.subscription-view .product-offer-card .product-price--subscription-on-card .product-price__amount {
+body.subscription-view .buy-sheet--offer-sub .product-price--subscription-on-card .product-price__amount {
   display: inline-block;
 }
 
-body.subscription-view .product-offer-card .product-subscription-refill {
+body.subscription-view .buy-sheet--offer-sub .product-subscription-refill {
   margin: 0.45rem 0 0;
   padding: 0;
   color: var(--white-dim);
@@ -257,7 +247,7 @@ body.subscription-view .product-subscription-copy {
   min-width: 0;
 }
 
-body.subscription-view .product-offer-card .product-subscription-copy .product-shipping--subscription .product-shipping__eta--arrival {
+body.subscription-view .buy-sheet--offer-sub .product-subscription-copy .product-shipping--subscription .product-shipping__eta--arrival {
   color: var(--white-dim);
   font-size: clamp(0.9rem, 2.2vw, 0.98rem);
   font-weight: 400;
@@ -266,12 +256,12 @@ body.subscription-view .product-offer-card .product-subscription-copy .product-s
   max-width: none;
 }
 
-body.subscription-view .product-offer-card .product-shipping__free {
+body.subscription-view .buy-sheet--offer-sub .product-shipping__free {
   font-weight: 600;
   color: var(--white);
 }
 
-body.subscription-view .product-offer-card .product-shipping__eta-datetime {
+body.subscription-view .buy-sheet--offer-sub .product-shipping__eta-datetime {
   font-weight: 600;
   color: var(--white);
 }
@@ -328,8 +318,8 @@ body.subscription-view .product-wa-block {
   background: rgba(255, 255, 255, 0.04);
 }
 
-body.subscription-view .product-offer-card > a#buy-btn.btn-buy,
-body.subscription-view .product-offer-card > .btn-buy {
+body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy,
+body.subscription-view .buy-sheet--offer-sub > .btn-buy {
   width: 100%;
   border-radius: 999px;
   padding: 0.58rem 1.25rem;
@@ -350,24 +340,24 @@ body.subscription-view .product-offer-card > .btn-buy {
 }
 
 /* Keep CTA text brand black in every state */
-body.subscription-view .product-offer-card > a#buy-btn.btn-buy:hover,
-body.subscription-view .product-offer-card > .btn-buy:hover,
-body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
-body.subscription-view .product-offer-card > .btn-buy:focus-visible {
+body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy:hover,
+body.subscription-view .buy-sheet--offer-sub > .btn-buy:hover,
+body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy:focus-visible,
+body.subscription-view .buy-sheet--offer-sub > .btn-buy:focus-visible {
   background: var(--orange);
   color: var(--black);
   filter: brightness(1.05) saturate(1.06);
   box-shadow: 0 4px 20px rgba(255, 158, 24, 0.35);
 }
 
-body.subscription-view .product-offer-card > a#buy-btn.btn-buy:focus-visible,
-body.subscription-view .product-offer-card > .btn-buy:focus-visible {
+body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy:focus-visible,
+body.subscription-view .buy-sheet--offer-sub > .btn-buy:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.4);
   outline-offset: 2px;
 }
 
-body.subscription-view .product-offer-card > a#buy-btn.btn-buy:active,
-body.subscription-view .product-offer-card > .btn-buy:active {
+body.subscription-view .buy-sheet--offer-sub > a#buy-btn.btn-buy:active,
+body.subscription-view .buy-sheet--offer-sub > .btn-buy:active {
   background: var(--orange);
   color: var(--black);
   transform: translateY(1px);
@@ -1083,32 +1073,38 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 .product-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
-  align-items: start;
+  box-sizing: border-box;
+}
+
+.product-hero {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  width: 100%;
 }
 
 @media (min-width: 840px) {
-  .product-layout {
-    /* Both columns sized to their content; grid centered as a unit → equal left/right margins */
+  .product-hero:not(.product-hero--subscription) {
+    display: grid;
     grid-template-columns: max-content max-content;
     justify-content: center;
-    gap: clamp(2rem, 4.5vw, 3rem);
     align-items: start;
+    gap: clamp(2rem, 4.5vw, 3rem);
     width: auto;
     max-width: 100%;
+    margin-inline: auto;
   }
 
-  .product-shots-wrap {
+  .product-hero:not(.product-hero--subscription) .product-hero__media {
     align-self: start;
+    min-width: 0;
   }
 
-  .product-side {
+  .product-hero:not(.product-hero--subscription) > .product-side {
     align-self: start;
   }
 }
@@ -1131,7 +1127,7 @@ body.subscription-view .cosmos-field__shoot {
     padding-right: var(--product-inline-pad);
   }
 
-  body.subscription-view .product-subscription-hero {
+  body.subscription-view .product-hero--subscription {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -1139,14 +1135,14 @@ body.subscription-view .cosmos-field__shoot {
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    column-gap: clamp(0.45rem, 1.0vw, 0.85rem);
+    column-gap: clamp(0.45rem, 1vw, 0.85rem);
     padding: 0;
     border: none;
     border-radius: 0;
     background: transparent;
   }
 
-  body.subscription-view .product-subscription-hero .product-shots-wrap {
+  body.subscription-view .product-hero--subscription .product-hero__media {
     width: auto;
     flex: 1 1 0;
     min-width: 0;
@@ -1158,7 +1154,7 @@ body.subscription-view .cosmos-field__shoot {
     min-height: 0;
   }
 
-  body.subscription-view .product-subscription-hero .product-gallery {
+  body.subscription-view .product-hero--subscription .product-gallery {
     flex: 1 1 auto;
     align-self: stretch;
     width: min(1024px, 91vw);
@@ -1169,7 +1165,7 @@ body.subscription-view .cosmos-field__shoot {
     box-sizing: border-box;
   }
 
-  body.subscription-view .product-subscription-hero .product-side {
+  body.subscription-view .product-hero--subscription .product-side {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
@@ -1181,7 +1177,7 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 @media (max-width: 839px) {
-  body.subscription-view .product-subscription-hero {
+  body.subscription-view .product-hero--subscription {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -1201,7 +1197,7 @@ body.subscription-view .cosmos-field__shoot {
   }
 }
 
-.product-shots-wrap {
+.product-hero__media {
   min-width: 0;
   width: 100%;
 }
@@ -1278,7 +1274,7 @@ body.subscription-view .product-gallery {
 }
 
 @media (min-width: 840px) {
-  .product-shots-wrap {
+  .product-hero:not(.product-hero--subscription) .product-hero__media {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -1752,24 +1748,19 @@ body.subscription-view .product-gallery__thumb img {
   gap: 1rem;
 }
 
-.product-panel {
+.buy-sheet {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.15rem 1.2rem 1.25rem;
+  gap: 1.05rem;
+  padding: 1.25rem 1.45rem 2.05rem;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(26, 26, 26, 0.55);
   backdrop-filter: blur(8px);
 }
 
-.product-panel--buy {
-  gap: 1.05rem;
-  padding: 1.25rem 1.45rem 2.05rem;
-}
-
-/* No outer panel border: single ring on the button only */
-.product-panel--howto {
+/* No outer panel border on how-to strip */
+.buy-sheet--howto {
   padding: 0;
   border: none;
   background: transparent;
