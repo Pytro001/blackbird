@@ -995,17 +995,14 @@ body.subscription-view .cosmos-field__shoot {
   border: none;
   background: transparent;
   padding: 0;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-  text-decoration-color: rgba(245, 245, 245, 0.22);
-  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+  cursor: default;
+  text-decoration: none;
+  transition: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .hero-editorial__script--link:hover {
-  color: rgba(245, 245, 245, 0.95);
-  text-decoration-color: rgba(245, 245, 245, 0.55);
+  color: var(--white-dim);
 }
 
 .hero-editorial__script--link:focus-visible {
@@ -2053,8 +2050,12 @@ body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
   }
 
   .product-education__title--script {
-    font-size: clamp(1.75rem, 8vw, 2.15rem);
+    font-size: clamp(2.05rem, 9.2vw, 2.55rem);
     line-height: 1.12;
+  }
+
+  .hero-editorial__script {
+    font-size: clamp(1.1rem, 4.4vw, 1.65rem);
   }
 }
 
