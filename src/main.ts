@@ -819,7 +819,7 @@ ${howtoBlock}
             ? `<button type="button" class="btn-pill hero-cta-now" id="cta-now">${escapeHtml(t.heroCtaNow)}</button>`
             : ""
         }
-        <button type="button" class="hero-editorial__script hero-editorial__script--link" id="hero-scroll-product">${escapeHtml(t.heroScript)}</button>
+        <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
       </div>
     </section>
 
@@ -1339,10 +1339,6 @@ function render(): void {
 }
 
 function bindProduct(): void {
-  document.getElementById("hero-scroll-product")?.addEventListener("click", () => {
-    scrollToProduct("smooth");
-  });
-
   document.getElementById("cta-now")?.addEventListener("click", () => {
     scrollToProduct("smooth");
   });

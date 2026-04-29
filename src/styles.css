@@ -296,8 +296,16 @@ body.subscription-view .buy-sheet--offer-sub .product-shipping__eta-datetime {
 body.subscription-view .product-wa-headline {
   color: #fefefe;
   font-weight: 600;
-  font-size: clamp(0.88rem, 2.2vw, 0.98rem);
+  font-size: clamp(0.82rem, 1.85vw, 0.95rem);
   letter-spacing: 0.01em;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  body.subscription-view .product-wa-headline {
+    white-space: normal;
+  }
 }
 
 body.subscription-view .product-wa-desc {
@@ -1217,8 +1225,8 @@ body.subscription-view .cosmos-field__shoot {
   body.subscription-view .product-hero--subscription .product-gallery {
     flex: 0 1 auto;
     align-self: stretch;
-    width: min(520px, 44vw);
-    max-width: min(520px, 44vw);
+    width: min(528px, 45vw);
+    max-width: min(528px, 45vw);
     min-width: 0;
     min-height: 0;
     height: auto;
@@ -1229,7 +1237,7 @@ body.subscription-view .cosmos-field__shoot {
     width: auto;
     flex: 0 0 auto;
     min-width: 0;
-    max-width: min(368px, 42vw);
+    max-width: min(400px, 45vw);
     align-self: stretch;
     display: flex;
     flex-direction: column;
@@ -1242,7 +1250,7 @@ body.subscription-view .cosmos-field__shoot {
     flex-direction: column;
     min-height: 0;
     overflow: hidden;
-    border-radius: 0;
+    border-radius: clamp(7px, 1.1vw, 11px);
   }
 
   body.subscription-view .product-gallery.product-gallery--match-aside .product-gallery__main {
@@ -1600,13 +1608,13 @@ body.subscription-view .product-gallery {
 body.subscription-view .product-gallery,
 body.subscription-view .product-gallery__stage {
   overflow: hidden;
-  border-radius: 0;
+  border-radius: clamp(7px, 1.1vw, 11px);
 }
 
-/* Main column may be shorter than the aside; allow inner box to size naturally */
+/* Main column may be shorter than the aside; clip for rounded photo */
 body.subscription-view .product-gallery__main {
-  overflow: visible;
-  border-radius: 0;
+  overflow: hidden;
+  border-radius: clamp(7px, 1.1vw, 11px);
 }
 
 /* Thumbnail strip: flex-direction and width are set per breakpoint (see below) so they are not overridden. */
