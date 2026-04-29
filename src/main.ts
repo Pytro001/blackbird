@@ -804,7 +804,6 @@ ${howtoBlock}
       </div>
       <div class="hero-editorial__bottom">
         <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
-        <button type="button" class="btn-pill" id="cta-now">${escapeHtml(t.heroNow)}</button>
       </div>
     </section>
 
@@ -1283,7 +1282,6 @@ function render(): void {
   if (view === "product" || view === "subscription") {
     const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
     root.innerHTML = homeHtml(uiLang, landingMode);
-    bindLanding();
     bindProduct();
     const scrollProduct =
       view === "product" || (view === "subscription" && wasEmailPath);
@@ -1322,12 +1320,6 @@ function render(): void {
   }
 
   if (view === "thanks") bindThanks();
-}
-
-function bindLanding(): void {
-  document.querySelector("#cta-now")?.addEventListener("click", () => {
-    scrollToProduct("smooth");
-  });
 }
 
 function bindProduct(): void {
