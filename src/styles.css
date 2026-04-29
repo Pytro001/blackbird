@@ -142,11 +142,11 @@ body.subscription-view .product-panel {
 body.subscription-view .product-identity--subscription {
   margin: 0;
   padding: 0;
-  gap: 0.35rem;
+  gap: 0.65rem;
 }
 
 body.subscription-view .product-name--subscription {
-  font-size: clamp(1.4rem, 3.6vw, 1.75rem);
+  font-size: clamp(1.0rem, 2.5vw, 1.2rem);
   line-height: 1.2;
   letter-spacing: 0.025em;
   white-space: nowrap;
@@ -167,7 +167,7 @@ body.subscription-view .product-panel--buy-subscription {
 body.subscription-view .product-offer-card {
   display: flex;
   flex-direction: column;
-  gap: 0.68rem;
+  gap: 1.1rem;
   margin: 0;
   min-width: 0;
   padding: 1.4rem 1.45rem 1.5rem;
@@ -238,10 +238,10 @@ body.subscription-view .product-offer-card .product-price--subscription-on-card 
 }
 
 body.subscription-view .product-offer-card .product-subscription-refill {
-  margin: 0.15rem 0 0;
+  margin: 0.45rem 0 0;
   padding: 0;
   color: var(--white-dim);
-  font-size: clamp(0.8rem, 2vw, 0.88rem);
+  font-size: clamp(0.9rem, 2.2vw, 0.98rem);
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.4;
@@ -258,7 +258,7 @@ body.subscription-view .product-subscription-copy {
 
 body.subscription-view .product-offer-card .product-subscription-copy .product-shipping--subscription .product-shipping__eta--arrival {
   color: var(--white-dim);
-  font-size: clamp(0.82rem, 2.05vw, 0.88rem);
+  font-size: clamp(0.9rem, 2.2vw, 0.98rem);
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.45;
@@ -319,7 +319,11 @@ body.subscription-view .product-shipping--subscription {
 }
 
 body.subscription-view .product-wa-block {
-  margin: clamp(0.95rem, 2.4vw, 1.5rem) 0 0;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy,
@@ -1110,7 +1114,7 @@ body.subscription-view .cosmos-field__shoot {
 /* Subscription: framed hero — gallery + aside; equal L/R from page padding */
 @media (min-width: 840px) {
   body.subscription-view .page-product {
-    --product-inline-pad: clamp(0.75rem, 2.5vw, 1.25rem);
+    --product-inline-pad: clamp(0.4rem, 1.2vw, 0.65rem);
     padding-top: max(1.75rem, 5.5vh);
     padding-bottom: max(2.75rem, 7vh);
   }
@@ -1133,7 +1137,7 @@ body.subscription-view .cosmos-field__shoot {
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    column-gap: clamp(1rem, 2.2vw, 1.65rem);
+    column-gap: clamp(0.65rem, 1.4vw, 1.1rem);
     padding: 0;
     border: none;
     border-radius: 0;
@@ -1167,7 +1171,7 @@ body.subscription-view .cosmos-field__shoot {
     width: auto;
     flex: 0 1 auto;
     min-width: 0;
-    max-width: min(420px, 100%);
+    max-width: min(390px, 100%);
     align-self: stretch;
     display: flex;
     flex-direction: column;
@@ -1555,9 +1559,8 @@ body.subscription-view .product-gallery__thumb img {
 
   body.subscription-view .product-gallery__thumbs {
     position: absolute;
-    left: 0.9rem;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 0.75rem;
+    top: 0.75rem;
     flex-direction: column;
     flex-wrap: nowrap;
     width: auto;
@@ -1567,12 +1570,12 @@ body.subscription-view .product-gallery__thumb img {
     justify-content: flex-start;
     overflow: visible;
     padding: 0;
-    gap: 0.45rem;
+    gap: 0.5rem;
   }
 
   body.subscription-view .product-gallery__thumb {
-    width: clamp(2.8rem, 3.8vw, 4rem);
-    min-width: 2.8rem;
+    width: clamp(3.8rem, 5.2vw, 5.5rem);
+    min-width: 3.8rem;
     max-width: none;
     box-sizing: border-box;
     padding: 4px;
