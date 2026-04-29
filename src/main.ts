@@ -198,6 +198,13 @@ let productGalleryThumbPeekCleanup: (() => void) | undefined;
 let missionStarDocumentClickUnbind: (() => void) | undefined;
 let productFaqDocumentClickUnbind: (() => void) | undefined;
 let imageZoomClickBound = false;
+/** Saved when opening zoom so closing does not scroll to the header. */
+let imageZoomRestoreScrollY = 0;
+let imageZoomReturnFocusEl: HTMLElement | null = null;
+
+function isImageZoomMobileViewport(): boolean {
+  return window.matchMedia("(max-width: 839px)").matches;
+}
 
 /** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
 const DEFAULT_STRIPE_PAYMENT_LINK =
@@ -708,7 +715,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
   const stageClasses = stageInner.join(" ");
 
   return `
-        <div class="product-gallery" id="product-gallery">
+        <div class="product-gallery" id="product-gallery" tabindex="-1">
           <div class="product-gallery__main">
             <div
               class="${stageClasses}"
@@ -760,7 +767,7 @@ function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
   }).join("");
 
   return `
-    <section class="product-faq" id="product-faq" aria-labelledby="product-faq-heading">
+    <section class="product-faq" id="product-faq" tabindex="-1" aria-labelledby="product-faq-heading">
       <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">${escapeHtml(t.faqHeading)}</h2>
       <div class="product-faq__figure">
         <img
@@ -1448,11 +1455,20 @@ function ensureImageZoomLightbox(): void {
   wrap.querySelector(".image-zoom-lightbox__close")?.addEventListener("click", closeImageZoomLightbox);
 }
 
-function openImageZoomLightbox(src: string, alt: string): void {
+function openImageZoomLightbox(
+  src: string,
+  alt: string,
+  returnFocus?: HTMLElement | null,
+): void {
   ensureImageZoomLightbox();
   const root = document.getElementById("image-zoom-lightbox");
   const img = document.getElementById("image-zoom-lightbox-img") as HTMLImageElement | null;
   if (!root || !img) return;
+  imageZoomRestoreScrollY = window.scrollY;
+  imageZoomReturnFocusEl =
+    returnFocus ??
+    document.getElementById("product-gallery") ??
+    document.getElementById("product-faq");
   img.src = src;
   img.alt = alt;
   root.removeAttribute("hidden");
@@ -1462,11 +1478,24 @@ function openImageZoomLightbox(src: string, alt: string): void {
 
 function closeImageZoomLightbox(): void {
   const root = document.getElementById("image-zoom-lightbox");
+  const y = imageZoomRestoreScrollY;
+  const x = window.scrollX;
+  const ae = document.activeElement;
+  if (root && ae instanceof Node && root.contains(ae)) {
+    (ae as HTMLElement).blur();
+  }
   if (root) root.setAttribute("hidden", "");
   document.body.style.overflow = "";
+  window.scrollTo(x, y);
+  requestAnimationFrame(() => {
+    window.scrollTo(x, y);
+    imageZoomReturnFocusEl?.focus({ preventScroll: true });
+    imageZoomReturnFocusEl = null;
+  });
 }
 
 function onImageZoomLightboxClick(e: MouseEvent): void {
+  if (!isImageZoomMobileViewport()) return;
   const t = e.target;
   if (!(t instanceof Element)) return;
   if (t.closest("#image-zoom-lightbox")) return;
@@ -1474,7 +1503,10 @@ function onImageZoomLightboxClick(e: MouseEvent): void {
   if (!imgEl || !(imgEl instanceof HTMLImageElement)) return;
   e.preventDefault();
   e.stopPropagation();
-  openImageZoomLightbox(imgEl.currentSrc || imgEl.src, imgEl.alt || "");
+  const returnFocus = imgEl.closest("#product-faq")
+    ? document.getElementById("product-faq")
+    : document.getElementById("product-gallery");
+  openImageZoomLightbox(imgEl.currentSrc || imgEl.src, imgEl.alt || "", returnFocus);
 }
 
 function bindImageZoomLightbox(): void {

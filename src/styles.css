@@ -3226,11 +3226,7 @@ body.legal-page-view .site-legal-footer__sep {
   border: 0;
 }
 
-/* Tap / click to open full-screen zoom (phone + desktop); pinch & scroll inside */
-img.image-zoomable {
-  cursor: zoom-in;
-}
-
+/* Tap to open full-screen zoom — mobile only (desktop disabled in main.ts) */
 .product-gallery__slide-img.image-zoomable,
 .product-gallery__main-img.image-zoomable {
   pointer-events: auto;
@@ -3238,11 +3234,20 @@ img.image-zoomable {
 
 body.subscription-view .product-gallery__slide-img.image-zoomable {
   pointer-events: auto;
-  cursor: zoom-in;
 }
 
-.product-faq__img.image-zoomable {
-  cursor: zoom-in;
+@media (max-width: 839px) {
+  img.image-zoomable {
+    cursor: zoom-in;
+  }
+
+  body.subscription-view .product-gallery__slide-img.image-zoomable {
+    cursor: zoom-in;
+  }
+
+  .product-faq__img.image-zoomable {
+    cursor: zoom-in;
+  }
 }
 
 .image-zoom-lightbox {
