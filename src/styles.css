@@ -288,7 +288,7 @@ body.subscription-view .product-shipping--subscription {
 }
 
 body.subscription-view .product-wa-block {
-  margin: 0.1rem 0 0;
+  margin: clamp(0.95rem, 2.4vw, 1.5rem) 0 0;
 }
 
 body.subscription-view .product-offer-card > a#buy-btn.btn-buy,
@@ -388,11 +388,9 @@ body.subscription-view .product-faq__pin[aria-expanded="true"]:hover,
 body.subscription-view .product-faq__pin[aria-expanded="true"]:active,
 body.subscription-view .product-faq__pin[aria-expanded="true"]:focus,
 body.subscription-view .product-faq__pin[aria-expanded="true"]:focus-visible {
-  background: rgba(255, 158, 24, 0.98);
-  color: rgba(245, 245, 245, 0.98);
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.35),
-    0 4px 14px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 158, 24, 0.92);
+  color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 body.subscription-view .product-faq__panel {
@@ -1960,11 +1958,9 @@ body.subscription-view .product-gallery__thumb img {
 .product-faq__pin[aria-expanded="true"]:active,
 .product-faq__pin[aria-expanded="true"]:focus,
 .product-faq__pin[aria-expanded="true"]:focus-visible {
-  background: rgba(255, 158, 24, 0.98);
-  color: rgba(245, 245, 245, 0.98);
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.35),
-    0 4px 16px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 158, 24, 0.92);
+  color: rgba(245, 245, 245, 0.95);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .product-faq__pin-label {
