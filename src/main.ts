@@ -36,6 +36,22 @@ function carouselSlides(lang: UiLang): readonly { file: string; alt: string }[] 
   ];
 }
 
+type ProductGalleryOptions = {
+  /** Thumbs inside the stage (VS below the image) */
+  thumbsInsideStage: boolean;
+  showThumbs: boolean;
+  /** Subscription: translateX strip with transition (vs single img src swap) */
+  smoothTrack: boolean;
+  thumbsVariant: "purchase" | "subscription";
+};
+
+const defaultProductGalleryOptions: ProductGalleryOptions = {
+  thumbsInsideStage: false,
+  showThumbs: true,
+  smoothTrack: false,
+  thumbsVariant: "purchase",
+};
+
 /** 5-point star (clip-path), not circles — many quiet static specks (separate from the click star) */
 function cosmosFieldDustMotesHtml(): string {
   const n = 88;
@@ -583,12 +599,14 @@ function productFaqAnswerHtml(answer: string): string {
     .join("");
 }
 
-function productGalleryHtml(lang: UiLang, thumbsInsideStage = false, showThumbs = true): string {
+function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOptions>): string {
+  const o: ProductGalleryOptions = { ...defaultProductGalleryOptions, ...options };
   const t = strings(lang);
   const slides = carouselSlides(lang);
   const n = slides.length;
-  const thumbs =
-    slides.length > 0 && showThumbs
+
+  const thumbButtons =
+    n > 0 && o.showThumbs
       ? slides
           .map((slide, i) => {
             const src = publicAssetUrl(slide.file);
@@ -614,26 +632,55 @@ function productGalleryHtml(lang: UiLang, thumbsInsideStage = false, showThumbs 
           .join("")
       : "";
 
-  const first = slides[0];
-  const firstSrc = publicAssetUrl(first.file);
-  const thumbsHtml = showThumbs
-    ? `<div class="product-gallery__thumbs" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbs}</div>`
+  const thumbsClass =
+    `product-gallery__thumbs${o.thumbsVariant === "subscription" ? " product-gallery__thumbs--subscription" : ""}`.trim();
+  const thumbsHtml = o.showThumbs
+    ? `<div class="${thumbsClass}" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbButtons}</div>`
     : "";
 
-  const stageClass = showThumbs
-    ? "product-gallery__stage"
-    : "product-gallery__stage product-gallery__stage--no-thumbs";
+  const first = slides[0];
+  const firstSrc = publicAssetUrl(first.file);
 
-  return `
-        <div class="product-gallery" id="product-gallery">
-          <div class="product-gallery__main">
-            <div
-              class="${stageClass}"
-              id="product-gallery-stage"
-              tabindex="0"
-              aria-label="${escapeHtml(t.galleryStageAria)}"
-            >
-              ${thumbsInsideStage && showThumbs ? thumbsHtml : ""}
+  const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs && !o.smoothTrack ? thumbsHtml : "";
+  const thumbsAfterInner =
+    o.thumbsInsideStage && o.showThumbs && o.smoothTrack ? thumbsHtml : "";
+  const thumbsOutside = !o.thumbsInsideStage && o.showThumbs ? thumbsHtml : "";
+
+  const aspectInnerSmooth = (): string =>
+    `
+              <div class="product-gallery__aspect product-gallery__aspect--smooth">
+                <div class="product-gallery__track-shell">
+                  <div
+                    id="product-gallery-track"
+                    class="product-gallery__track product-gallery__track--smooth"
+                    style="--gallery-slides:${n}; --gallery-index: 0;"
+                    aria-hidden="false"
+                  >
+                    ${slides
+                      .map((slide, i) => {
+                        const srcSlide = publicAssetUrl(slide.file);
+                        return `
+                    <figure class="product-gallery__slide-figure">
+                      <img
+                        class="product-gallery__slide-img"
+                        src="${escapeHtml(srcSlide)}"
+                        width="1024"
+                        height="658"
+                        alt="${escapeHtml(slide.alt)}"
+                        decoding="async"
+                        loading="${i === 0 ? "eager" : "lazy"}"
+                        fetchpriority="${i === 0 ? "high" : "low"}"
+                        draggable="false"
+                      />
+                    </figure>`;
+                      })
+                      .join("")}
+                  </div>
+                </div>
+              </div>`;
+
+  const aspectInnerLegacy = (): string =>
+    `
               <div class="product-gallery__aspect">
                 <figure class="product-gallery__figure">
                   <img
@@ -648,10 +695,30 @@ function productGalleryHtml(lang: UiLang, thumbsInsideStage = false, showThumbs 
                     draggable="false"
                   />
                 </figure>
-              </div>
+              </div>`;
+
+  const innerAspect = o.smoothTrack ? aspectInnerSmooth() : aspectInnerLegacy();
+
+  let stageInner = ["product-gallery__stage"];
+  if (!o.showThumbs) stageInner.push("product-gallery__stage--no-thumbs");
+  if (o.smoothTrack) stageInner.push("product-gallery__stage--smooth");
+  const stageClasses = stageInner.join(" ");
+
+  return `
+        <div class="product-gallery" id="product-gallery">
+          <div class="product-gallery__main">
+            <div
+              class="${stageClasses}"
+              id="product-gallery-stage"
+              tabindex="0"
+              aria-label="${escapeHtml(t.galleryStageAria)}"
+            >
+              ${thumbsBeforeInner}
+              ${innerAspect}
+              ${thumbsAfterInner}
             </div>
           </div>
-          ${!thumbsInsideStage && showThumbs ? thumbsHtml : ""}
+          ${thumbsOutside}
         </div>`;
 }
 
@@ -827,7 +894,22 @@ ${howtoBlock}
       <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
         <div class="product-hero${isSubscription ? " product-hero--subscription" : ""}">
         <div class="product-hero__media">
-          ${productGalleryHtml(lang, !isSubscription, !isSubscription)}
+          ${productGalleryHtml(
+            lang,
+            isSubscription
+              ? {
+                  thumbsInsideStage: true,
+                  showThumbs: true,
+                  smoothTrack: true,
+                  thumbsVariant: "subscription",
+                }
+              : {
+                  thumbsInsideStage: true,
+                  showThumbs: true,
+                  smoothTrack: false,
+                  thumbsVariant: "purchase",
+                },
+          )}
         </div>
 ${productHeroAside}
         </div>
@@ -1504,24 +1586,35 @@ const PRODUCT_GALLERY_WHEEL_COOLDOWN_MS = 240;
 const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX = 52;
 
 function bindProductShotsCarousel(): void {
-  const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
   const stage = document.getElementById("product-gallery-stage");
+  const track = document.querySelector<HTMLElement>(
+    "#product-gallery-track.product-gallery__track--smooth",
+  );
+  const mainImg = document.querySelector<HTMLImageElement>("#product-gallery-main-img");
   const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>(".product-gallery__thumb"));
-  if (!mainImg || !stage) return;
+
+  if (!stage) return;
+  const useSmoothStrip = !!track && !mainImg;
+  if (!useSmoothStrip && !mainImg) return;
 
   const slides = carouselSlides(detectUiLang());
   const n = slides.length;
   let index = 0;
 
-  const show = (i: number): void => {
-    if (!Number.isFinite(i) || n < 1) return;
-    const next = Math.max(0, Math.min(n - 1, Math.round(i)));
+  const show = (raw: number): void => {
+    if (!Number.isFinite(raw) || n < 1) return;
+    const next = Math.max(0, Math.min(n - 1, Math.round(raw)));
     index = next;
-    const slide = slides[index];
-    mainImg.src = publicAssetUrl(slide.file);
-    mainImg.alt = slide.alt;
+    const slide = slides[next];
+    if (useSmoothStrip && track) {
+      track.style.setProperty("--gallery-index", String(next));
+    }
+    if (mainImg) {
+      mainImg.src = publicAssetUrl(slide.file);
+      mainImg.alt = slide.alt;
+    }
     thumbs.forEach((btn, j) => {
-      const on = j === index;
+      const on = j === next;
       btn.classList.toggle("is-active", on);
       btn.setAttribute("aria-current", on ? "true" : "false");
     });
@@ -1532,8 +1625,8 @@ function bindProductShotsCarousel(): void {
       e.stopPropagation();
     });
     btn.addEventListener("click", () => {
-      const raw = btn.getAttribute("data-gallery-index");
-      const i = raw ? parseInt(raw, 10) : 0;
+      const btnIndex = btn.getAttribute("data-gallery-index");
+      const i = btnIndex ? parseInt(btnIndex, 10) : 0;
       if (!Number.isNaN(i)) show(i);
     });
   });
