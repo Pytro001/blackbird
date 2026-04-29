@@ -1376,17 +1376,18 @@ function bindProductGalleryAsideHeight(): void {
 
   const apply = (): void => {
     if (window.matchMedia("(max-width: 839px)").matches) {
-      gallery.style.removeProperty("height");
-      gallery.style.removeProperty("width");
-      return;
-    }
-    if (document.body.classList.contains("subscription-view")) {
+      gallery.classList.remove("product-gallery--match-aside");
       gallery.style.removeProperty("height");
       gallery.style.removeProperty("width");
       return;
     }
     const hSide = Math.round(side.offsetHeight);
     gallery.style.height = `${hSide}px`;
+    if (document.body.classList.contains("subscription-view")) {
+      gallery.classList.add("product-gallery--match-aside");
+    } else {
+      gallery.classList.remove("product-gallery--match-aside");
+    }
     gallery.style.removeProperty("width");
   };
 
@@ -1410,6 +1411,7 @@ function bindProductGalleryAsideHeight(): void {
     window.removeEventListener("resize", onResize);
     gallery.style.removeProperty("height");
     gallery.style.removeProperty("width"); // clear any leftover from earlier versions
+    gallery.classList.remove("product-gallery--match-aside");
   };
 }
 
