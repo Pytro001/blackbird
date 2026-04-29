@@ -991,6 +991,29 @@ body.subscription-view .cosmos-field__shoot {
   max-width: 100%;
 }
 
+.hero-editorial__script--link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  text-decoration-color: rgba(245, 245, 245, 0.22);
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-editorial__script--link:hover {
+  color: rgba(245, 245, 245, 0.95);
+  text-decoration-color: rgba(245, 245, 245, 0.55);
+}
+
+.hero-editorial__script--link:focus-visible {
+  outline: 2px solid rgba(245, 245, 245, 0.35);
+  outline-offset: 6px;
+  border-radius: 8px;
+}
+
 .btn-pill {
   display: inline-flex;
   align-items: center;
@@ -1404,9 +1427,11 @@ body.subscription-view .product-gallery {
   .product-gallery__main-img {
     display: block;
     height: 100%;
-    width: auto;
+    width: 100%;
     max-height: 100%;
-    max-width: none;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
     pointer-events: none;
   }
 }
@@ -1733,7 +1758,7 @@ body.subscription-view .product-gallery__thumb img {
 .product-side {
   min-width: 0;
   width: 100%;
-  max-width: 468px;
+  max-width: 420px;
   justify-self: start;
   display: flex;
   flex-direction: column;
@@ -1743,8 +1768,8 @@ body.subscription-view .product-gallery__thumb img {
 .buy-sheet {
   display: flex;
   flex-direction: column;
-  gap: 1.05rem;
-  padding: 1.25rem 1.45rem 2.05rem;
+  gap: 0.85rem;
+  padding: 1.05rem 1.15rem 1.35rem;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(26, 26, 26, 0.55);

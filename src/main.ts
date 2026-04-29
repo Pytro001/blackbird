@@ -803,7 +803,7 @@ ${howtoBlock}
         <h1 class="hero-editorial__title">blackbird</h1>
       </div>
       <div class="hero-editorial__bottom">
-        <p class="hero-editorial__script">${escapeHtml(t.heroScript)}</p>
+        <button type="button" class="hero-editorial__script hero-editorial__script--link" id="hero-scroll-product">${escapeHtml(t.heroScript)}</button>
       </div>
     </section>
 
@@ -1323,6 +1323,10 @@ function render(): void {
 }
 
 function bindProduct(): void {
+  document.getElementById("hero-scroll-product")?.addEventListener("click", () => {
+    scrollToProduct("smooth");
+  });
+
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {
     openPdfManualModal();
   });
