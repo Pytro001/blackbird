@@ -1432,6 +1432,32 @@ function render(): void {
   if (view === "thanks") bindThanks();
 }
 
+/** Wide/tall zoomed images sit in a scroll box that defaults to top-left; center initial view (mobile). */
+function centerImageZoomLightboxScroll(): void {
+  const scroll = document.querySelector<HTMLElement>(".image-zoom-lightbox__scroll");
+  if (!scroll) return;
+  const run = (): void => {
+    scroll.scrollLeft = Math.max(0, (scroll.scrollWidth - scroll.clientWidth) / 2);
+    scroll.scrollTop = Math.max(0, (scroll.scrollHeight - scroll.clientHeight) / 2);
+  };
+  run();
+  requestAnimationFrame(run);
+  requestAnimationFrame(() => requestAnimationFrame(run));
+}
+
+function scheduleImageZoomLightboxCenter(img: HTMLImageElement): void {
+  const apply = (): void => {
+    centerImageZoomLightboxScroll();
+  };
+  if (img.complete && img.naturalWidth > 0) {
+    queueMicrotask(apply);
+    requestAnimationFrame(apply);
+    return;
+  }
+  img.addEventListener("load", apply, { once: true });
+  void img.decode?.().then(apply).catch(() => {});
+}
+
 function ensureImageZoomLightbox(): void {
   if (document.getElementById("image-zoom-lightbox")) return;
   const t = strings(detectUiLang());
@@ -1473,6 +1499,7 @@ function openImageZoomLightbox(
   img.alt = alt;
   root.removeAttribute("hidden");
   document.body.style.overflow = "hidden";
+  scheduleImageZoomLightboxCenter(img);
   (root.querySelector(".image-zoom-lightbox__close") as HTMLButtonElement | null)?.focus();
 }
 
