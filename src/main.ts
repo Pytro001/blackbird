@@ -811,7 +811,7 @@ ${howtoBlock}
       <main class="product-layout${isSubscription ? " product-layout--subscription" : ""}">
         <div class="product-hero${isSubscription ? " product-hero--subscription" : ""}">
         <div class="product-hero__media">
-          ${productGalleryHtml(lang, isSubscription)}
+          ${productGalleryHtml(lang, true)}
         </div>
 ${productHeroAside}
         </div>

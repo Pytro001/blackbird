@@ -168,11 +168,9 @@ body.subscription-view .product-name--subscription {
   font-weight: 650;
   line-height: 1.22;
   letter-spacing: 0.02em;
-  white-space: normal;
-}
-
-body.subscription-view .buy-sheet--offer-sub .product-name--subscription {
-  max-width: 18ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Bordered offer card: title → shipping → CTA — stacked inside framed .product-hero */
@@ -1114,16 +1112,12 @@ body.subscription-view .cosmos-field__shoot {
   gap: clamp(1.25rem, 3vw, 1.75rem);
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--buy-card-radius);
-  border: 1px solid var(--buy-card-border);
-  background: linear-gradient(
-      165deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      transparent 48%
-    ),
-    var(--buy-card-surface);
-  padding: clamp(1.15rem, 2.5vw, 1.75rem);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 @media (min-width: 840px) {
@@ -1233,38 +1227,17 @@ body.subscription-view .cosmos-field__shoot {
   width: 100%;
 }
 
-/* Mobile: thumbnail strip first (top), main image below — aligned to start */
+/* Mobile / all: main image fills width; thumbs are overlaid (not a separate row) */
 @media (max-width: 839px) {
   .product-gallery {
-    display: flex;
-    flex-direction: column;
+    display: block;
     width: 100%;
     max-width: 100%;
     overflow: visible;
   }
 
   .product-gallery__main {
-    order: 2;
     width: 100%;
-  }
-
-  .product-gallery__thumbs {
-    order: 1;
-    flex-direction: row;
-    align-self: stretch;
-    width: 100%;
-    justify-content: flex-start;
-    gap: clamp(0.35rem, 2vw, 0.55rem);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding: 0 0 0.45rem;
-    box-sizing: border-box;
-  }
-
-  .product-gallery__thumb {
-    flex: 0 0 auto;
-    width: clamp(3rem, 22vw, 4.5rem);
   }
 }
 
@@ -1290,18 +1263,42 @@ body.subscription-view .product-gallery {
   position: relative;
   min-width: 0;
   width: 100%;
-  border-radius: var(--radius);
-  overflow: visible;
+  border-radius: 0;
+  overflow: hidden;
 }
 
 .product-gallery__stage {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   outline: none;
   cursor: default;
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* Thumbnail row: top-left inside main image (requires thumbs in .product-gallery__stage) */
+.product-gallery__stage > .product-gallery__thumbs {
+  position: absolute;
+  top: clamp(0.45rem, 1.2vw, 0.85rem);
+  left: clamp(0.45rem, 1.2vw, 0.85rem);
+  z-index: 5;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: flex-start;
+  width: auto;
+  max-width: min(75%, calc(100% - 0.9rem));
+  margin: 0;
+  padding: 0;
+  gap: clamp(0.3rem, 0.9vw, 0.5rem);
+  overflow-x: auto;
+  overflow-y: visible;
+  background: transparent;
 }
 
 @media (min-width: 840px) {
@@ -1322,10 +1319,10 @@ body.subscription-view .product-gallery {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: clamp(0.45rem, 1vw, 0.65rem);
+    gap: 0;
     min-height: 0;
     overflow: hidden;
-    border-radius: var(--radius);
+    border-radius: 0;
   }
 
   .product-gallery__thumbs {
@@ -1428,33 +1425,15 @@ body.subscription-view .product-gallery {
     height: auto !important;
     max-height: none;
     overflow: hidden;
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 0;
     box-sizing: border-box;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+    box-shadow: none;
+    background: transparent;
   }
 
   body.subscription-view .product-gallery__thumbs {
-    order: 2;
-    position: static;
-    left: auto;
-    top: auto;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    flex: 0 0 auto;
-    min-width: 0;
-    padding: 0.35rem 0.5rem 0.55rem;
-    gap: clamp(0.45rem, 1vw, 0.65rem);
-    overflow-x: auto;
-    overflow-y: visible;
-    z-index: 2;
-    pointer-events: none;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    background: rgba(0, 0, 0, 0.35);
+    justify-content: flex-start;
   }
 
   body.subscription-view .product-gallery__aspect {
@@ -1492,8 +1471,8 @@ body.subscription-view .product-gallery {
     max-height: none;
     object-fit: contain;
     object-position: center;
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0);
+    border: none;
+    border-radius: 0;
     box-sizing: border-box;
   }
 
@@ -1504,19 +1483,19 @@ body.subscription-view .product-gallery {
     min-width: 44px;
     min-height: 44px;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 4px;
     border-radius: var(--radius);
-    opacity: 0.85;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    opacity: 0.92;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: opacity 0.15s ease, box-shadow 0.15s ease;
   }
 
   body.subscription-view .product-gallery__thumb.is-active {
     opacity: 1;
     box-shadow:
-      0 4px 14px rgba(0, 0, 0, 0.42),
-      0 0 0 2px rgba(255, 255, 255, 0.45);
+      0 4px 16px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.35);
   }
 
   body.subscription-view .product-gallery__thumb:hover:not(.is-active) {
@@ -1538,13 +1517,13 @@ body.subscription-view .product-gallery {
 body.subscription-view .product-gallery,
 body.subscription-view .product-gallery__stage {
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
 }
 
-/* Main column may be shorter than the aside; allow inner 14:9 box to size naturally */
+/* Main column may be shorter than the aside; allow inner box to size naturally */
 body.subscription-view .product-gallery__main {
   overflow: visible;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
 }
 
 /* Thumbnail strip: flex-direction and width are set per breakpoint (see below) so they are not overridden. */
@@ -1611,17 +1590,6 @@ body.subscription-view .product-gallery__thumb img {
   filter: brightness(1.12) contrast(1.02);
 }
 
-/* Thumb strip direction + preview sizes — placed after base `.product-gallery__thumb` so cascade wins over legacy rules. */
-@media (max-width: 839px) {
-  .product-gallery__thumbs {
-    flex-direction: row;
-    width: 100%;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: flex-start;
-  }
-}
-
 @media (min-width: 840px) {
   .product-gallery__thumbs {
     flex-direction: row;
@@ -1658,32 +1626,25 @@ body.subscription-view .product-gallery__thumb img {
     flex-direction: column;
   }
 
+  .product-gallery__stage {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
   body.subscription-view .product-gallery__stage {
     position: relative;
     width: 100%;
     overflow: hidden;
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 0;
     box-sizing: border-box;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
+    box-shadow: none;
   }
 
   body.subscription-view .product-gallery__thumbs {
-    position: absolute;
-    top: 0.65rem;
-    left: 0.65rem;
-    z-index: 3;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    align-self: flex-start;
-    width: auto;
-    max-width: min(42%, calc(100% - 1.3rem));
-    margin: 0;
-    padding: 0;
-    gap: 0.4rem;
-    overflow: visible;
-    pointer-events: none;
+    flex-direction: row;
   }
 
   body.subscription-view .product-gallery__thumb {
@@ -1732,7 +1693,7 @@ body.subscription-view .product-gallery__thumb img {
     max-height: none;
     object-fit: contain;
     object-position: center;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
   }
 }
 
@@ -2331,6 +2292,9 @@ body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
   letter-spacing: 0.03em;
   line-height: 1.2;
   color: rgba(245, 245, 245, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-price {
