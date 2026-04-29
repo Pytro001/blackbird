@@ -865,9 +865,11 @@ ${
         </div>
 
         <aside class="product-side" aria-label="Product details">
+          <div class="product-side-card">
 ${productBuyPanel}
-          <div class="product-panel product-panel--howto">
-            <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
+            <div class="product-panel product-panel--howto">
+              <button type="button" class="btn-howto" id="product-howto-open">How to use blackbird</button>
+            </div>
           </div>
         </aside>
         </div>`

@@ -178,11 +178,39 @@ body.subscription-view .product-offer-card {
   box-shadow: none;
 }
 
-body.subscription-view .product-subscription-hero .product-offer-card {
+/* Single framed card (subscription hero): buy block + how-to in one dark panel */
+body.subscription-view .product-side-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 1.4rem 1.45rem 1.5rem;
+  box-sizing: border-box;
+  border-radius: var(--radius);
+  border: 1px solid rgba(58, 58, 58, 0.95);
+  background: rgba(20, 20, 20, 0.92);
+  box-shadow: none;
+}
+
+body.subscription-view .product-side-card .product-offer-card {
   border: none;
   background: transparent;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+}
+
+body.subscription-view .product-side-card .product-panel--howto {
+  width: 100%;
+  align-items: stretch;
+}
+
+body.subscription-view .product-side-card .btn-howto {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body.subscription-view .product-offer-card .product-name--subscription {
