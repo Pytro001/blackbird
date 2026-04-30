@@ -1067,6 +1067,10 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 /* —— Product (image left, info right); background from .home-shell —— */
+#product {
+  overflow-anchor: none;
+}
+
 .page-product {
   /* Same horizontal inset left/right, then each side max() with its safe-area */
   --product-inline-pad: clamp(1rem, 4vw, 2rem);
@@ -2113,23 +2117,30 @@ body.subscription-view .product-gallery__thumb img {
     border-radius: 0;
     box-sizing: border-box;
     box-shadow: none;
-    touch-action: pan-x pan-y;
+    /* Let vertical scroll pass to the page; horizontal swipes are handled in JS */
+    touch-action: pan-y;
   }
 
   body.subscription-view .product-gallery__thumbs:not(.product-gallery__thumbs--subscription) {
     flex-direction: row;
   }
 
+  /*
+   * Slides are ~2:3 portrait; intrinsic padding-bottom made the hero ~150% of viewport width tall.
+   * Use a shorter fixed frame + cover so the page scroll stays sane (crop top/bottom).
+   */
   body.subscription-view .product-gallery__aspect,
   body.subscription-view .product-gallery__aspect--smooth {
     display: block;
     position: relative;
     width: 100%;
-    height: 0;
-    padding-bottom: var(--subscription-gallery-aspect-pad);
+    height: auto;
+    padding-bottom: 0;
     flex: none;
     overflow: hidden;
     border-radius: inherit;
+    aspect-ratio: 4 / 3;
+    max-height: min(52svh, 440px);
   }
 
   body.subscription-view .product-gallery__track-shell {

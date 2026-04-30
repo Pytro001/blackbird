@@ -594,9 +594,12 @@ function goLanding(): void {
 }
 
 /** Same document as home; scroll product block into view */
-function scrollToProduct(behavior: ScrollBehavior): void {
+function scrollToProduct(
+  behavior: ScrollBehavior = "auto",
+  block: ScrollLogicalPosition = "nearest",
+): void {
   requestAnimationFrame(() => {
-    document.getElementById("product")?.scrollIntoView({ behavior, block: "start" });
+    document.getElementById("product")?.scrollIntoView({ behavior, block });
   });
 }
 
@@ -1434,10 +1437,10 @@ function render(): void {
     const landingMode: LandingMode = view === "subscription" ? "subscription" : "purchase";
     root.innerHTML = homeHtml(uiLang, landingMode);
     bindProduct();
-    const scrollProduct =
-      view === "product" || (view === "subscription" && wasEmailPath);
+    /* Subscription home: do not auto-scroll on load (prevents jumpy mobile viewport). */
+    const scrollProduct = view === "product" && wasEmailPath;
     if (scrollProduct) {
-      scrollToProduct(view === "product" ? "auto" : "smooth");
+      scrollToProduct("auto", "nearest");
     } else if (
       location.hash === "#product-faq" ||
       location.hash === "#education" ||
@@ -1587,7 +1590,7 @@ function bindImageZoomLightbox(): void {
 
 function bindProduct(): void {
   document.getElementById("cta-now")?.addEventListener("click", () => {
-    scrollToProduct("smooth");
+    scrollToProduct("auto", "start");
   });
 
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {
