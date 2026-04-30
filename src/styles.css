@@ -30,6 +30,8 @@
   --buy-card-inset: rgba(255, 255, 255, 0.045);
   /* Hero gallery image box (683×1024 sources); padding-bottom % */
   --subscription-gallery-aspect-pad: calc(1024 / 683 * 100%);
+  /** Subscription carousel: +17% vertical focal bias — less empty top, products higher in frame */
+  --gallery-slide-object-position: center calc(50% + 17%);
   /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
   --font: "Diatype", "Inter", system-ui, -apple-system, sans-serif;
   /* Hero “blackbird” wordmark — previous site font */
@@ -1300,7 +1302,7 @@ body.subscription-view .cosmos-field__shoot {
     height: 100%;
     max-height: none;
     object-fit: cover;
-    object-position: center;
+    object-position: var(--gallery-slide-object-position);
   }
 }
 
@@ -1611,7 +1613,7 @@ body.subscription-view .product-gallery {
     margin-left: 0;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: var(--gallery-slide-object-position);
     border: none;
     border-radius: 0;
     box-sizing: border-box;
@@ -1838,7 +1840,7 @@ body.subscription-view .product-gallery__thumb img {
     height: 100%;
     max-height: none;
     object-fit: cover;
-    object-position: center;
+    object-position: var(--gallery-slide-object-position);
     border-radius: 0;
   }
 
