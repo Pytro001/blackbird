@@ -1343,12 +1343,16 @@ body.subscription-view .cosmos-field__shoot {
     padding-bottom: 50%;
     flex: none;
     overflow: hidden;
+    /* Visible gaps when clipping hero — matches typical packshot backdrop */
+    background: #ebe6df;
   }
 
   body:not(.subscription-view) .product-gallery__figure {
     position: absolute;
     inset: 0;
     margin: 0;
+    clip-path: inset(25% 0 7% 0);
+    border-radius: inherit;
   }
 
   body:not(.subscription-view) .product-gallery__figure picture {
@@ -1627,6 +1631,12 @@ body.subscription-view .product-gallery {
   border: none;
   box-shadow: none;
   background: transparent;
+}
+
+@media (max-width: 839px) {
+  .product-gallery__stage {
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Thumbnail overlay: top-left inside main image (purchase) */
@@ -3462,6 +3472,10 @@ body.subscription-view .product-gallery__slide-img.image-zoomable {
 @media (max-width: 839px) {
   img.image-zoomable {
     cursor: zoom-in;
+  }
+
+  #product-gallery img.image-zoomable {
+    cursor: default;
   }
 
   body.subscription-view .product-gallery__slide-img.image-zoomable {

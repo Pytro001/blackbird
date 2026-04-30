@@ -1595,6 +1595,7 @@ function onImageZoomLightboxClick(e: MouseEvent): void {
   if (t.closest("#image-zoom-lightbox")) return;
   const imgEl = t.closest("img.image-zoomable");
   if (!imgEl || !(imgEl instanceof HTMLImageElement)) return;
+  if (imgEl.closest("#product-gallery")) return;
   e.preventDefault();
   e.stopPropagation();
   const returnFocus = imgEl.closest("#product-faq")
@@ -1836,11 +1837,14 @@ function bindProductFaq(): void {
 }
 
 const PRODUCT_GALLERY_SWIPE_MIN_PX = 48;
+/** One-finger horizontal swipe; lower on mobile for easier photo changes. */
+const PRODUCT_GALLERY_SWIPE_MIN_PX_MOBILE = 20;
 /** Horizontal wheel delta before changing slide (trackpad two-finger swipe). */
 const PRODUCT_GALLERY_WHEEL_STEP_PX = 36;
 const PRODUCT_GALLERY_WHEEL_COOLDOWN_MS = 240;
 /** Midpoint movement between two touches before changing slide. */
 const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX = 52;
+const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX_MOBILE = 26;
 
 function bindProductShotsCarousel(): void {
   const stage = document.getElementById("product-gallery-stage");
@@ -1923,8 +1927,13 @@ function bindProductShotsCarousel(): void {
       /* ignore */
     }
     if (n < 2) return;
-    if (Math.abs(dx) < PRODUCT_GALLERY_SWIPE_MIN_PX) return;
-    if (Math.abs(dx) <= Math.abs(dy)) return;
+    const mobile = window.matchMedia("(max-width: 839px)").matches;
+    const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
+    const minSwipe = mobile && touchLike ? PRODUCT_GALLERY_SWIPE_MIN_PX_MOBILE : PRODUCT_GALLERY_SWIPE_MIN_PX;
+    if (Math.abs(dx) < minSwipe) return;
+    if (mobile && touchLike) {
+      if (Math.abs(dx) <= Math.abs(dy) * 0.48) return;
+    } else if (Math.abs(dx) <= Math.abs(dy)) return;
     if (dx < 0) show(index + 1);
     else show(index - 1);
   };
@@ -2003,7 +2012,11 @@ function bindProductShotsCarousel(): void {
       if (n < 2 || e.touches.length !== 2 || twoTouchMidX === null || twoTouchConsumed) return;
       const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const dx = midX - twoTouchMidX;
-      if (Math.abs(dx) < PRODUCT_GALLERY_TWO_TOUCH_MIN_PX) return;
+      const min2 =
+        window.matchMedia("(max-width: 839px)").matches
+          ? PRODUCT_GALLERY_TWO_TOUCH_MIN_PX_MOBILE
+          : PRODUCT_GALLERY_TWO_TOUCH_MIN_PX;
+      if (Math.abs(dx) < min2) return;
       e.preventDefault();
       if (dx < 0) show(index + 1);
       else show(index - 1);
