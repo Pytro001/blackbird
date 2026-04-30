@@ -1361,7 +1361,7 @@ body.subscription-view .cosmos-field__shoot {
     position: absolute;
     inset: 0;
     margin: 0;
-    clip-path: inset(25% 0 7% 0);
+    clip-path: inset(20% 0 10% 0);
     border-radius: inherit;
   }
 
@@ -1669,39 +1669,32 @@ body.subscription-view .product-gallery {
   pointer-events: auto;
 }
 
-/* Subscription: thumbnails bottom-center overlay (borderless styling in scoped rules below) */
+/* Subscription: same simple top-left thumb stack as /product — always visible, no fade/peek */
 .product-gallery__stage > .product-gallery__thumbs--subscription {
   position: absolute;
-  bottom: clamp(0.42rem, 2.2vw, 0.88rem);
-  left: 50%;
-  top: auto;
+  top: clamp(0.45rem, 1.2vw, 0.85rem);
+  left: clamp(0.45rem, 1.2vw, 0.85rem);
+  bottom: auto;
   right: auto;
   z-index: 7;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: flex-start;
   width: auto;
-  max-width: calc(100% - 1.25rem);
-  max-height: none;
-  transition:
-    opacity 0.38s cubic-bezier(0.32, 0.72, 0.25, 1),
-    transform 0.38s cubic-bezier(0.32, 0.72, 0.25, 1);
-  opacity: 0;
-  transform: translateX(-50%) translateY(10px);
-  pointer-events: none;
-}
-
-.product-gallery__stage > .product-gallery__thumbs--subscription.is-visible {
+  max-width: min(34%, calc(100% - 0.9rem));
+  max-height: min(70%, calc(100% - 0.9rem));
+  margin: 0;
+  padding: 0;
+  gap: clamp(0.3rem, 0.9vw, 0.45rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: transparent;
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: none;
+  transition: none;
   pointer-events: auto;
-}
-
-/* Hidden strip must not intercept taps meant for the image (children default to pointer-events: auto). */
-.product-gallery__stage
-  > .product-gallery__thumbs--subscription:not(.is-visible)
-  .product-gallery__thumb {
-  pointer-events: none;
 }
 
 /* picture wrapper must not affect flex sizing of the hero img */
@@ -1880,33 +1873,41 @@ body.subscription-view .product-gallery {
   }
 
   body.subscription-view .product-gallery__thumbs--subscription {
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb {
     flex-shrink: 0;
-    width: clamp(2.85rem, 5vw, 3.85rem);
+    width: clamp(3.05rem, 6.8vw, 3.85rem);
+    height: clamp(3.05rem, 6.8vw, 3.85rem);
     max-width: none;
-    min-width: 42px;
-    min-height: 42px;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
     box-sizing: border-box;
-    padding: 3px;
-    border-radius: 6px;
+    padding: 0;
+    border-radius: clamp(8px, 1.4vw, 12px);
     border: none;
     background: transparent;
-    opacity: 0.48;
+    opacity: 1;
     box-shadow: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: none;
+    filter: none;
   }
 
   body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb.is-active {
-    opacity: 1;
-    transform: translateY(-1px);
+    filter: brightness(1.06);
   }
 
   body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb:hover:not(.is-active) {
-    opacity: 0.78;
+    filter: brightness(1.03);
+  }
+
+  body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb img {
+    border-radius: clamp(7px, 1.3vw, 10px);
+    object-fit: cover;
+    display: block;
   }
 
   body.subscription-view .product-gallery__main {
@@ -2105,30 +2106,35 @@ body.subscription-view .product-gallery__thumb img {
   }
 
   body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb {
-    width: clamp(2.5rem, 18vw, 3.4rem);
-    min-width: 40px;
-    min-height: 40px;
+    width: clamp(2.75rem, 12vw, 3.5rem);
+    height: clamp(2.75rem, 12vw, 3.5rem);
+    min-width: 0;
+    min-height: 0;
     max-width: none;
+    aspect-ratio: 1 / 1;
     box-sizing: border-box;
-    padding: 2px;
+    padding: 0;
     border: none;
+    border-radius: clamp(8px, 2vw, 11px);
     background: transparent;
-    opacity: 0.5;
+    opacity: 1;
     box-shadow: none;
+    filter: none;
   }
 
   body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb.is-active {
-    opacity: 1;
+    filter: brightness(1.06);
+  }
+
+  body.subscription-view .product-gallery__thumbs--subscription .product-gallery__thumb img {
+    border-radius: clamp(6px, 1.8vw, 10px);
+    object-fit: cover;
+    display: block;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   body.subscription-view .product-gallery__track--smooth {
-    transition-duration: 0.06ms;
-    transition-timing-function: linear;
-  }
-
-  .product-gallery__stage > .product-gallery__thumbs--subscription {
     transition-duration: 0.06ms;
     transition-timing-function: linear;
   }
