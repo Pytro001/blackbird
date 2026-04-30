@@ -1180,8 +1180,140 @@ body.subscription-view .cosmos-field__shoot {
 
   .product-hero:not(.product-hero--subscription) > .product-side {
     align-self: start;
-    margin-top: clamp(1.35rem, 3.5vw, 2.25rem);
+    margin-top: 0;
   }
+}
+
+/* —— Purchase (/product): reference-style two-column, rounded gallery, always-visible thumb stack —— */
+@media (min-width: 840px) {
+  body:not(.subscription-view) .product-hero:not(.product-hero--subscription) {
+    display: grid;
+    grid-template-columns: minmax(0, min(480px, 52vw)) minmax(280px, 420px);
+    justify-content: center;
+    align-items: start;
+    column-gap: clamp(1.75rem, 4vw, 2.75rem);
+    row-gap: clamp(1rem, 2.5vw, 1.5rem);
+    width: 100%;
+    max-width: min(1100px, 100%);
+    margin-inline: auto;
+  }
+
+  body:not(.subscription-view) .product-hero:not(.product-hero--subscription) .product-hero__media {
+    min-width: 0;
+  }
+
+  body:not(.subscription-view) .product-gallery {
+    max-width: min(440px, 50vw);
+    margin-inline: 0;
+    border-radius: clamp(14px, 2.2vw, 18px);
+    overflow: hidden;
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.42),
+      0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  }
+
+  body:not(.subscription-view) .product-gallery__main,
+  body:not(.subscription-view) .product-gallery__stage {
+    border-radius: inherit;
+  }
+
+  body:not(.subscription-view) .product-gallery__stage > .product-gallery__thumbs--purchase {
+    top: clamp(0.55rem, 1.5vw, 0.85rem);
+    left: clamp(0.55rem, 1.5vw, 0.85rem);
+    gap: clamp(0.45rem, 1.1vw, 0.65rem);
+    max-width: min(36%, 9.25rem);
+    max-height: none;
+    overflow: visible;
+    z-index: 6;
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb {
+    width: clamp(3rem, 7vw, 3.85rem);
+    height: clamp(3rem, 7vw, 3.85rem);
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    padding: 3px;
+    border-radius: clamp(8px, 1.4vw, 10px);
+    background: rgba(10, 10, 10, 0.58);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    opacity: 0.88;
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb.is-active {
+    opacity: 1;
+    outline: 2px solid rgba(255, 255, 255, 0.42);
+    outline-offset: 1px;
+    filter: none;
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb:hover:not(.is-active) {
+    opacity: 0.98;
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb img {
+    border-radius: max(4px, calc(clamp(8px, 1.4vw, 10px) - 4px));
+    object-fit: cover;
+  }
+}
+
+@media (max-width: 839px) {
+  body:not(.subscription-view) .product-gallery {
+    border-radius: clamp(12px, 3.5vw, 16px);
+    overflow: hidden;
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.38);
+  }
+
+  body:not(.subscription-view) .product-gallery__stage > .product-gallery__thumbs--purchase {
+    gap: clamp(0.4rem, 1vw, 0.55rem);
+    max-height: min(52%, calc(100% - 1rem));
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb {
+    width: clamp(2.65rem, 12vw, 3.35rem);
+    height: clamp(2.65rem, 12vw, 3.35rem);
+    aspect-ratio: 1 / 1;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  }
+}
+
+body:not(.subscription-view) .buy-sheet--howto {
+  width: 100%;
+  max-width: 420px;
+  align-self: stretch;
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 1.2rem;
+  min-height: 48px;
+  font-size: clamp(0.84rem, 2.1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-decoration: none;
+  color: rgba(250, 250, 250, 0.96);
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: clamp(10px, 2vw, 14px);
+  box-shadow: none;
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto:hover {
+  color: var(--white);
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.26);
+  text-decoration: none;
+}
+
+body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 2px;
 }
 
 /* Subscription: match purchase horizontal inset; avoid doubling with .product-layout--subscription below */
@@ -1387,7 +1519,7 @@ body.subscription-view .product-gallery {
   background: transparent;
 }
 
-/* Thumbnail overlay: top-left inside main image — not subscription bottom strip */
+/* Thumbnail overlay: top-left inside main image (purchase) */
 .product-gallery__stage > .product-gallery__thumbs:not(.product-gallery__thumbs--subscription) {
   position: absolute;
   top: clamp(0.45rem, 1.2vw, 0.85rem);
@@ -1407,6 +1539,8 @@ body.subscription-view .product-gallery {
   overflow-x: hidden;
   overflow-y: auto;
   background: transparent;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Subscription: thumbnails bottom-center overlay (borderless styling in scoped rules below) */
@@ -1989,35 +2123,6 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 .btn-howto:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.38);
   outline-offset: 2px;
-}
-
-body:not(.subscription-view) .buy-sheet--howto .btn-howto {
-  width: auto;
-  max-width: 100%;
-  background: none;
-  border: none;
-  padding: 0.35rem 0;
-  min-height: unset;
-  margin: 0;
-  font-size: clamp(0.76rem, 1.9vw, 0.85rem);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: rgba(200, 200, 200, 0.75);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: rgba(200, 200, 200, 0.32);
-  box-shadow: none;
-}
-
-body:not(.subscription-view) .buy-sheet--howto .btn-howto:hover {
-  color: rgba(230, 230, 230, 0.95);
-  border: none;
-  background: none;
-  text-decoration-color: rgba(230, 230, 230, 0.55);
-}
-
-body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
-  outline-color: rgba(240, 240, 240, 0.45);
 }
 
 /* How-to manual: darkened site, native PDF in iframe; backdrop tap closes */

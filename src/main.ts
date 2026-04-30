@@ -715,7 +715,11 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
       : "";
 
   const thumbsClass =
-    `product-gallery__thumbs${o.thumbsVariant === "subscription" ? " product-gallery__thumbs--subscription is-visible" : ""}`.trim();
+    `product-gallery__thumbs${
+      o.thumbsVariant === "subscription"
+        ? " product-gallery__thumbs--subscription is-visible"
+        : " product-gallery__thumbs--purchase"
+    }`.trim();
   const thumbsHtml = o.showThumbs
     ? `<div class="${thumbsClass}" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbButtons}</div>`
     : "";
