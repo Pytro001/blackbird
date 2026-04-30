@@ -33,7 +33,6 @@ function carouselSlides(lang: UiLang): readonly { file: string; alt: string }[] 
     { file: "product-slide-01.png", alt: t.carouselAlt1 },
     { file: "product-slide-02.png", alt: t.carouselAlt2 },
     { file: "product-slide-03.png", alt: t.carouselAlt3 },
-    { file: "product-slide-04.png", alt: t.carouselAlt4 },
   ];
 }
 
@@ -674,8 +673,8 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                       <img
                         class="product-gallery__slide-img image-zoomable"
                         src="${escapeHtml(srcSlide)}"
-                        width="1024"
-                        height="658"
+                        width="683"
+                        height="1024"
                         alt="${escapeHtml(slide.alt)}"
                         decoding="async"
                         loading="${i === 0 ? "eager" : "lazy"}"
@@ -697,8 +696,8 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                     id="product-gallery-main-img"
                     class="product-gallery__main-img image-zoomable"
                     src="${escapeHtml(firstSrc)}"
-                    width="1024"
-                    height="658"
+                    width="683"
+                    height="1024"
                     alt="${escapeHtml(first.alt)}"
                     decoding="async"
                     fetchpriority="high"

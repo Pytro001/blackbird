@@ -28,8 +28,8 @@
   --buy-card-surface: #141414;
   --buy-card-border: rgba(255, 255, 255, 0.08);
   --buy-card-inset: rgba(255, 255, 255, 0.045);
-  /* Hero gallery image box (1024×658 sources); padding-bottom % */
-  --subscription-gallery-aspect-pad: calc(658 / 1024 * 100%);
+  /* Hero gallery image box (683×1024 sources); padding-bottom % */
+  --subscription-gallery-aspect-pad: calc(1024 / 683 * 100%);
   /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
   --font: "Diatype", "Inter", system-ui, -apple-system, sans-serif;
   /* Hero “blackbird” wordmark — previous site font */
