@@ -111,6 +111,8 @@ type ProductGalleryOptions = {
   /** Thumbs inside the stage (VS below the image) */
   thumbsInsideStage: boolean;
   showThumbs: boolean;
+  /** Subscription landing: thumbs column to the left of the hero image (not overlaid). */
+  thumbsBesideMain: boolean;
   /** Subscription: translateX strip with transition (vs single img src swap) */
   smoothTrack: boolean;
   thumbsVariant: "purchase" | "subscription";
@@ -119,6 +121,7 @@ type ProductGalleryOptions = {
 const defaultProductGalleryOptions: ProductGalleryOptions = {
   thumbsInsideStage: false,
   showThumbs: true,
+  thumbsBesideMain: false,
   smoothTrack: false,
   thumbsVariant: "purchase",
 };
@@ -277,7 +280,7 @@ function isImageZoomMobileViewport(): boolean {
 
 /** Default Stripe subscription / subscribe CTA (overridable via `VITE_STRIPE_SUBSCRIPTION_LINK`). */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
-  "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
+  "https://buy.stripe.com/fZudRad9h7dkdHq2ndfbq04";
 
 function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
@@ -703,10 +706,16 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
       ? ` style="--subscription-gallery-aspect-pad: calc(${firstMeta.intrinsicHeight} / ${firstMeta.intrinsicWidth} * 100%)"`
       : ` style="--subscription-gallery-aspect-pad: 50%"`;
 
-  /* Same DOM order as /product: thumbs first, then image — overlay stays top-left (no bottom strip / peek). */
-  const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs ? thumbsHtml : "";
+  /* Beside layout (landing): rail left of stage — thumbs not overlaid on image */
+  const besideRail =
+    o.thumbsBesideMain && o.showThumbs
+      ? `<div class="product-gallery__thumbs-rail">${thumbsHtml}</div>`
+      : "";
+  const thumbsBeforeInner =
+    o.thumbsInsideStage && o.showThumbs && !o.thumbsBesideMain ? thumbsHtml : "";
   const thumbsAfterInner = "";
-  const thumbsOutside = !o.thumbsInsideStage && o.showThumbs ? thumbsHtml : "";
+  const thumbsOutside =
+    !o.thumbsInsideStage && !o.thumbsBesideMain && o.showThumbs ? thumbsHtml : "";
 
   const aspectInnerSmooth = (): string =>
     `
@@ -753,8 +762,11 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
   if (o.smoothTrack) stageInner.push("product-gallery__stage--smooth");
   const stageClasses = stageInner.join(" ");
 
+  const galleryModifierClass = o.thumbsBesideMain ? " product-gallery--thumbs-beside" : "";
+
   return `
-        <div class="product-gallery" id="product-gallery" tabindex="-1"${galleryAspectAttr}>
+        <div class="product-gallery${galleryModifierClass}" id="product-gallery" tabindex="-1"${galleryAspectAttr}>
+          ${besideRail}
           <div class="product-gallery__main">
             <div
               class="${stageClasses}"
@@ -900,8 +912,8 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
           <div class="buy-stack buy-stack--subscription">
 ${productBuyPanel}
             ${whatsAppBlockHtml(lang)}
-${howtoBlock}
           </div>
+${howtoBlock}
         </aside>`
     : `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
 ${productBuyPanel}
@@ -937,12 +949,14 @@ ${howtoBlock}
             lang,
             isSubscription
               ? {
-                  thumbsInsideStage: true,
+                  thumbsBesideMain: true,
+                  thumbsInsideStage: false,
                   showThumbs: true,
                   smoothTrack: true,
                   thumbsVariant: "subscription",
                 }
               : {
+                  thumbsBesideMain: false,
                   thumbsInsideStage: true,
                   showThumbs: true,
                   smoothTrack: false,
