@@ -44,7 +44,7 @@ const MANUAL_PAGE_VER = "1";
 function carouselSlideUrls(stem: string): {
   webp: string;
   webp2x: string | null;
-  png: string;
+  fallback: string;
   meta: GallerySlideMeta;
 } {
   const meta = gallerySlideMeta(stem);
@@ -54,7 +54,7 @@ function carouselSlideUrls(stem: string): {
       meta.hasTwoWebpTiers && meta.fullWebpWidth > meta.heroWebpWidth
         ? publicAssetUrl(`${stem}@2x.webp`)
         : null,
-    png: publicAssetUrl(`${stem}.png`),
+    fallback: publicAssetUrl(`${stem}.${meta.fallbackExt}`),
     meta,
   };
 }
@@ -85,7 +85,7 @@ function gallerySlidePictureHtml(options: {
                         />
                         <img${idAttr}
                           class="${escapeHtml(options.imgClass)}"
-                          src="${escapeHtml(u.png)}"
+                          src="${escapeHtml(u.fallback)}"
                           width="${m.intrinsicWidth}"
                           height="${m.intrinsicHeight}"
                           alt="${escapeHtml(options.alt)}"
@@ -1859,7 +1859,7 @@ function bindProductShotsCarousel(): void {
     if (mainImg) {
       const urls = carouselSlideUrls(slide.stem);
       const m = urls.meta;
-      mainImg.src = urls.png;
+      mainImg.src = urls.fallback;
       mainImg.alt = slide.alt;
       mainImg.width = m.intrinsicWidth;
       mainImg.height = m.intrinsicHeight;
