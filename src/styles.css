@@ -1184,17 +1184,17 @@ body.subscription-view .cosmos-field__shoot {
   }
 }
 
-/* —— Purchase (/product): reference-style two-column, rounded gallery, always-visible thumb stack —— */
+/* —— Purchase (/product): wide 2:1 hero crop, thumb stack, card-like gallery —— */
 @media (min-width: 840px) {
   body:not(.subscription-view) .product-hero:not(.product-hero--subscription) {
     display: grid;
-    grid-template-columns: minmax(0, min(480px, 52vw)) minmax(280px, 420px);
+    grid-template-columns: minmax(0, min(640px, 58vw)) minmax(280px, 420px);
     justify-content: center;
     align-items: start;
     column-gap: clamp(1.75rem, 4vw, 2.75rem);
     row-gap: clamp(1rem, 2.5vw, 1.5rem);
     width: 100%;
-    max-width: min(1100px, 100%);
+    max-width: min(1180px, 100%);
     margin-inline: auto;
   }
 
@@ -1203,7 +1203,8 @@ body.subscription-view .cosmos-field__shoot {
   }
 
   body:not(.subscription-view) .product-gallery {
-    max-width: min(440px, 50vw);
+    width: 100%;
+    max-width: min(600px, 58vw);
     margin-inline: 0;
     border-radius: clamp(14px, 2.2vw, 18px);
     overflow: hidden;
@@ -1217,43 +1218,104 @@ body.subscription-view .cosmos-field__shoot {
     border-radius: inherit;
   }
 
+  /* 2:1 aspect (padding-bottom % of width) — crop top/bottom, hero reads wider */
+  body:not(.subscription-view) .product-gallery__main {
+    flex: 0 0 auto;
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  body:not(.subscription-view) .product-gallery__stage {
+    flex: 0 0 auto;
+    display: block;
+    height: auto;
+    position: relative;
+  }
+
+  body:not(.subscription-view) .product-gallery__aspect {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 50%;
+    flex: none;
+    min-height: 0;
+    overflow: hidden;
+    display: block;
+    border-radius: inherit;
+  }
+
+  body:not(.subscription-view) .product-gallery__figure {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: block;
+    border-radius: inherit;
+  }
+
+  body:not(.subscription-view) .product-gallery__figure picture {
+    display: block;
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    border-radius: inherit;
+  }
+
+  body:not(.subscription-view) .product-gallery__main-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center 40%;
+    pointer-events: auto;
+    border-radius: inherit;
+  }
+
   body:not(.subscription-view) .product-gallery__stage > .product-gallery__thumbs--purchase {
     top: clamp(0.55rem, 1.5vw, 0.85rem);
     left: clamp(0.55rem, 1.5vw, 0.85rem);
-    gap: clamp(0.45rem, 1.1vw, 0.65rem);
-    max-width: min(36%, 9.25rem);
+    gap: clamp(0.5rem, 1.2vw, 0.75rem);
+    max-width: min(34%, 11rem);
     max-height: none;
     overflow: visible;
     z-index: 6;
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb {
-    width: clamp(3rem, 7vw, 3.85rem);
-    height: clamp(3rem, 7vw, 3.85rem);
+    width: clamp(3.65rem, 8.5vw, 4.85rem);
+    height: clamp(3.65rem, 8.5vw, 4.85rem);
     max-width: none;
     aspect-ratio: 1 / 1;
-    padding: 3px;
-    border-radius: clamp(8px, 1.4vw, 10px);
-    background: rgba(10, 10, 10, 0.58);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-    opacity: 0.88;
+    padding: 2px;
+    border: none;
+    border-radius: clamp(9px, 1.5vw, 12px);
+    background: rgba(8, 8, 8, 0.42);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: none;
+    opacity: 0.92;
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb.is-active {
     opacity: 1;
-    outline: 2px solid rgba(255, 255, 255, 0.42);
-    outline-offset: 1px;
-    filter: none;
+    outline: none;
+    filter: brightness(1.12);
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb:hover:not(.is-active) {
-    opacity: 0.98;
+    opacity: 1;
+    filter: brightness(1.06);
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb img {
-    border-radius: max(4px, calc(clamp(8px, 1.4vw, 10px) - 4px));
+    border-radius: clamp(7px, 1.3vw, 10px);
     object-fit: cover;
   }
 }
@@ -1265,19 +1327,67 @@ body.subscription-view .cosmos-field__shoot {
     box-shadow: 0 10px 36px rgba(0, 0, 0, 0.38);
   }
 
+  body:not(.subscription-view) .product-gallery__main {
+    display: block;
+  }
+
+  body:not(.subscription-view) .product-gallery__stage {
+    display: block;
+    position: relative;
+  }
+
+  body:not(.subscription-view) .product-gallery__aspect {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 50%;
+    flex: none;
+    overflow: hidden;
+  }
+
+  body:not(.subscription-view) .product-gallery__figure {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+  }
+
+  body:not(.subscription-view) .product-gallery__figure picture {
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+
+  body:not(.subscription-view) .product-gallery__main-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    max-width: none;
+    max-height: none;
+  }
+
   body:not(.subscription-view) .product-gallery__stage > .product-gallery__thumbs--purchase {
-    gap: clamp(0.4rem, 1vw, 0.55rem);
-    max-height: min(52%, calc(100% - 1rem));
+    gap: clamp(0.45rem, 1.1vw, 0.6rem);
+    max-height: min(48%, calc(100% - 1rem));
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb {
-    width: clamp(2.65rem, 12vw, 3.35rem);
-    height: clamp(2.65rem, 12vw, 3.35rem);
+    width: clamp(3.25rem, 14vw, 4.15rem);
+    height: clamp(3.25rem, 14vw, 4.15rem);
     aspect-ratio: 1 / 1;
-    background: rgba(10, 10, 10, 0.55);
+    padding: 2px;
+    border: none;
+    background: rgba(8, 8, 8, 0.42);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
+  }
+
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb.is-active {
+    outline: none;
+    filter: brightness(1.1);
   }
 }
 

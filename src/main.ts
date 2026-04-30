@@ -726,7 +726,10 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
 
   const first = slides[0];
   const firstMeta = gallerySlideMeta(first.stem);
-  const galleryAspectAttr = ` style="--subscription-gallery-aspect-pad: calc(${firstMeta.intrinsicHeight} / ${firstMeta.intrinsicWidth} * 100%)"`;
+  const galleryAspectAttr =
+    o.thumbsVariant === "subscription"
+      ? ` style="--subscription-gallery-aspect-pad: calc(${firstMeta.intrinsicHeight} / ${firstMeta.intrinsicWidth} * 100%)"`
+      : ` style="--subscription-gallery-aspect-pad: 50%"`;
 
   const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs && !o.smoothTrack ? thumbsHtml : "";
   const thumbsAfterInner =
@@ -1648,13 +1651,16 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
+    /* Purchase uses CSS 2:1 aspect on .product-gallery__aspect — inline height would break the crop. */
+    if (!document.body.classList.contains("subscription-view")) {
+      gallery.classList.remove("product-gallery--match-aside");
+      gallery.style.removeProperty("height");
+      gallery.style.removeProperty("width");
+      return;
+    }
     const hSide = Math.round(side.offsetHeight);
     gallery.style.height = `${hSide}px`;
-    if (document.body.classList.contains("subscription-view")) {
-      gallery.classList.add("product-gallery--match-aside");
-    } else {
-      gallery.classList.remove("product-gallery--match-aside");
-    }
+    gallery.classList.add("product-gallery--match-aside");
     gallery.style.removeProperty("width");
   };
 
