@@ -1184,7 +1184,7 @@ body.subscription-view .cosmos-field__shoot {
   }
 }
 
-/* —— Purchase (/product): wide 2:1 hero crop, thumb stack, card-like gallery —— */
+/* —— Purchase (/product): gallery stretches to aside (How-to line); borderless thumbs —— */
 @media (min-width: 840px) {
   body:not(.subscription-view) .product-hero:not(.product-hero--subscription) {
     display: grid;
@@ -1200,12 +1200,21 @@ body.subscription-view .cosmos-field__shoot {
 
   body:not(.subscription-view) .product-hero:not(.product-hero--subscription) .product-hero__media {
     min-width: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
   }
 
   body:not(.subscription-view) .product-gallery {
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
-    max-width: min(600px, 58vw);
+    max-width: 100%;
     margin-inline: 0;
+    display: flex;
+    flex-direction: column;
     border-radius: clamp(14px, 2.2vw, 18px);
     overflow: hidden;
     box-shadow:
@@ -1218,27 +1227,29 @@ body.subscription-view .cosmos-field__shoot {
     border-radius: inherit;
   }
 
-  /* 2:1 aspect (padding-bottom % of width) — crop top/bottom, hero reads wider */
   body:not(.subscription-view) .product-gallery__main {
-    flex: 0 0 auto;
-    display: block;
-    height: auto;
+    flex: 1 1 auto;
     min-height: 0;
-    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
   }
 
   body:not(.subscription-view) .product-gallery__stage {
-    flex: 0 0 auto;
-    display: block;
-    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
     position: relative;
+    display: block;
+    height: 100%;
   }
 
   body:not(.subscription-view) .product-gallery__aspect {
-    position: relative;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: 0;
-    padding-bottom: 50%;
+    height: 100%;
+    padding-bottom: 0;
     flex: none;
     min-height: 0;
     overflow: hidden;
@@ -1293,30 +1304,29 @@ body.subscription-view .cosmos-field__shoot {
     height: clamp(3.65rem, 8.5vw, 4.85rem);
     max-width: none;
     aspect-ratio: 1 / 1;
-    padding: 2px;
+    padding: 0;
     border: none;
     border-radius: clamp(9px, 1.5vw, 12px);
-    background: rgba(8, 8, 8, 0.42);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: none;
-    opacity: 0.92;
+    opacity: 1;
   }
 
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb.is-active {
-    opacity: 1;
     outline: none;
-    filter: brightness(1.12);
-  }
-
-  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb:hover:not(.is-active) {
-    opacity: 1;
     filter: brightness(1.06);
   }
 
+  body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb:hover:not(.is-active) {
+    filter: brightness(1.04);
+  }
+
   body:not(.subscription-view) .product-gallery__thumbs--purchase .product-gallery__thumb img {
-    border-radius: clamp(7px, 1.3vw, 10px);
+    border-radius: clamp(8px, 1.4vw, 12px);
     object-fit: cover;
+    display: block;
   }
 }
 
@@ -1381,11 +1391,11 @@ body.subscription-view .cosmos-field__shoot {
     width: clamp(3.25rem, 14vw, 4.15rem);
     height: clamp(3.25rem, 14vw, 4.15rem);
     aspect-ratio: 1 / 1;
-    padding: 2px;
+    padding: 0;
     border: none;
-    background: rgba(8, 8, 8, 0.42);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     box-shadow: none;
   }
 
@@ -1396,15 +1406,17 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 body:not(.subscription-view) .buy-sheet--howto {
-  width: 100%;
-  max-width: 420px;
-  align-self: stretch;
+  width: auto;
+  max-width: 100%;
+  align-self: flex-start;
 }
 
 body:not(.subscription-view) .buy-sheet--howto .btn-howto {
-  width: 100%;
+  width: auto;
+  max-width: min(100%, 20rem);
+  align-self: flex-start;
   box-sizing: border-box;
-  padding: 0.65rem 1.2rem;
+  padding: 0.6rem 1.15rem;
   min-height: 48px;
   font-size: clamp(0.84rem, 2.1vw, 0.95rem);
   font-weight: 600;
@@ -1588,18 +1600,12 @@ body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
   }
 }
 
-/* Mobile: fluid width; desktop: width/height set in JS to match .product-side */
+/* Mobile: fluid width; desktop purchase: stretch + max-width in purchase block (no override here) */
 .product-gallery {
   min-width: 0;
   width: 100%;
   max-width: min(560px, 100%);
   box-sizing: border-box;
-}
-
-@media (min-width: 840px) {
-  body:not(.subscription-view) .product-gallery {
-    max-width: min(760px, 66vw);
-  }
 }
 
 body.subscription-view .product-gallery {
@@ -2202,10 +2208,16 @@ body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) > a#buy-btn.btn-b
 
 body:not(.subscription-view) .buy-sheet .product-wa-block {
   margin-top: clamp(0.25rem, 1.2vw, 0.55rem);
-  padding: clamp(0.85rem, 2vw, 1.05rem);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  background: rgba(255, 255, 255, 0.035);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+body:not(.subscription-view) .buy-sheet .product-wa-qr__img {
+  border: none;
+  border-radius: clamp(8px, 1.2vw, 12px);
+  background: var(--white);
 }
 
 body:not(.subscription-view) .buy-sheet .product-wa-headline {
