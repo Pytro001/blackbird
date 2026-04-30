@@ -1442,6 +1442,12 @@ body.subscription-view .product-gallery {
   pointer-events: none;
 }
 
+/* picture wrapper must not affect flex sizing of the hero img */
+.product-gallery__slide-figure picture,
+.product-gallery__figure picture {
+  display: contents;
+}
+
 @media (min-width: 840px) {
   .product-hero:not(.product-hero--subscription) .product-hero__media {
     display: flex;

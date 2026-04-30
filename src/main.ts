@@ -17,6 +17,12 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
+/** Intrinsic dimensions of product-slide PNG/WebP (1×) — keep in sync with scripts/optimize-product-gallery.mjs */
+const CAROUSEL_IMG_WIDTH = 683;
+const CAROUSEL_IMG_HEIGHT = 1024;
+/** Match subscription hero gallery width rules in styles.css */
+const CAROUSEL_IMG_SIZES = "(max-width: 839px) 100vw, min(528px, 45vw)";
+
 /** Root-anchored public/ URL so images load on `/product` and other SPA paths (relative URLs would break). */
 function publicAssetUrl(path: string): string {
   const p = path.replace(/^\/+/, "");
@@ -27,12 +33,54 @@ function publicAssetUrl(path: string): string {
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
-function carouselSlides(lang: UiLang): readonly { file: string; alt: string }[] {
+function carouselSlideUrls(stem: string): { webp: string; webp2x: string; png: string } {
+  return {
+    webp: publicAssetUrl(`${stem}.webp`),
+    webp2x: publicAssetUrl(`${stem}@2x.webp`),
+    png: publicAssetUrl(`${stem}.png`),
+  };
+}
+
+function gallerySlidePictureHtml(options: {
+  stem: string;
+  alt: string;
+  index: number;
+  imgClass: string;
+  figureClass: string;
+  imgId?: string;
+}): string {
+  const { webp, webp2x, png } = carouselSlideUrls(options.stem);
+  const eager = options.index === 0;
+  const idAttr = options.imgId ? ` id="${escapeHtml(options.imgId)}"` : "";
+  return `
+                    <figure class="${escapeHtml(options.figureClass)}">
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcset="${escapeHtml(webp)} ${CAROUSEL_IMG_WIDTH}w, ${escapeHtml(webp2x)} ${CAROUSEL_IMG_WIDTH * 2}w"
+                          sizes="${CAROUSEL_IMG_SIZES}"
+                        />
+                        <img${idAttr}
+                          class="${escapeHtml(options.imgClass)}"
+                          src="${escapeHtml(png)}"
+                          width="${CAROUSEL_IMG_WIDTH}"
+                          height="${CAROUSEL_IMG_HEIGHT}"
+                          alt="${escapeHtml(options.alt)}"
+                          decoding="async"
+                          loading="${eager ? "eager" : "lazy"}"
+                          fetchpriority="${eager ? "high" : "low"}"
+                          draggable="false"
+                        />
+                      </picture>
+                    </figure>`;
+}
+
+function carouselSlides(lang: UiLang): readonly { stem: string; alt: string }[] {
   const t = strings(lang);
   return [
-    { file: "product-slide-01.png", alt: t.carouselAlt1 },
-    { file: "product-slide-02.png", alt: t.carouselAlt2 },
-    { file: "product-slide-03.png", alt: t.carouselAlt3 },
+    { stem: "product-slide-01", alt: t.carouselAlt1 },
+    { stem: "product-slide-02", alt: t.carouselAlt2 },
+    { stem: "product-slide-03", alt: t.carouselAlt3 },
   ];
 }
 
@@ -618,7 +666,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
     n > 0 && o.showThumbs
       ? slides
           .map((slide, i) => {
-            const src = publicAssetUrl(slide.file);
+            const src = publicAssetUrl(`${slide.stem}.webp`);
             const ariaThumb = `${t.galleryThumbAria} ${i + 1} ${t.thumbAriaConnector} ${n}`;
             return `
             <button
@@ -648,8 +696,6 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
     : "";
 
   const first = slides[0];
-  const firstSrc = publicAssetUrl(first.file);
-
   const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs && !o.smoothTrack ? thumbsHtml : "";
   const thumbsAfterInner =
     o.thumbsInsideStage && o.showThumbs && o.smoothTrack ? thumbsHtml : "";
@@ -666,23 +712,15 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                     aria-hidden="false"
                   >
                     ${slides
-                      .map((slide, i) => {
-                        const srcSlide = publicAssetUrl(slide.file);
-                        return `
-                    <figure class="product-gallery__slide-figure">
-                      <img
-                        class="product-gallery__slide-img image-zoomable"
-                        src="${escapeHtml(srcSlide)}"
-                        width="683"
-                        height="1024"
-                        alt="${escapeHtml(slide.alt)}"
-                        decoding="async"
-                        loading="${i === 0 ? "eager" : "lazy"}"
-                        fetchpriority="${i === 0 ? "high" : "low"}"
-                        draggable="false"
-                      />
-                    </figure>`;
-                      })
+                      .map((slide, i) =>
+                        gallerySlidePictureHtml({
+                          stem: slide.stem,
+                          alt: slide.alt,
+                          index: i,
+                          imgClass: "product-gallery__slide-img image-zoomable",
+                          figureClass: "product-gallery__slide-figure",
+                        }),
+                      )
                       .join("")}
                   </div>
                 </div>
@@ -691,19 +729,14 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
   const aspectInnerLegacy = (): string =>
     `
               <div class="product-gallery__aspect">
-                <figure class="product-gallery__figure">
-                  <img
-                    id="product-gallery-main-img"
-                    class="product-gallery__main-img image-zoomable"
-                    src="${escapeHtml(firstSrc)}"
-                    width="683"
-                    height="1024"
-                    alt="${escapeHtml(first.alt)}"
-                    decoding="async"
-                    fetchpriority="high"
-                    draggable="false"
-                  />
-                </figure>
+                ${gallerySlidePictureHtml({
+                  stem: first.stem,
+                  alt: first.alt,
+                  index: 0,
+                  imgClass: "product-gallery__main-img image-zoomable",
+                  figureClass: "product-gallery__figure",
+                  imgId: "product-gallery-main-img",
+                })}
               </div>`;
 
   const innerAspect = o.smoothTrack ? aspectInnerSmooth() : aspectInnerLegacy();
@@ -1796,8 +1829,17 @@ function bindProductShotsCarousel(): void {
       track.style.setProperty("--gallery-index", String(next));
     }
     if (mainImg) {
-      mainImg.src = publicAssetUrl(slide.file);
+      const urls = carouselSlideUrls(slide.stem);
+      mainImg.src = urls.png;
       mainImg.alt = slide.alt;
+      const pic = mainImg.closest("picture");
+      const source = pic?.querySelector("source[type=\"image/webp\"]");
+      if (source) {
+        source.setAttribute(
+          "srcset",
+          `${urls.webp} ${CAROUSEL_IMG_WIDTH}w, ${urls.webp2x} ${CAROUSEL_IMG_WIDTH * 2}w`,
+        );
+      }
     }
     thumbs.forEach((btn, j) => {
       const on = j === next;

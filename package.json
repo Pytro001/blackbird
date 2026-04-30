@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsc && node scripts/optimize-product-gallery.mjs && vite build",
+    "preview": "vite preview",
+    "optimize-gallery": "node scripts/optimize-product-gallery.mjs"
   },
   "devDependencies": {
+    "sharp": "^0.34.5",
     "typescript": "~5.7.2",
     "vite": "^6.0.3"
   },
