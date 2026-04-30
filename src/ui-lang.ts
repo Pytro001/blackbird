@@ -9,7 +9,10 @@ export function detectUiLang(): UiLang {
 
 const copy = {
   en: {
-    productName: "blackbird Men Dandruff Set",
+    productName: "blackbird Men Flake-Free Set",
+    monthlyPriceSuffix: " / month",
+    purchaseRefillLine: "Free bottle refill when empty",
+    subscribe: "Subscribe",
     refillAfterPrefix: "Every refill after",
     buy: "Buy",
     checkout: "Checkout",
@@ -93,7 +96,10 @@ const copy = {
   },
 
   de: {
-    productName: "blackbird Men Anti-Schuppen Set",
+    productName: "blackbird Men Flake-Free Set",
+    monthlyPriceSuffix: " / Monat",
+    purchaseRefillLine: "Kostenlose Nachfüllflasche bei leer",
+    subscribe: "Abonnieren",
     refillAfterPrefix: "Jede Nachfüllung ab",
     buy: "Kaufen",
     checkout: "Zur Kasse",

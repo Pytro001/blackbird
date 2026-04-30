@@ -276,31 +276,16 @@ function isImageZoomMobileViewport(): boolean {
   return window.matchMedia("(max-width: 839px)").matches;
 }
 
-/** Canonical Stripe Payment Link — Buy always opens this URL (no serverless checkout). */
-const DEFAULT_STRIPE_PAYMENT_LINK =
-  "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
-
-/** Default home (`/`) Checkout uses same Stripe Payment Link as Buy unless overridden. */
+/** Default Stripe subscription / subscribe CTA (overridable via `VITE_STRIPE_SUBSCRIPTION_LINK`). */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
   "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
-
-function stripePaymentLinkUrl(): string {
-  return import.meta.env.VITE_STRIPE_PAYMENT_LINK?.trim() || DEFAULT_STRIPE_PAYMENT_LINK;
-}
 
 function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
-/** Shown next to Buy; keep in sync with your Stripe Price amount. */
-const PRODUCT_PRICE_EUR = 59.99;
-const productPriceDisplay = new Intl.NumberFormat("de-DE", {
-  style: "currency",
-  currency: "EUR",
-}).format(PRODUCT_PRICE_EUR);
-
-/** Shown on `/` and `/subscription`; must match the Stripe subscription price in the dashboard. */
-const SUBSCRIPTION_PRICE_EUR = 14.99;
+/** Subscription + /product monthly price; keep in sync with Stripe subscription price. */
+const SUBSCRIPTION_PRICE_EUR = 5.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
   currency: "EUR",
@@ -308,7 +293,7 @@ const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   maximumFractionDigits: 2,
 })
   .format(SUBSCRIPTION_PRICE_EUR)
-  // de-DE uses NBSP before €; keep "14,99 €" for display
+  // de-DE uses NBSP before €; keep "5,99 €" for display
   .replace(/[\s\u00a0\u202f]+€/g, " €");
 
 const SUBSCRIPTION_REFILL_AFTER_EUR = 9.99;
@@ -887,14 +872,8 @@ function productEducationSectionHtml(lang: UiLang): string {
 function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
   const t = strings(lang);
   const isSubscription = mode === "subscription";
-  const checkoutHref = isSubscription ? stripeSubscriptionLinkUrl() : stripePaymentLinkUrl();
-  const priceBlock = isSubscription
-    ? ""
-    : `<p class="product-price">${escapeHtml(productPriceDisplay)}</p>`;
-  const returnsLine = isSubscription
-    ? ""
-    : `<p class="product-shipping__returns">${t.returnLine}</p>`;
-  const buyLabel = isSubscription ? t.checkout : t.buy;
+  const checkoutHref = stripeSubscriptionLinkUrl();
+  const buyLabel = isSubscription ? t.checkout : t.subscribe;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
@@ -916,9 +895,9 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
             </section>`
     : `          <section class="buy-sheet">
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
-              ${priceBlock}
+              <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}${escapeHtml(t.monthlyPriceSuffix)}</p>
+              <p class="product-purchase-refill">${escapeHtml(t.purchaseRefillLine)}</p>
               <div class="product-shipping">
-                ${returnsLine}
                 <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
