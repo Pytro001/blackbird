@@ -1245,7 +1245,7 @@ body.subscription-view .cosmos-field__shoot {
     align-items: flex-start;
   }
 
-  /* Gallery height matched to aside in JS (.product-gallery--match-aside); fill vertically + crop sides */
+  /* Gallery height matched to aside in JS (.product-gallery--match-aside); image fills frame without horizontal zoom-crop */
   body.subscription-view .product-gallery.product-gallery--match-aside {
     display: flex;
     flex-direction: column;
@@ -1293,10 +1293,10 @@ body.subscription-view .cosmos-field__shoot {
   }
 
   body.subscription-view .product-gallery.product-gallery--match-aside .product-gallery__slide-img {
-    width: 125%;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     max-width: none;
-    margin-left: -12.5%;
+    margin-left: 0;
     height: 100%;
     max-height: none;
     object-fit: cover;
@@ -1599,10 +1599,10 @@ body.subscription-view .product-gallery {
 
   body.subscription-view .product-gallery__slide-img {
     display: block;
-    width: 125%;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     max-width: none;
-    margin-left: -12.5%;
+    margin-left: 0;
     height: 100%;
     object-fit: cover;
     object-position: center;
@@ -1825,10 +1825,10 @@ body.subscription-view .product-gallery__thumb img {
 
   body.subscription-view .product-gallery__slide-img {
     display: block;
-    width: 118%;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     max-width: none;
-    margin-left: -9%;
+    margin-left: 0;
     height: 100%;
     max-height: none;
     object-fit: cover;
