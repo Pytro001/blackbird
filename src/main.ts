@@ -295,16 +295,6 @@ const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   // de-DE uses NBSP before €; keep "5,99 €" for display
   .replace(/[\s\u00a0\u202f]+€/g, " €");
 
-const SUBSCRIPTION_REFILL_AFTER_EUR = 9.99;
-const subscriptionRefillAfterDisplay = new Intl.NumberFormat("de-DE", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-  .format(SUBSCRIPTION_REFILL_AFTER_EUR)
-  .replace(/[\s\u00a0\u202f]+€/g, " €");
-
 type LandingMode = "purchase" | "subscription";
 
 type View = "product" | "subscription" | "thanks" | "manual" | "impressum" | "datenschutz";
@@ -699,10 +689,8 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
       : "";
 
   const thumbsClass =
-    `product-gallery__thumbs${
-      o.thumbsVariant === "subscription"
-        ? " product-gallery__thumbs--subscription"
-        : " product-gallery__thumbs--purchase"
+    `product-gallery__thumbs product-gallery__thumbs--purchase${
+      o.thumbsVariant === "subscription" ? " product-gallery__thumbs--subscription" : ""
     }`.trim();
   const thumbsHtml = o.showThumbs
     ? `<div class="${thumbsClass}" role="list" aria-label="${escapeHtml(t.galleryThumbnailsAria)}">${thumbButtons}</div>`
@@ -715,9 +703,9 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
       ? ` style="--subscription-gallery-aspect-pad: calc(${firstMeta.intrinsicHeight} / ${firstMeta.intrinsicWidth} * 100%)"`
       : ` style="--subscription-gallery-aspect-pad: 50%"`;
 
-  const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs && !o.smoothTrack ? thumbsHtml : "";
-  const thumbsAfterInner =
-    o.thumbsInsideStage && o.showThumbs && o.smoothTrack ? thumbsHtml : "";
+  /* Same DOM order as /product: thumbs first, then image — overlay stays top-left (no bottom strip / peek). */
+  const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs ? thumbsHtml : "";
+  const thumbsAfterInner = "";
   const thumbsOutside = !o.thumbsInsideStage && o.showThumbs ? thumbsHtml : "";
 
   const aspectInnerSmooth = (): string =>
@@ -876,7 +864,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
-              <p class="product-subscription-refill">${escapeHtml(t.refillAfterPrefix)} ${escapeHtml(subscriptionRefillAfterDisplay)}</p>`
+              <p class="product-subscription-refill">${escapeHtml(t.purchaseRefillLine)}</p>`
     : "";
 
   const productBuyPanel = isSubscription
