@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && node scripts/optimize-product-gallery.mjs && vite build",
+    "build": "node scripts/optimize-product-gallery.mjs && tsc && vite build",
     "preview": "vite preview",
     "optimize-gallery": "node scripts/optimize-product-gallery.mjs"
   },

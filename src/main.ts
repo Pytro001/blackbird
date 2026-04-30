@@ -6,6 +6,10 @@ import {
   strings,
   type UiLang,
 } from "./ui-lang";
+import {
+  GALLERY_SLIDE_META,
+  type GallerySlideMeta,
+} from "./generated/gallery-meta";
 
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
@@ -17,11 +21,15 @@ const BASE_HREF = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 
-/** Intrinsic dimensions of product-slide PNG/WebP (1×) — keep in sync with scripts/optimize-product-gallery.mjs */
-const CAROUSEL_IMG_WIDTH = 683;
-const CAROUSEL_IMG_HEIGHT = 1024;
-/** Match subscription hero gallery width rules in styles.css */
-const CAROUSEL_IMG_SIZES = "(max-width: 839px) 100vw, min(528px, 45vw)";
+/** Match subscription hero gallery width rules in styles.css — browser picks full tier when `sizes` warrants it */
+const CAROUSEL_IMG_SIZES =
+  "(max-width: 839px) 100vw, min(528px, 45vw)";
+
+function gallerySlideMeta(stem: string): GallerySlideMeta {
+  const m = GALLERY_SLIDE_META.find((x) => x.stem === stem);
+  if (!m) throw new Error(`[gallery] missing meta for ${stem}; run npm run optimize-gallery`);
+  return m;
+}
 
 /** Root-anchored public/ URL so images load on `/product` and other SPA paths (relative URLs would break). */
 function publicAssetUrl(path: string): string {
@@ -33,11 +41,21 @@ function publicAssetUrl(path: string): string {
 const MANUAL_PAGE_COUNT = 7;
 const MANUAL_PAGE_VER = "1";
 
-function carouselSlideUrls(stem: string): { webp: string; webp2x: string; png: string } {
+function carouselSlideUrls(stem: string): {
+  webp: string;
+  webp2x: string | null;
+  png: string;
+  meta: GallerySlideMeta;
+} {
+  const meta = gallerySlideMeta(stem);
   return {
     webp: publicAssetUrl(`${stem}.webp`),
-    webp2x: publicAssetUrl(`${stem}@2x.webp`),
+    webp2x:
+      meta.hasTwoWebpTiers && meta.fullWebpWidth > meta.heroWebpWidth
+        ? publicAssetUrl(`${stem}@2x.webp`)
+        : null,
     png: publicAssetUrl(`${stem}.png`),
+    meta,
   };
 }
 
@@ -49,22 +67,27 @@ function gallerySlidePictureHtml(options: {
   figureClass: string;
   imgId?: string;
 }): string {
-  const { webp, webp2x, png } = carouselSlideUrls(options.stem);
+  const u = carouselSlideUrls(options.stem);
+  const m = u.meta;
   const eager = options.index === 0;
   const idAttr = options.imgId ? ` id="${escapeHtml(options.imgId)}"` : "";
+  const webpSrcset =
+    u.webp2x != null && m.fullWebpWidth > m.heroWebpWidth
+      ? `${escapeHtml(u.webp)} ${m.heroWebpWidth}w, ${escapeHtml(u.webp2x)} ${m.fullWebpWidth}w`
+      : `${escapeHtml(u.webp)} ${m.heroWebpWidth}w`;
   return `
                     <figure class="${escapeHtml(options.figureClass)}">
                       <picture>
                         <source
                           type="image/webp"
-                          srcset="${escapeHtml(webp)} ${CAROUSEL_IMG_WIDTH}w, ${escapeHtml(webp2x)} ${CAROUSEL_IMG_WIDTH * 2}w"
+                          srcset="${webpSrcset}"
                           sizes="${CAROUSEL_IMG_SIZES}"
                         />
                         <img${idAttr}
                           class="${escapeHtml(options.imgClass)}"
-                          src="${escapeHtml(png)}"
-                          width="${CAROUSEL_IMG_WIDTH}"
-                          height="${CAROUSEL_IMG_HEIGHT}"
+                          src="${escapeHtml(u.png)}"
+                          width="${m.intrinsicWidth}"
+                          height="${m.intrinsicHeight}"
                           alt="${escapeHtml(options.alt)}"
                           decoding="async"
                           loading="${eager ? "eager" : "lazy"}"
@@ -666,6 +689,8 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
     n > 0 && o.showThumbs
       ? slides
           .map((slide, i) => {
+            const sm = gallerySlideMeta(slide.stem);
+            const thumbH = Math.max(1, Math.round((80 * sm.intrinsicHeight) / sm.intrinsicWidth));
             const src = publicAssetUrl(`${slide.stem}.webp`);
             const ariaThumb = `${t.galleryThumbAria} ${i + 1} ${t.thumbAriaConnector} ${n}`;
             return `
@@ -680,7 +705,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
                 src="${escapeHtml(src)}"
                 alt=""
                 width="80"
-                height="64"
+                height="${thumbH}"
                 decoding="async"
                 loading="${i === 0 ? "eager" : "lazy"}"
               />
@@ -696,6 +721,9 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
     : "";
 
   const first = slides[0];
+  const firstMeta = gallerySlideMeta(first.stem);
+  const galleryAspectAttr = ` style="--subscription-gallery-aspect-pad: calc(${firstMeta.intrinsicHeight} / ${firstMeta.intrinsicWidth} * 100%)"`;
+
   const thumbsBeforeInner = o.thumbsInsideStage && o.showThumbs && !o.smoothTrack ? thumbsHtml : "";
   const thumbsAfterInner =
     o.thumbsInsideStage && o.showThumbs && o.smoothTrack ? thumbsHtml : "";
@@ -747,7 +775,7 @@ function productGalleryHtml(lang: UiLang, options?: Partial<ProductGalleryOption
   const stageClasses = stageInner.join(" ");
 
   return `
-        <div class="product-gallery" id="product-gallery" tabindex="-1">
+        <div class="product-gallery" id="product-gallery" tabindex="-1"${galleryAspectAttr}>
           <div class="product-gallery__main">
             <div
               class="${stageClasses}"
@@ -1830,15 +1858,19 @@ function bindProductShotsCarousel(): void {
     }
     if (mainImg) {
       const urls = carouselSlideUrls(slide.stem);
+      const m = urls.meta;
       mainImg.src = urls.png;
       mainImg.alt = slide.alt;
+      mainImg.width = m.intrinsicWidth;
+      mainImg.height = m.intrinsicHeight;
       const pic = mainImg.closest("picture");
       const source = pic?.querySelector("source[type=\"image/webp\"]");
       if (source) {
-        source.setAttribute(
-          "srcset",
-          `${urls.webp} ${CAROUSEL_IMG_WIDTH}w, ${urls.webp2x} ${CAROUSEL_IMG_WIDTH * 2}w`,
-        );
+        const srcset =
+          urls.webp2x != null && m.fullWebpWidth > m.heroWebpWidth
+            ? `${urls.webp} ${m.heroWebpWidth}w, ${urls.webp2x} ${m.fullWebpWidth}w`
+            : `${urls.webp} ${m.heroWebpWidth}w`;
+        source.setAttribute("srcset", srcset);
       }
     }
     thumbs.forEach((btn, j) => {
