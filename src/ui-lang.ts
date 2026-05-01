@@ -11,7 +11,8 @@ const copy = {
   en: {
     productName: "blackbird Men Flake-Free Set",
     monthlyPriceSuffix: " / month",
-    purchaseRefillLine: "Free bottle refill when empty",
+    purchaseRefillLineHtml:
+      '<span class="product-shipping__free">Free</span> bottle refill when empty',
     subscribe: "Subscribe",
     refillAfterPrefix: "Every refill after",
     buy: "Buy",
@@ -98,7 +99,8 @@ const copy = {
   de: {
     productName: "blackbird Men Flake-Free Set",
     monthlyPriceSuffix: " / Monat",
-    purchaseRefillLine: "Kostenlose Nachfüllflasche bei leer",
+    purchaseRefillLineHtml:
+      '<span class="product-shipping__free">Kostenlose</span> Nachfüllflasche bei leer',
     subscribe: "Abonnieren",
     refillAfterPrefix: "Jede Nachfüllung ab",
     buy: "Kaufen",

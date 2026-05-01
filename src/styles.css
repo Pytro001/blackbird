@@ -30,8 +30,11 @@
   --buy-card-inset: rgba(255, 255, 255, 0.045);
   /* Hero gallery image box (683×1024 sources); padding-bottom % */
   --subscription-gallery-aspect-pad: calc(1024 / 683 * 100%);
-  /** Subscription carousel: focal bias shifted further up (~30% vs prior anchor) */
-  --gallery-slide-object-position: center calc(50% + 17% - 30%);
+  /**
+   * Packshots: bias toward lower third (~bottom 30% of image) so bottles aren’t lost under empty top.
+   * (Higher % = anchor lower in source → more of bottom visible in frame.)
+   */
+  --gallery-slide-object-position: center 73%;
   /* Diatype: add @font-face to public/ when licensed; otherwise Inter loads from Google Fonts */
   --font: "Diatype", "Inter", system-ui, -apple-system, sans-serif;
   /* Hero “blackbird” wordmark — previous site font */
@@ -286,8 +289,13 @@ body.subscription-view .buy-sheet--offer-sub .product-subscription-copy .product
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__free {
-  font-weight: 400;
-  color: rgba(200, 200, 200, 0.92);
+  font-weight: 800;
+  color: rgba(245, 245, 245, 0.92);
+}
+
+body.subscription-view .buy-sheet--offer-sub .product-subscription-refill .product-shipping__free {
+  font-weight: 800;
+  color: inherit;
 }
 
 body.subscription-view .buy-sheet--offer-sub .product-shipping__eta-datetime {
@@ -1288,7 +1296,7 @@ body.subscription-view .cosmos-field__shoot {
     max-width: none;
     max-height: none;
     object-fit: cover;
-    object-position: center calc(20% - 6%);
+    object-position: var(--gallery-slide-object-position);
     pointer-events: auto;
     border-radius: inherit;
   }
@@ -1330,7 +1338,7 @@ body.subscription-view .cosmos-field__shoot {
   .product-gallery__thumbs--purchase .product-gallery__thumb img {
     border-radius: clamp(8px, 1.4vw, 12px);
     object-fit: cover;
-    object-position: center calc(50% + 17% - 30%);
+    object-position: var(--gallery-slide-object-position);
     display: block;
   }
 }
@@ -1382,7 +1390,7 @@ body.subscription-view .cosmos-field__shoot {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center calc(20% - 6%);
+    object-position: var(--gallery-slide-object-position);
     max-width: none;
     max-height: none;
   }
@@ -2827,7 +2835,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 .product-price__period {
   font-weight: 500;
-  font-size: 0.42em;
+  font-size: 0.48em;
   letter-spacing: 0.03em;
   color: rgba(245, 245, 245, 0.72);
   margin-left: 0.12em;

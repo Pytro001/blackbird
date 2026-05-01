@@ -879,7 +879,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
     ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
-              <p class="product-subscription-refill">${escapeHtml(t.purchaseRefillLine)}</p>`
+              <p class="product-subscription-refill">${t.purchaseRefillLineHtml}</p>`
     : "";
 
   const productBuyPanel = isSubscription
@@ -899,7 +899,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">${escapeHtml(t.monthlyPriceSuffix)}</span></p>
               <div class="product-offer-detail">
-              <p class="product-purchase-refill">${escapeHtml(t.purchaseRefillLine)}</p>
+              <p class="product-purchase-refill">${t.purchaseRefillLineHtml}</p>
               <div class="product-shipping">
                 <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               </div>
