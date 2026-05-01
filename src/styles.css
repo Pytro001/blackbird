@@ -2292,8 +2292,16 @@ body:not(.subscription-view) .buy-sheet .product-buy-lede {
   align-self: stretch;
   width: 100%;
   min-width: 0;
-  gap: clamp(0.18rem, 0.65vw, 0.32rem);
+  gap: 0;
   margin: 0;
+}
+
+body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
+  margin-bottom: clamp(0.12rem, 0.5vw, 0.24rem);
+}
+
+body:not(.subscription-view) .buy-sheet .product-buy-lede .product-cancel-anytime {
+  margin-bottom: clamp(0.5rem, 1.55vw, 0.95rem);
 }
 
 body:not(.subscription-view) .buy-sheet .product-buy-lede .product-offer-detail {
