@@ -25,6 +25,13 @@ const SOURCE_EXTS = ["jpg", "jpeg", "png", "webp"];
 /** Max width for hero WebP; full native tier added when source is wider than this. */
 const HERO_MAX_PX = 2800;
 
+/** WebP encode for full-resolution tier (native pixels when source > hero max). */
+const FULL_WEBP_QUALITY_DEFAULT = 92;
+const FULL_WEBP_QUALITY_HIGH = 96;
+
+/** Stems that get the higher full-tier quality (large marketing masters). */
+const FULL_WEBP_QUALITY_HIGH_STEMS = new Set(["product-slide-01"]);
+
 /**
  * @param {string} pubDir
  * @param {string} stem
@@ -68,8 +75,11 @@ for (const stem of stems) {
   if (w > heroW) {
     hasTwoWebpTiers = true;
     fullWebpWidth = w;
+    const fullQuality = FULL_WEBP_QUALITY_HIGH_STEMS.has(stem)
+      ? FULL_WEBP_QUALITY_HIGH
+      : FULL_WEBP_QUALITY_DEFAULT;
     await sharp(input)
-      .webp({ quality: 92, effort: 6, smartSubsample: true })
+      .webp({ quality: fullQuality, effort: 6, smartSubsample: true })
       .toFile(fullPath);
   } else {
     if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);

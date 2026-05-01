@@ -13,12 +13,12 @@ export type GallerySlideMeta = {
 export const GALLERY_SLIDE_META: readonly GallerySlideMeta[] = [
   {
     "stem": "product-slide-01",
-    "fallbackExt": "jpg",
-    "intrinsicWidth": 1024,
-    "intrinsicHeight": 682,
-    "heroWebpWidth": 1024,
-    "fullWebpWidth": 1024,
-    "hasTwoWebpTiers": false
+    "fallbackExt": "png",
+    "intrinsicWidth": 6000,
+    "intrinsicHeight": 4000,
+    "heroWebpWidth": 2800,
+    "fullWebpWidth": 6000,
+    "hasTwoWebpTiers": true
   },
   {
     "stem": "product-slide-02",
