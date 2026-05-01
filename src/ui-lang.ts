@@ -13,6 +13,7 @@ const copy = {
     monthlyPriceSuffix: " / month",
     purchaseRefillLineHtml:
       '<span class="product-shipping__free">Free</span> bottle refill when empty',
+    subscriptionCancelAnytime: "You can cancel your subscription anytime.",
     subscribe: "Subscribe",
     refillAfterPrefix: "Every refill after",
     buy: "Buy",
@@ -101,6 +102,7 @@ const copy = {
     monthlyPriceSuffix: " / Monat",
     purchaseRefillLineHtml:
       '<span class="product-shipping__free">Kostenlose</span> Nachfüllflasche bei leer',
+    subscriptionCancelAnytime: "Sie können Ihr Abonnement jederzeit kündigen.",
     subscribe: "Abonnieren",
     refillAfterPrefix: "Jede Nachfüllung ab",
     buy: "Kaufen",

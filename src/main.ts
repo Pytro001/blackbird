@@ -10,6 +10,7 @@ import {
   GALLERY_SLIDE_META,
   type GallerySlideMeta,
 } from "./generated/gallery-meta";
+import { FAQ_IMAGE_META } from "./generated/faq-image-meta";
 
 const root: HTMLDivElement = (() => {
   const el = document.querySelector("#app");
@@ -31,7 +32,7 @@ function gallerySlideMeta(stem: string): GallerySlideMeta {
   return m;
 }
 
-/** Root-anchored public/ URL so images load on `/`, `/product`, and other SPA paths (relative URLs would break). */
+/** Root-anchored public/ URL so images load on `/` and other SPA paths (relative URLs would break). */
 function publicAssetUrl(path: string): string {
   const p = path.replace(/^\/+/, "");
   const base = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
@@ -96,6 +97,37 @@ function gallerySlidePictureHtml(options: {
                         />
                       </picture>
                     </figure>`;
+}
+
+/** FAQ hero: responsive WebP + full tier (see FAQ_IMAGE_META). */
+function faqHeroPictureHtml(lang: UiLang): string {
+  const t = strings(lang);
+  const m = FAQ_IMAGE_META;
+  const stem = m.stem;
+  const webp = publicAssetUrl(`${stem}.webp`);
+  const webp2x =
+    m.hasTwoWebpTiers && m.fullWebpWidth > m.heroWebpWidth
+      ? publicAssetUrl(`${stem}@2x.webp`)
+      : null;
+  const fallback = publicAssetUrl(`${stem}.${m.fallbackExt}`);
+  const webpSrcset =
+    webp2x != null
+      ? `${escapeHtml(webp)} ${m.heroWebpWidth}w, ${escapeHtml(webp2x)} ${m.fullWebpWidth}w`
+      : `${escapeHtml(webp)} ${m.heroWebpWidth}w`;
+  const faqImgSizes = "(max-width: 839px) 100vw, min(960px, 92vw)";
+  return `
+        <picture>
+          <source type="image/webp" srcset="${webpSrcset}" sizes="${faqImgSizes}" />
+          <img
+            class="product-faq__img"
+            src="${escapeHtml(fallback)}"
+            width="${m.intrinsicWidth}"
+            height="${m.intrinsicHeight}"
+            alt="${escapeHtml(t.faqImageAlt)}"
+            decoding="async"
+            loading="lazy"
+          />
+        </picture>`;
 }
 
 function carouselSlides(lang: UiLang): readonly { stem: string; alt: string }[] {
@@ -286,7 +318,7 @@ function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
-/** Subscription + /product monthly price; keep in sync with Stripe subscription price. */
+/** Subscription + landing monthly price; keep in sync with Stripe subscription price. */
 const SUBSCRIPTION_PRICE_EUR = 5.99;
 const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
   style: "currency",
@@ -572,7 +604,7 @@ function getAppPath(): string {
 function pathToView(): View {
   const path = getAppPath();
   if (path === "/subscription") return "subscription";
-  if (path === "/" || path === "/product") return "product";
+  if (path === "/") return "product";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
   if (path === "/agb") {
@@ -824,15 +856,7 @@ function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
     <section class="product-faq" id="product-faq" tabindex="-1" aria-labelledby="product-faq-heading">
       <h2 id="product-faq-heading" class="product-faq__heading product-faq__heading--script">${escapeHtml(t.faqHeading)}</h2>
       <div class="product-faq__figure">
-        <img
-          class="product-faq__img"
-          src="${publicAssetUrl("faq-four-bottles.png")}"
-          width="1024"
-          height="576"
-          alt="${escapeHtml(t.faqImageAlt)}"
-          decoding="async"
-          loading="lazy"
-        />
+        ${faqHeroPictureHtml(lang)}
         <div class="product-faq__spots">${spots}</div>
       </div>
     </section>`;
@@ -892,6 +916,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <div class="product-shipping product-shipping--subscription">
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
+              <p class="product-subscription-cancel">${escapeHtml(t.subscriptionCancelAnytime)}</p>
               </div>
               <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
             </section>`
@@ -1424,6 +1449,10 @@ function render(): void {
     history.replaceState(null, "", BASE_HREF);
   }
 
+  if (getAppPath() === "/product") {
+    history.replaceState(null, "", `${BASE_HREF}${location.search}${location.hash}`);
+  }
+
   const view = pathToView();
   const uiLang = detectUiLang();
   setDocumentLang(view, uiLang);
@@ -1464,7 +1493,7 @@ function render(): void {
   if (themeColorMeta) {
     const chrome =
       view === "impressum" || view === "datenschutz"
-        ? "#f9f5ef"
+        ? "#000000"
         : view === "subscription"
           ? "#000000"
           : "#2e2a26";
@@ -1960,7 +1989,7 @@ window.addEventListener("popstate", () => {
 
 window.addEventListener("hashchange", () => {
   const path = getAppPath();
-  if (path !== "/" && path !== "/product" && path !== "/subscription") return;
+  if (path !== "/" && path !== "/subscription") return;
   const h = location.hash;
   if (h === "#product-faq" || h === "#education" || h === "#site-footer") {
     requestAnimationFrame(() => scrollToHashSection());

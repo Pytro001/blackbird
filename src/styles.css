@@ -288,6 +288,17 @@ body.subscription-view .buy-sheet--offer-sub .product-subscription-copy .product
   max-width: none;
 }
 
+body.subscription-view .buy-sheet--offer-sub .product-subscription-cancel {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  font-size: clamp(0.8rem, 1.95vw, 0.88rem);
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  line-height: 1.45;
+  color: rgba(210, 210, 210, 0.9);
+  max-width: none;
+}
+
 body.subscription-view .buy-sheet--offer-sub .product-shipping__free {
   font-weight: 800;
   color: rgba(245, 245, 245, 0.92);
@@ -1196,7 +1207,7 @@ body.subscription-view .cosmos-field__shoot {
   }
 }
 
-/* —— Purchase (default `/` and `/product`): gallery stretches to aside (How-to line); borderless thumbs —— */
+/* —— Purchase (default `/`): gallery stretches to aside (How-to line); borderless thumbs —— */
 @media (min-width: 840px) {
   body:not(.subscription-view) .product-hero:not(.product-hero--subscription) {
     display: grid;
@@ -1784,7 +1795,7 @@ body.subscription-view .product-gallery {
   }
 }
 
-/* Top-left thumb stack — same for /product and landing (both use .product-gallery__thumbs--purchase) */
+/* Top-left thumb stack — same on purchase landing (both use .product-gallery__thumbs--purchase) */
 .product-gallery__stage > .product-gallery__thumbs--purchase {
   position: absolute;
   top: clamp(0.45rem, 1.2vw, 0.85rem);
@@ -3228,106 +3239,106 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(210, 210, 210, 0.95);
 }
 
-/* Impressum / Datenschutz: same paper as home; site ink (body class from render) */
+/* Impressum / Datenschutz: black canvas, orange section titles, white body copy */
 body.legal-page-view,
 body.legal-page-view #app {
-  background: var(--subscription-paper);
-  color: var(--black);
+  background: #000;
+  color: rgba(245, 245, 245, 0.9);
 }
 
 body.legal-page-view .page-step.page-legal {
-  background: var(--subscription-paper);
+  background: #000;
 }
 
 body.legal-page-view .legal-title {
-  color: var(--black);
+  color: rgba(245, 245, 245, 0.98);
 }
 
 body.legal-page-view .legal-prose {
-  color: rgba(46, 42, 38, 0.92);
+  color: rgba(245, 245, 245, 0.88);
 }
 
 body.legal-page-view .legal-lead {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(220, 220, 220, 0.82);
 }
 
 body.legal-page-view .legal-h2 {
-  color: var(--black);
+  color: var(--orange);
 }
 
 body.legal-page-view .legal-h3 {
-  color: rgba(46, 42, 38, 0.95);
+  color: rgba(245, 245, 245, 0.96);
 }
 
 body.legal-page-view .legal-prose a {
-  color: rgba(46, 42, 38, 0.9);
-  text-decoration-color: rgba(46, 42, 38, 0.35);
+  color: var(--orange);
+  text-decoration-color: rgba(255, 158, 24, 0.45);
 }
 
 body.legal-page-view .legal-prose a:hover {
-  color: rgba(46, 42, 38, 0.9);
-  text-decoration-color: rgba(46, 42, 38, 0.35);
+  color: #ffb347;
+  text-decoration-color: rgba(255, 158, 24, 0.65);
 }
 
 body.legal-page-view .legal-prose a:focus-visible {
-  color: var(--black);
-  text-decoration-color: rgba(46, 42, 38, 0.5);
+  color: var(--orange);
+  text-decoration-color: rgba(255, 158, 24, 0.55);
   outline: none;
 }
 
 body.legal-page-view .legal-pre {
-  border: none;
-  background: rgba(46, 42, 38, 0.06);
-  color: var(--black);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(245, 245, 245, 0.9);
 }
 
 body.legal-page-view .manual-back {
-  color: rgba(46, 42, 38, 0.85);
+  color: rgba(245, 245, 245, 0.85);
 }
 
 body.legal-page-view .manual-back:hover {
-  color: rgba(46, 42, 38, 0.85);
+  color: rgba(245, 245, 245, 0.95);
 }
 
 body.legal-page-view .manual-back:focus-visible {
-  color: var(--black);
+  color: var(--white);
   outline: none;
 }
 
 body.legal-page-view .site-legal-footer__line {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(200, 200, 200, 0.75);
 }
 
 body.legal-page-view .site-legal-footer__chunk a {
-  color: rgba(46, 42, 38, 0.92);
-  text-decoration-color: rgba(46, 42, 38, 0.3);
+  color: rgba(245, 245, 245, 0.88);
+  text-decoration-color: rgba(245, 245, 245, 0.35);
 }
 
 body.legal-page-view .site-legal-footer__chunk a:hover {
-  color: rgba(46, 42, 38, 0.92);
-  text-decoration-color: rgba(46, 42, 38, 0.3);
+  color: rgba(245, 245, 245, 0.95);
+  text-decoration-color: rgba(245, 245, 245, 0.45);
 }
 
 body.legal-page-view .site-legal-footer__chunk a:focus-visible {
-  color: var(--black);
+  color: var(--white);
   outline: none;
 }
 
 body.legal-page-view .site-legal-footer__nav a {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(220, 220, 220, 0.85);
 }
 
 body.legal-page-view .site-legal-footer__nav a:hover {
-  color: rgba(46, 42, 38, 0.78);
+  color: rgba(245, 245, 245, 0.95);
 }
 
 body.legal-page-view .site-legal-footer__nav a:focus-visible {
-  color: var(--black);
+  color: var(--white);
   outline: none;
 }
 
 body.legal-page-view .site-legal-footer__sep {
-  color: rgba(46, 42, 38, 0.35);
+  color: rgba(120, 120, 120, 0.85);
 }
 
 /* —— Thanks step —— */
