@@ -30,7 +30,7 @@ const copy = {
     dermatologistAriaLabel: "Dermatologist check via WhatsApp",
 
     carouselAlt1:
-      "blackbird Men set: Daily Wash, After Wash, and Before Sleep bottles",
+      "blackbird Men set: four bottles — two Daily Wash, After Wash, and Before Sleep",
     carouselAlt2: "blackbird After Wash: daily flake-free spray",
     carouselAlt3: "blackbird Before Sleep: overnight scalp care",
 
@@ -120,7 +120,7 @@ const copy = {
     dermatologistAriaLabel: "Hautärztlicher Check über WhatsApp",
 
     carouselAlt1:
-      "blackbird Men Set: Daily Wash, After Wash und Before Sleep Flaschen",
+      "blackbird Men Set: vier Flaschen — zwei Daily Wash, After Wash und Before Sleep",
     carouselAlt2: "blackbird After Wash: tägliches Anti-Schuppen-Spray",
     carouselAlt3: "blackbird Before Sleep: nächtliche Kopfhautpflege",
 

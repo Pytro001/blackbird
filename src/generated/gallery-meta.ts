@@ -14,11 +14,11 @@ export const GALLERY_SLIDE_META: readonly GallerySlideMeta[] = [
   {
     "stem": "product-slide-01",
     "fallbackExt": "jpg",
-    "intrinsicWidth": 5464,
-    "intrinsicHeight": 8192,
-    "heroWebpWidth": 2800,
-    "fullWebpWidth": 5464,
-    "hasTwoWebpTiers": true
+    "intrinsicWidth": 1024,
+    "intrinsicHeight": 682,
+    "heroWebpWidth": 1024,
+    "fullWebpWidth": 1024,
+    "hasTwoWebpTiers": false
   },
   {
     "stem": "product-slide-02",
