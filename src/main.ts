@@ -145,7 +145,7 @@ type ProductGalleryOptions = {
   showThumbs: boolean;
   /** Subscription landing: thumbs column to the left of the hero image (not overlaid). */
   thumbsBesideMain: boolean;
-  /** Subscription: translateX strip with transition (vs single img src swap) */
+  /** Horizontal slide strip + CSS transition (both landings; legacy single-img when false). */
   smoothTrack: boolean;
   thumbsVariant: "purchase" | "subscription";
 };
@@ -1813,7 +1813,10 @@ function bindProductShotsCarousel(): void {
     const slide = slides[next];
     if (useSmoothStrip && track) {
       track.style.setProperty("--gallery-index", String(next));
+      track.classList.remove("is-dragging");
+      track.style.removeProperty("--gallery-drag-px");
     }
+    stage.classList.remove("is-gallery-dragging");
     if (mainImg) {
       const urls = carouselSlideUrls(slide.stem);
       const m = urls.meta;
@@ -1859,22 +1862,32 @@ function bindProductShotsCarousel(): void {
   let dragPointerId: number | null = null;
   let dragStartX = 0;
   let dragStartY = 0;
+  /** Touch: wait for horizontal intent before moving the strip (avoids fighting vertical scroll). */
+  let dragHorizLocked = false;
 
   const endDrag = (e: PointerEvent): void => {
     if (dragPointerId !== e.pointerId) return;
     const dx = e.clientX - dragStartX;
-    const dy = e.clientY - dragStartY;
     dragPointerId = null;
+    dragHorizLocked = false;
     try {
       stage.releasePointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
+
+    if (useSmoothStrip && track) {
+      track.classList.remove("is-dragging");
+      track.style.removeProperty("--gallery-drag-px");
+    }
+    stage.classList.remove("is-gallery-dragging");
+
     if (n < 2) return;
     const mobile = window.matchMedia("(max-width: 839px)").matches;
     const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
     const minSwipe = mobile && touchLike ? PRODUCT_GALLERY_SWIPE_MIN_PX_MOBILE : PRODUCT_GALLERY_SWIPE_MIN_PX;
     if (Math.abs(dx) < minSwipe) return;
+    const dy = e.clientY - dragStartY;
     if (mobile && touchLike) {
       if (Math.abs(dx) <= Math.abs(dy) * 0.48) return;
     } else if (Math.abs(dx) <= Math.abs(dy)) return;
@@ -1888,12 +1901,45 @@ function bindProductShotsCarousel(): void {
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
+    dragHorizLocked = false;
+    if (useSmoothStrip && track && n >= 2) {
+      track.classList.add("is-dragging");
+      track.style.setProperty("--gallery-drag-px", "0px");
+    }
     try {
       stage.setPointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
   });
+
+  stage.addEventListener(
+    "pointermove",
+    (e: PointerEvent) => {
+      if (dragPointerId !== e.pointerId || !useSmoothStrip || !track || n < 2) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      const mobile = window.matchMedia("(max-width: 839px)").matches;
+      const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
+
+      let px = dx;
+      if (mobile && touchLike) {
+        if (!dragHorizLocked) {
+          if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+          dragHorizLocked = Math.abs(dx) >= Math.abs(dy) * 0.55;
+          if (!dragHorizLocked) return;
+        }
+        stage.classList.add("is-gallery-dragging");
+        e.preventDefault();
+      }
+
+      if (index <= 0 && px > 0) px = Math.min(px * 0.35, 56);
+      else if (index >= n - 1 && px < 0) px = Math.max(px * 0.35, -56);
+
+      track.style.setProperty("--gallery-drag-px", `${px}px`);
+    },
+    { passive: false },
+  );
 
   stage.addEventListener("pointerup", endDrag);
   stage.addEventListener("pointercancel", endDrag);

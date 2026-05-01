@@ -1368,7 +1368,9 @@ body.subscription-view .cosmos-field__shoot {
     transition: transform 0.48s cubic-bezier(0.32, 0.72, 0.25, 1);
     will-change: transform;
     transform: translateX(
-      calc(var(--gallery-index, 0) / var(--gallery-slides, 3) * -100%)
+      calc(
+        var(--gallery-index, 0) / var(--gallery-slides, 3) * -100% + var(--gallery-drag-px, 0px)
+      )
     );
   }
 
@@ -1488,8 +1490,11 @@ body.subscription-view .cosmos-field__shoot {
     height: 100%;
     width: calc(var(--gallery-slides, 3) * 100%);
     transition: transform 0.48s cubic-bezier(0.32, 0.72, 0.25, 1);
+    will-change: transform;
     transform: translateX(
-      calc(var(--gallery-index, 0) / var(--gallery-slides, 3) * -100%)
+      calc(
+        var(--gallery-index, 0) / var(--gallery-slides, 3) * -100% + var(--gallery-drag-px, 0px)
+      )
     );
   }
 
@@ -2052,7 +2057,9 @@ body.subscription-view .product-gallery {
     transition: transform 0.48s cubic-bezier(0.32, 0.72, 0.25, 1);
     will-change: transform;
     transform: translateX(
-      calc(var(--gallery-index, 0) / var(--gallery-slides, 3) * -100%)
+      calc(
+        var(--gallery-index, 0) / var(--gallery-slides, 3) * -100% + var(--gallery-drag-px, 0px)
+      )
     );
   }
 
@@ -2202,6 +2209,20 @@ body.subscription-view .product-gallery__thumb img {
 }
 
 @media (max-width: 839px) {
+  /* Default thumbs are 5:4 + object-fit:contain — force square crops on small screens. */
+  .product-gallery__thumb {
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-gallery__thumb img {
+    object-fit: cover;
+    object-position: var(--gallery-slide-object-position);
+  }
+
+  #product-gallery-stage.is-gallery-dragging {
+    touch-action: none;
+  }
+
   .product-gallery__aspect {
     width: 100%;
     min-height: 0;
@@ -2261,8 +2282,11 @@ body.subscription-view .product-gallery__thumb img {
     height: 100%;
     width: calc(var(--gallery-slides, 3) * 100%);
     transition: transform 0.48s cubic-bezier(0.32, 0.72, 0.25, 1);
+    will-change: transform;
     transform: translateX(
-      calc(var(--gallery-index, 0) / var(--gallery-slides, 3) * -100%)
+      calc(
+        var(--gallery-index, 0) / var(--gallery-slides, 3) * -100% + var(--gallery-drag-px, 0px)
+      )
     );
   }
 
@@ -2286,6 +2310,11 @@ body.subscription-view .product-gallery__thumb img {
     object-position: var(--gallery-slide-object-position);
     border-radius: 0;
   }
+}
+
+body.subscription-view .product-gallery__track--smooth.is-dragging,
+body:not(.subscription-view) .product-gallery__track--smooth.is-dragging {
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
