@@ -992,7 +992,7 @@ ${howtoBlock}
                   thumbsBesideMain: false,
                   thumbsInsideStage: true,
                   showThumbs: true,
-                  smoothTrack: false,
+                  smoothTrack: true,
                   thumbsVariant: "purchase",
                 },
           )}
@@ -1658,7 +1658,7 @@ function bindProductGalleryAsideHeight(): void {
       gallery.style.removeProperty("width");
       return;
     }
-    /* Purchase uses CSS 2:1 aspect on .product-gallery__aspect — inline height would break the crop. */
+    /* Purchase uses CSS aspect on .product-gallery__aspect — inline height would break the crop. */
     if (!document.body.classList.contains("subscription-view")) {
       gallery.classList.remove("product-gallery--match-aside");
       gallery.style.removeProperty("height");
