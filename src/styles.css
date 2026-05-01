@@ -1188,7 +1188,7 @@ body.subscription-view .cosmos-field__shoot {
   }
 }
 
-/* —— Purchase (/product): gallery stretches to aside (How-to line); borderless thumbs —— */
+/* —— Purchase (default `/` and `/product`): gallery stretches to aside (How-to line); borderless thumbs —— */
 @media (min-width: 840px) {
   body:not(.subscription-view) .product-hero:not(.product-hero--subscription) {
     display: grid;

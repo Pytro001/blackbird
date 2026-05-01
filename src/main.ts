@@ -31,7 +31,7 @@ function gallerySlideMeta(stem: string): GallerySlideMeta {
   return m;
 }
 
-/** Root-anchored public/ URL so images load on `/product` and other SPA paths (relative URLs would break). */
+/** Root-anchored public/ URL so images load on `/`, `/product`, and other SPA paths (relative URLs would break). */
 function publicAssetUrl(path: string): string {
   const p = path.replace(/^\/+/, "");
   const base = import.meta.env.BASE_URL.replace(/\/$/, "") || "";
@@ -571,8 +571,8 @@ function getAppPath(): string {
 
 function pathToView(): View {
   const path = getAppPath();
-  if (path === "/product") return "product";
-  if (path === "/" || path === "/subscription") return "subscription";
+  if (path === "/subscription") return "subscription";
+  if (path === "/" || path === "/product") return "product";
   if (path === "/thanks") return "thanks";
   if (path === "/how-to-use") return "manual";
   if (path === "/agb") {
@@ -585,7 +585,7 @@ function pathToView(): View {
   }
   if (path === "/impressum") return "impressum";
   if (path === "/datenschutz") return "datenschutz";
-  return "subscription";
+  return "product";
 }
 
 function goLanding(): void {
@@ -871,7 +871,7 @@ function productEducationSectionHtml(lang: UiLang): string {
     </section>`;
 }
 
-function homeHtml(lang: UiLang, mode: LandingMode = "subscription"): string {
+function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const t = strings(lang);
   const isSubscription = mode === "subscription";
   const checkoutHref = stripeSubscriptionLinkUrl();
@@ -1272,7 +1272,7 @@ function manualHtml(lang: UiLang): string {
         </div>
         <div class="manual-end" id="manual-end" hidden>
           <p class="manual-end__lede">${escapeHtml(t.manualEndLede)}</p>
-          <a class="manual-end__cta" href="${BASE_HREF}product">${escapeHtml(t.manualEndCta)}</a>
+          <a class="manual-end__cta" href="${BASE_HREF}">${escapeHtml(t.manualEndCta)}</a>
           <button type="button" class="manual-end__again btn-pill" id="manual-restart">${escapeHtml(t.manualRestart)}</button>
         </div>
         <div class="manual-progress" id="manual-progress" aria-live="polite" hidden>1 / 7</div>
@@ -1420,10 +1420,6 @@ function render(): void {
     history.replaceState(null, "", BASE_HREF);
   } else if (path === "/admin" || path.startsWith("/admin/")) {
     history.replaceState(null, "", BASE_HREF);
-  }
-
-  if (getAppPath() === "/subscription") {
-    history.replaceState(null, "", `${BASE_HREF}${location.search}${location.hash}`);
   }
 
   const view = pathToView();
