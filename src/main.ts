@@ -923,6 +923,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
     : `          <section class="buy-sheet">
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">${escapeHtml(t.monthlyPriceSuffix)}</span></p>
+              <p class="product-cancel-anytime">${escapeHtml(t.subscriptionCancelAnytime)}</p>
               <div class="product-offer-detail">
               <p class="product-purchase-refill">${t.purchaseRefillLineHtml}</p>
               <div class="product-shipping">

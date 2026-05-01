@@ -2338,7 +2338,17 @@ body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) .product-name {
 }
 
 body:not(.subscription-view) .buy-sheet .product-price--monthly {
-  margin-bottom: 0.05rem;
+  margin-bottom: 0;
+}
+
+body:not(.subscription-view) .buy-sheet .product-cancel-anytime {
+  margin: 0.15rem 0 0.35rem;
+  padding: 0;
+  font-size: clamp(0.8rem, 1.95vw, 0.88rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  color: rgba(210, 210, 210, 0.88);
 }
 
 body:not(.subscription-view) .buy-sheet .product-wa-desc {
