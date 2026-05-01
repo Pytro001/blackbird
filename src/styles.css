@@ -1373,8 +1373,9 @@ body.subscription-view .cosmos-field__shoot {
   body:not(.subscription-view) .product-gallery__aspect {
     position: relative;
     width: 100%;
-    height: 0;
-    padding-bottom: 50%;
+    height: auto;
+    padding-bottom: 0;
+    aspect-ratio: 1 / 1;
     flex: none;
     overflow: hidden;
     /* Visible gaps when clipping hero — matches typical packshot backdrop */
@@ -1385,7 +1386,7 @@ body.subscription-view .cosmos-field__shoot {
     position: absolute;
     inset: 0;
     margin: 0;
-    clip-path: inset(20% 0 10% 0);
+    clip-path: none;
     border-radius: inherit;
   }
 
@@ -2148,8 +2149,7 @@ body.subscription-view .product-gallery__thumb img {
   }
 
   /*
-   * Slides are ~2:3 portrait; intrinsic padding-bottom made the hero ~150% of viewport width tall.
-   * Use a shorter fixed frame + cover so the page scroll stays sane (crop top/bottom).
+   * Square mobile frame + object-fit: cover for consistent 1:1 crop (matches purchase path).
    */
   body.subscription-view .product-gallery__aspect,
   body.subscription-view .product-gallery__aspect--smooth {
@@ -2161,8 +2161,8 @@ body.subscription-view .product-gallery__thumb img {
     flex: none;
     overflow: hidden;
     border-radius: inherit;
-    aspect-ratio: 4 / 3;
-    max-height: min(52svh, 440px);
+    aspect-ratio: 1 / 1;
+    max-height: none;
   }
 
   body.subscription-view .product-gallery__track-shell {
