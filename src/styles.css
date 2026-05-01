@@ -2488,6 +2488,12 @@ body:not(.subscription-view) .buy-sheet .product-cancel-anytime {
   color: rgba(210, 210, 210, 0.88);
 }
 
+@media (max-width: 839px) {
+  body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
+    margin-bottom: clamp(0.32rem, 1.35vw, 0.48rem);
+  }
+}
+
 body:not(.subscription-view) .buy-sheet .product-wa-desc {
   color: rgba(200, 200, 200, 0.82);
 }
