@@ -379,7 +379,6 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
   const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
   const refillImg = document.querySelector<HTMLImageElement>("#pdf-manual-refill-img");
-  const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
   const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
   if (!modal || !embed) return;
   const t = strings(detectUiLang());
@@ -425,10 +424,6 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   if (sheet) {
     sheet.setAttribute("aria-label", isRefillInfographic ? t.pdfRefillDialogAria : t.pdfDialogAria);
   }
-  if (newTab) {
-    newTab.href = url;
-    newTab.textContent = isRefillInfographic ? t.refillOpenNewTab : t.pdfOpenNewTab;
-  }
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
 }
@@ -465,10 +460,6 @@ function pdfManualModalHtml(lang: UiLang): string {
           decoding="async"
           alt="${escapeHtml(t.refillInfographicAlt)}"
         />
-        <p class="pdf-modal__pdf-actions">
-          <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
-            >${escapeHtml(t.pdfOpenNewTab)}</a>
-        </p>
       </div>
     </div>`;
 }

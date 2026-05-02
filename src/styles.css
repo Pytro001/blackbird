@@ -2668,32 +2668,6 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   display: none !important;
 }
 
-.pdf-modal__pdf-actions {
-  margin: 0.5rem 0 0;
-  padding: 0;
-  text-align: center;
-}
-
-.pdf-modal__newtab {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.88);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.pdf-modal__newtab:hover {
-  color: rgba(245, 245, 245, 0.88);
-  text-decoration: underline;
-}
-
-.pdf-modal__newtab:focus-visible {
-  color: var(--orange);
-  outline: none;
-}
-
 .pdf-modal__close {
   position: absolute;
   top: max(0.35rem, env(safe-area-inset-top));
