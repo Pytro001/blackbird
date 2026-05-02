@@ -1099,6 +1099,7 @@ body.subscription-view .cosmos-field__shoot {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  margin-top: clamp(1.75rem, 5.5vw, 3.25rem);
   padding: max(clamp(0.75rem, 2.5vw, 1rem), env(safe-area-inset-top))
     max(var(--product-inline-pad), env(safe-area-inset-right))
     max(clamp(2rem, 5vw, 3rem), env(safe-area-inset-bottom))

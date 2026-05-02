@@ -710,15 +710,18 @@ function goLanding(): void {
 }
 
 /** Scroll commerce hero (gallery + price card) into view — not `#product` alone (min-height:100vh skews alignment). */
-function scrollToProduct(
-  behavior: ScrollBehavior = "smooth",
-  block: ScrollLogicalPosition = "center",
-): void {
+const PRODUCT_SCROLL_EXTRA_DOWN_PX = 120;
+
+function scrollToProduct(behavior: ScrollBehavior = "smooth"): void {
   requestAnimationFrame(() => {
     const el =
       document.querySelector<HTMLElement>(".page-product .product-hero") ??
       document.getElementById("product");
-    el?.scrollIntoView({ behavior, block, inline: "nearest" });
+    if (!el) return;
+    const marginTop = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+    const rect = el.getBoundingClientRect();
+    const y = window.scrollY + rect.top - marginTop + PRODUCT_SCROLL_EXTRA_DOWN_PX;
+    window.scrollTo({ top: Math.max(0, y), behavior });
   });
 }
 
@@ -1560,7 +1563,7 @@ function render(): void {
     /* Subscription home: do not auto-scroll on load (prevents jumpy mobile viewport). */
     const scrollProduct = view === "product" && wasEmailPath;
     if (scrollProduct) {
-      scrollToProduct("auto", "center");
+      scrollToProduct("auto");
     } else if (
       location.hash === "#product-faq" ||
       location.hash === "#education" ||
@@ -1710,7 +1713,7 @@ function bindImageZoomLightbox(): void {
 
 function bindProduct(): void {
   document.getElementById("cta-now")?.addEventListener("click", () => {
-    scrollToProduct("smooth", "center");
+    scrollToProduct("smooth");
   });
 
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {
