@@ -383,10 +383,10 @@ function shouldUsePdfIframe(): boolean {
 /** Fragment appended to PDF URL for Chrome/Safari viewers (#toolbar, zoom, fit). */
 function pdfViewerOpenUrl(href: string, pdfFile: string, forEmbed: boolean): string {
   if (pdfFile === PDF_REFILL_FILE) {
-    const mobile = window.matchMedia("(max-width: 839px)").matches;
-    return mobile
-      ? `${href}#page=1&toolbar=0&navpanes=0&view=Fit`
-      : `${href}#page=1&toolbar=0&navpanes=0&zoom=50`;
+    const narrow = window.matchMedia("(max-width: 839px)").matches;
+    if (narrow) {
+      return `${href}#page=1&toolbar=0&navpanes=0&view=Fit`;
+    }
   }
   return forEmbed ? href : `${href}#toolbar=0`;
 }
