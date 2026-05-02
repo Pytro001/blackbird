@@ -1028,8 +1028,8 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
               <div class="buy-sheet-howto-actions">
-              <button type="button" class="btn-howto" id="product-refill-open">${escapeHtml(t.howToRefillBottles)}</button>
               <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
+              <button type="button" class="btn-howto" id="product-refill-open">${escapeHtml(t.howToRefillBottles)}</button>
               </div>
             </div>`;
 
