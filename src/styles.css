@@ -2912,7 +2912,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 /* —— Education (#education for keyboard / skip links) —— */
 .product-education {
-  max-width: min(720px, 100%);
+  max-width: min(800px, 100%);
   margin: 0 auto;
   padding: max(0rem, env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
