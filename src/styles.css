@@ -2946,7 +2946,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-education__title {
-  margin: 0 0 1rem;
+  margin: 0 0 1.35rem;
   text-align: center;
 }
 
@@ -2963,10 +2963,10 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-education__lead {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.6;
   color: rgba(235, 235, 235, 0.92);
   text-align: center;
   text-wrap: balance;
@@ -2975,8 +2975,8 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 .product-education__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 2.5vw, 1.25rem);
-  margin-bottom: 1.25rem;
+  gap: clamp(1.1rem, 2.5vw, 1.4rem);
+  margin-bottom: 1.5rem;
   justify-items: stretch;
 }
 
@@ -2990,7 +2990,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 .product-education__card {
   margin: 0;
-  padding: 0 0 0.25rem;
+  padding: 0 0 0.4rem;
   border: none;
   border-radius: 0;
   background: none;
@@ -2998,7 +2998,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-education__sub {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.65rem;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -3011,7 +3011,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   max-width: 34ch;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
-  line-height: 1.58;
+  line-height: 1.6;
   color: rgba(228, 228, 228, 0.94);
   text-align: start;
   text-wrap: pretty;
@@ -3020,10 +3020,10 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 .product-education__stats {
   margin: 0;
-  padding-top: clamp(0.65rem, 1.8vw, 0.95rem);
+  padding-top: clamp(0.85rem, 2vw, 1.1rem);
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
-  line-height: 1.58;
+  line-height: 1.6;
   color: rgba(225, 225, 225, 0.92);
   border-top: none;
   text-align: center;
