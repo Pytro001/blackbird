@@ -629,13 +629,16 @@ function goLanding(): void {
   render();
 }
 
-/** Same document as home; scroll product block into view */
+/** Scroll commerce hero (gallery + price card) into view — not `#product` alone (min-height:100vh skews alignment). */
 function scrollToProduct(
-  behavior: ScrollBehavior = "auto",
-  block: ScrollLogicalPosition = "nearest",
+  behavior: ScrollBehavior = "smooth",
+  block: ScrollLogicalPosition = "center",
 ): void {
   requestAnimationFrame(() => {
-    document.getElementById("product")?.scrollIntoView({ behavior, block });
+    const el =
+      document.querySelector<HTMLElement>(".page-product .product-hero") ??
+      document.getElementById("product");
+    el?.scrollIntoView({ behavior, block, inline: "nearest" });
   });
 }
 
@@ -1477,7 +1480,7 @@ function render(): void {
     /* Subscription home: do not auto-scroll on load (prevents jumpy mobile viewport). */
     const scrollProduct = view === "product" && wasEmailPath;
     if (scrollProduct) {
-      scrollToProduct("auto", "nearest");
+      scrollToProduct("auto", "center");
     } else if (
       location.hash === "#product-faq" ||
       location.hash === "#education" ||
@@ -1627,7 +1630,7 @@ function bindImageZoomLightbox(): void {
 
 function bindProduct(): void {
   document.getElementById("cta-now")?.addEventListener("click", () => {
-    scrollToProduct("auto", "start");
+    scrollToProduct("smooth", "center");
   });
 
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {

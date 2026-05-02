@@ -1182,6 +1182,7 @@ body.subscription-view .cosmos-field__shoot {
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+  scroll-margin-block: clamp(1rem, 4vh, 2.75rem);
 }
 
 @media (min-width: 840px) {
