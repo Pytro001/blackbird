@@ -380,6 +380,17 @@ function shouldUsePdfIframe(): boolean {
   return /Android/i.test(navigator.userAgent);
 }
 
+/** Fragment appended to PDF URL for Chrome/Safari viewers (#toolbar, zoom, fit). */
+function pdfViewerOpenUrl(href: string, pdfFile: string, forEmbed: boolean): string {
+  if (pdfFile === PDF_REFILL_FILE) {
+    const mobile = window.matchMedia("(max-width: 839px)").matches;
+    return mobile
+      ? `${href}#page=1&toolbar=0&navpanes=0&view=Fit`
+      : `${href}#page=1&toolbar=0&navpanes=0&zoom=50`;
+  }
+  return forEmbed ? href : `${href}#toolbar=0`;
+}
+
 function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
@@ -400,17 +411,18 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
     embed.removeAttribute("src");
     iframe.hidden = false;
     iframe.title = titleStr;
-    iframe.src = `${url}#toolbar=0`;
+    iframe.src = pdfViewerOpenUrl(url, pdfFile, false);
   } else {
     iframe?.removeAttribute("src");
     iframe?.setAttribute("hidden", "");
-    embed.src = url;
+    embed.src = pdfViewerOpenUrl(url, pdfFile, true);
     embed.title = titleStr;
   }
 
   if (sheet) {
     sheet.setAttribute("aria-label", isRefill ? t.pdfRefillDialogAria : t.pdfDialogAria);
   }
+  modal.classList.toggle("pdf-modal--refill-doc", isRefill);
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
 }
@@ -486,7 +498,7 @@ function closePdfManualModal(immediate = false): void {
       ifr.removeAttribute("src");
       ifr.setAttribute("hidden", "");
     }
-    modal?.classList.remove("pdf-modal--android-inline");
+    modal?.classList.remove("pdf-modal--android-inline", "pdf-modal--refill-doc");
     unlockBodyScrollAfterPdfModal();
   };
 
