@@ -1894,6 +1894,8 @@ body.subscription-view .product-gallery {
 @media (max-width: 839px) {
   .product-gallery__stage {
     touch-action: pan-x pan-y;
+    /* Reduce browser/history horizontal overscroll eating swipe-right (previous slide) on Android */
+    overscroll-behavior-x: contain;
   }
 }
 

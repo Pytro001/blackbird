@@ -1867,29 +1867,6 @@ const PRODUCT_GALLERY_WHEEL_COOLDOWN_MS = 240;
 /** Midpoint movement between two touches before changing slide. */
 const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX = 52;
 const PRODUCT_GALLERY_TWO_TOUCH_MIN_PX_MOBILE = 26;
-/**
- * Android Chrome edge-swipe back shares the same horizontal pan as the gallery.
- * If we capture the pointer and preventDefault, the OS never receives the gesture.
- * Reserve both viewport edges for touch/pen on Android mobile only (iOS uses a different back UX).
- */
-const PRODUCT_GALLERY_ANDROID_EDGE_BACK_INSET_PX = 48;
-
-function productGalleryViewportWidth(): number {
-  if (typeof window === "undefined") return 0;
-  return window.visualViewport?.width ?? window.innerWidth;
-}
-
-function productGallerySkipDragForAndroidEdgeBack(e: PointerEvent): boolean {
-  if (e.pointerType !== "touch" && e.pointerType !== "pen") return false;
-  if (!/Android/i.test(navigator.userAgent)) return false;
-  if (!window.matchMedia("(max-width: 839px)").matches) return false;
-  const vw = productGalleryViewportWidth();
-  if (vw <= 0) return false;
-  const inset = PRODUCT_GALLERY_ANDROID_EDGE_BACK_INSET_PX;
-  const x = e.clientX;
-  return x < inset || x > vw - inset;
-}
-
 function bindProductShotsCarousel(): void {
   const stage = document.getElementById("product-gallery-stage");
   const track = document.querySelector<HTMLElement>(
@@ -2005,7 +1982,6 @@ function bindProductShotsCarousel(): void {
   stage.addEventListener("pointerdown", (e: PointerEvent) => {
     if ((e.target as HTMLElement).closest(".product-gallery__thumb")) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    if (productGallerySkipDragForAndroidEdgeBack(e)) return;
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
