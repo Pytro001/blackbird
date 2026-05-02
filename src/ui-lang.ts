@@ -277,18 +277,17 @@ export type ProductFaqItemBase = {
 export type ProductFaqPanelPlace = "above" | "below" | "left" | "right";
 
 export type ProductFaqItem = ProductFaqItemBase & {
-  pinTop: string;
-  pinLeft: string;
   panel: ProductFaqPanelPlace;
 };
 
-type PinSlot = Omit<ProductFaqItem, "question" | "pinLabel" | "answer">;
+type PinSlot = Pick<ProductFaqItem, "id" | "panel">;
 
+/** Positions live in CSS (`src/styles.css`) so breakpoints can override without losing to inline styles. */
 const PIN_SLOTS: readonly PinSlot[] = [
-  { id: "what-is", pinTop: "47%", pinLeft: "23%", panel: "below" },
-  { id: "two-bottles", pinTop: "28%", pinLeft: "38%", panel: "above" },
-  { id: "why-spray", pinTop: "30%", pinLeft: "77%", panel: "above" },
-  { id: "subscription", pinTop: "63%", pinLeft: "80%", panel: "above" },
+  { id: "what-is", panel: "below" },
+  { id: "two-bottles", panel: "above" },
+  { id: "why-spray", panel: "above" },
+  { id: "subscription", panel: "above" },
 ];
 
 export function localizedFaqItems(

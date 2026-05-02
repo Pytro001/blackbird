@@ -900,11 +900,7 @@ function productFaqSectionHtml(mode: LandingMode, lang: UiLang): string {
     const panelId = `product-faq-panel-${item.id}`;
     const btnId = `product-faq-btn-${item.id}`;
     return `
-          <div
-            class="product-faq__spot"
-            data-id="${item.id}"
-            style="--pin-top:${item.pinTop};--pin-left:${item.pinLeft};"
-          >
+          <div class="product-faq__spot" data-id="${item.id}">
             <div
               class="product-faq__panel product-faq__panel--${item.panel}"
               id="${panelId}"

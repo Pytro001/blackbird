@@ -2788,6 +2788,27 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   pointer-events: none;
 }
 
+/* FAQ pin anchors (% of figure box). Overridable per breakpoint — do not set inline on spots (inline wins cascade). */
+.product-faq__spot[data-id="what-is"] {
+  --pin-top: 47%;
+  --pin-left: 23%;
+}
+
+.product-faq__spot[data-id="two-bottles"] {
+  --pin-top: 28%;
+  --pin-left: 38%;
+}
+
+.product-faq__spot[data-id="why-spray"] {
+  --pin-top: 30%;
+  --pin-left: 77%;
+}
+
+.product-faq__spot[data-id="subscription"] {
+  --pin-top: 63%;
+  --pin-left: 80%;
+}
+
 .product-faq__spot > * {
   pointer-events: auto;
 }
@@ -2905,20 +2926,26 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   }
 }
 
-/* Phone: tighter hotspots + nudge positions on the FAQ image */
+/* Phone: tighter buttons + nudged anchors (see inline-style note above) */
 @media (max-width: 639px) {
   .product-faq__spot[data-id="what-is"] {
-    --pin-left: 17%;
+    --pin-top: 45%;
+    --pin-left: 16%;
   }
 
-  /* Upper row: move ~30% higher vs prior mobile tuning */
   .product-faq__spot[data-id="two-bottles"] {
-    --pin-top: 16%;
-    --pin-left: 23%;
+    --pin-top: 14%;
+    --pin-left: 22%;
   }
 
   .product-faq__spot[data-id="why-spray"] {
-    --pin-top: 17%;
+    --pin-top: 15%;
+    --pin-left: 74%;
+  }
+
+  .product-faq__spot[data-id="subscription"] {
+    --pin-top: 59%;
+    --pin-left: 77%;
   }
 
   .product-faq__pin {
