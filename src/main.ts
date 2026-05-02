@@ -353,6 +353,15 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Newlines in copy become &lt;br /&gt; (for education card paragraphs). */
+function educationCardTextHtml(text: string): string {
+  return text
+    .split("\n")
+    .map((line) => escapeHtml(line.trim()))
+    .filter((line) => line.length > 0)
+    .join("<br />");
+}
+
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
 const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
 const PDF_REFILL_FILE = "how-to-refill-bottles.pdf";
@@ -920,13 +929,13 @@ function productEducationSectionHtml(lang: UiLang): string {
         <div class="product-education__card">
           <h3 class="product-education__sub">${escapeHtml(t.educationOilyTitle)}</h3>
           <p class="product-education__text">
-            ${escapeHtml(t.educationOilyText)}
+            ${educationCardTextHtml(t.educationOilyText)}
           </p>
         </div>
         <div class="product-education__card">
           <h3 class="product-education__sub">${escapeHtml(t.educationDryTitle)}</h3>
           <p class="product-education__text">
-            ${escapeHtml(t.educationDryText)}
+            ${educationCardTextHtml(t.educationDryText)}
           </p>
         </div>
       </div>
