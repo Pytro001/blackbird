@@ -701,18 +701,17 @@ function goLanding(): void {
 }
 
 /** Scroll commerce hero (gallery + price card) into view — not `#product` alone (min-height:100vh skews alignment). */
-const PRODUCT_SCROLL_EXTRA_DOWN_PX = 120;
-
+/** Scroll so gallery + price block sits vertically centered in the viewport. */
 function scrollToProduct(behavior: ScrollBehavior = "smooth"): void {
   requestAnimationFrame(() => {
     const el =
       document.querySelector<HTMLElement>(".page-product .product-hero") ??
       document.getElementById("product");
     if (!el) return;
-    const marginTop = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
     const rect = el.getBoundingClientRect();
-    const y = window.scrollY + rect.top - marginTop + PRODUCT_SCROLL_EXTRA_DOWN_PX;
-    window.scrollTo({ top: Math.max(0, y), behavior });
+    const elCenterY = rect.top + window.scrollY + rect.height / 2;
+    const targetY = elCenterY - window.innerHeight / 2;
+    window.scrollTo({ top: Math.max(0, targetY), behavior });
   });
 }
 
