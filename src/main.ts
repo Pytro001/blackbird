@@ -960,7 +960,7 @@ function productEducationSectionHtml(lang: UiLang): string {
     >
       <h2 id="education-heading" class="product-education__title product-education__title--script">${escapeHtml(t.educationHeading)}</h2>
       <p class="product-education__lead">
-        ${escapeHtml(t.educationLead)}
+        ${educationCardTextHtml(t.educationLead)}
       </p>
       <div class="product-education__grid">
         <div class="product-education__card">
