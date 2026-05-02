@@ -2734,11 +2734,6 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
     line-height: 1.08;
   }
 
-  .product-education__title--script {
-    font-size: clamp(2.05rem, 9.2vw, 2.55rem);
-    line-height: 1.12;
-  }
-
   .hero-editorial__script {
     font-size: clamp(1.1rem, 4.4vw, 1.65rem);
   }
@@ -2950,16 +2945,23 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   text-align: center;
 }
 
-/* Same voice as hero script line */
+/* Same voice & scale as FAQ script heading (mobile bump in a later @media so it isn’t overridden). */
 .product-education__title--script {
   font-family: var(--font-script);
-  font-size: clamp(1.15rem, 4.2vw, 2.35rem);
+  font-size: clamp(1.65rem, 6vw, 3.35rem);
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
   color: var(--white-dim);
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .product-education__title--script {
+    font-size: clamp(2.05rem, 9.2vw, 2.55rem);
+    line-height: 1.08;
+  }
 }
 
 .product-education__lead {
