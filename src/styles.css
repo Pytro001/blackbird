@@ -2970,6 +2970,8 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(235, 235, 235, 0.92);
   text-align: center;
   text-wrap: balance;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 .product-education__grid {
@@ -3015,7 +3017,8 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(228, 228, 228, 0.94);
   text-align: start;
   text-wrap: pretty;
-  hyphens: auto;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 .product-education__stats {
@@ -3028,7 +3031,8 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   border-top: none;
   text-align: center;
   text-wrap: pretty;
-  hyphens: auto;
+  hyphens: none;
+  -webkit-hyphens: none;
 }
 
 /* Product title + price: one visual block; subscription tightens in body.subscription-view */
