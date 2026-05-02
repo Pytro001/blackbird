@@ -2880,9 +2880,32 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
     top: calc(100% + 0.45rem);
     transform: translateX(-50%);
   }
+}
+
+/* Phone: tighter hotspots + nudge positions on the FAQ image */
+@media (max-width: 639px) {
+  .product-faq__spot[data-id="what-is"] {
+    --pin-left: 17%;
+  }
 
   .product-faq__spot[data-id="two-bottles"] {
-    --pin-top: 5%;
+    --pin-top: 23%;
+  }
+
+  .product-faq__spot[data-id="why-spray"] {
+    --pin-top: 24%;
+  }
+
+  .product-faq__pin {
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0.28rem 0.48rem;
+    font-size: clamp(0.58rem, 2.75vw, 0.68rem);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.32);
+  }
+
+  body.subscription-view .product-faq__pin {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.32);
   }
 }
 
