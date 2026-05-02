@@ -378,7 +378,6 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   const modal = document.getElementById("pdf-manual-modal");
   const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
   const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
-  const refillImg = document.querySelector<HTMLImageElement>("#pdf-manual-refill-img");
   const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
   if (!modal || !embed) return;
   const t = strings(detectUiLang());
@@ -389,23 +388,15 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   const titleStr = isRefillInfographic ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
 
   if (isRefillInfographic) {
-    modal.classList.remove("pdf-modal--android-inline");
+    /* Same viewer chrome as PDF iframe path (dark frame, full sheet) — not inline <img>. */
     embed.removeAttribute("src");
-    iframe?.removeAttribute("src");
-    iframe?.setAttribute("hidden", "");
-    if (refillImg) {
-      refillImg.src = url;
-      refillImg.alt = t.refillInfographicAlt;
-      refillImg.title = titleStr;
-      refillImg.removeAttribute("hidden");
+    modal.classList.add("pdf-modal--android-inline");
+    if (iframe) {
+      iframe.hidden = false;
+      iframe.title = titleStr;
+      iframe.src = url;
     }
-    modal.classList.add("pdf-modal--refill-image");
   } else {
-    modal.classList.remove("pdf-modal--refill-image");
-    if (refillImg) {
-      refillImg.removeAttribute("src");
-      refillImg.setAttribute("hidden", "");
-    }
     const useIframe = shouldUsePdfIframe() && !!iframe;
     modal.classList.toggle("pdf-modal--android-inline", useIframe);
     if (useIframe && iframe) {
@@ -451,15 +442,6 @@ function pdfManualModalHtml(lang: UiLang): string {
           hidden
           title="${escapeHtml(t.pdfManualTitleEmbed)}"
         ></iframe>
-        <img
-          class="pdf-modal__refill-img"
-          id="pdf-manual-refill-img"
-          width="800"
-          height="1200"
-          hidden
-          decoding="async"
-          alt="${escapeHtml(t.refillInfographicAlt)}"
-        />
       </div>
     </div>`;
 }
@@ -508,12 +490,7 @@ function closePdfManualModal(immediate = false): void {
       ifr.removeAttribute("src");
       ifr.setAttribute("hidden", "");
     }
-    const rimg = document.querySelector<HTMLImageElement>("#pdf-manual-refill-img");
-    if (rimg) {
-      rimg.removeAttribute("src");
-      rimg.setAttribute("hidden", "");
-    }
-    modal?.classList.remove("pdf-modal--android-inline", "pdf-modal--refill-image");
+    modal?.classList.remove("pdf-modal--android-inline");
     unlockBodyScrollAfterPdfModal();
   };
 

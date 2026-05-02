@@ -2642,32 +2642,6 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   display: block;
 }
 
-.pdf-modal__refill-img {
-  display: none;
-  width: 100%;
-  max-width: min(720px, 100%);
-  height: auto;
-  max-height: min(88dvh, 1100px);
-  margin: 0 auto;
-  object-fit: contain;
-  border-radius: var(--radius-lg);
-  background: #fff;
-  box-sizing: border-box;
-}
-
-.pdf-modal__refill-img[hidden] {
-  display: none !important;
-}
-
-.pdf-modal--refill-image .pdf-modal__refill-img {
-  display: block;
-}
-
-.pdf-modal--refill-image .pdf-modal__embed,
-.pdf-modal--refill-image .pdf-modal__iframe {
-  display: none !important;
-}
-
 .pdf-modal__close {
   position: absolute;
   top: max(0.35rem, env(safe-area-inset-top));

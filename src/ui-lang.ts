@@ -83,8 +83,6 @@ const copy = {
     pdfCloseBtn: "Close",
     pdfManualTitleEmbed: "blackbird user manual",
     pdfRefillTitleEmbed: "How to refill blackbird bottles",
-    refillInfographicAlt:
-      "How refill works: empty bottles, WhatsApp, address check, delivery, repeat",
 
     manualBack: "Back",
     manualStageAria: "Usage comic, click to turn pages",
@@ -179,8 +177,6 @@ const copy = {
     pdfCloseBtn: "Schließen",
     pdfManualTitleEmbed: "blackbird Gebrauchsanleitung",
     pdfRefillTitleEmbed: "blackbird: Flaschen nachfüllen",
-    refillInfographicAlt:
-      "So funktioniert Nachfüllen: leere Flaschen, WhatsApp, Adresse prüfen, Lieferung",
 
     manualBack: "Zurück",
     manualStageAria: "Comic zur Anwendung — Klick zum Blättern",
