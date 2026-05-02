@@ -371,8 +371,8 @@ function educationCardTextHtml(text: string): string {
 
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
 const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
-/** One-pager PNG (not the generated PDF) — “How refill works” infographic. */
-const REFILL_ONE_PAGER_IMAGE = "how-refill-works.png";
+/** Single-page PDF built from how-refill-works.png — same viewer as the manual. */
+const PDF_REFILL_FILE = "how-refill-works.pdf";
 
 /** Chrome/Android rarely renders &lt;embed type="application/pdf"&gt; inline; iframe works more reliably. */
 function shouldUsePdfIframe(): boolean {
@@ -388,39 +388,28 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
   if (!modal || !embed) return;
   const t = strings(detectUiLang());
-  const isRefillInfographic = pdfFile === REFILL_ONE_PAGER_IMAGE;
+  const isRefill = pdfFile === PDF_REFILL_FILE;
   lockBodyScrollForPdfModal();
   const path = publicAssetUrl(pdfFile);
   const url = new URL(path, window.location.origin).href;
-  const titleStr = isRefillInfographic ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
+  const titleStr = isRefill ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
 
-  if (isRefillInfographic) {
-    /* Same viewer chrome as PDF iframe path (dark frame, full sheet) — not inline <img>. */
+  const useIframe = shouldUsePdfIframe() && !!iframe;
+  modal.classList.toggle("pdf-modal--android-inline", useIframe);
+  if (useIframe && iframe) {
     embed.removeAttribute("src");
-    modal.classList.add("pdf-modal--android-inline");
-    if (iframe) {
-      iframe.hidden = false;
-      iframe.title = titleStr;
-      iframe.src = url;
-    }
+    iframe.hidden = false;
+    iframe.title = titleStr;
+    iframe.src = `${url}#toolbar=0`;
   } else {
-    const useIframe = shouldUsePdfIframe() && !!iframe;
-    modal.classList.toggle("pdf-modal--android-inline", useIframe);
-    if (useIframe && iframe) {
-      embed.removeAttribute("src");
-      iframe.hidden = false;
-      iframe.title = titleStr;
-      iframe.src = `${url}#toolbar=0`;
-    } else {
-      iframe?.removeAttribute("src");
-      iframe?.setAttribute("hidden", "");
-      embed.src = url;
-      embed.title = titleStr;
-    }
+    iframe?.removeAttribute("src");
+    iframe?.setAttribute("hidden", "");
+    embed.src = url;
+    embed.title = titleStr;
   }
 
   if (sheet) {
-    sheet.setAttribute("aria-label", isRefillInfographic ? t.pdfRefillDialogAria : t.pdfDialogAria);
+    sheet.setAttribute("aria-label", isRefill ? t.pdfRefillDialogAria : t.pdfDialogAria);
   }
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
@@ -1695,7 +1684,7 @@ function bindProduct(): void {
   });
 
   document.querySelector("#product-refill-open")?.addEventListener("click", () => {
-    openPdfManualModal(REFILL_ONE_PAGER_IMAGE);
+    openPdfManualModal(PDF_REFILL_FILE);
   });
 
   document.querySelector("#pdf-manual-backdrop")?.addEventListener("click", () => {
