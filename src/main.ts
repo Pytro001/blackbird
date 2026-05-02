@@ -355,10 +355,28 @@ function escapeHtml(s: string): string {
 
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
 const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
+const PDF_REFILL_FILE = "how-to-refill-bottles.pdf";
 
-function pdfManualAbsoluteUrl(): string {
-  const path = publicAssetUrl(PDF_MANUAL_FILE);
-  return new URL(path, window.location.origin).href;
+function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
+  window.clearTimeout(pdfModalCloseTimer);
+  const modal = document.getElementById("pdf-manual-modal");
+  const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
+  const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
+  const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
+  if (!modal || !embed) return;
+  const t = strings(detectUiLang());
+  const isRefill = pdfFile === PDF_REFILL_FILE;
+  lockBodyScrollForPdfModal();
+  const path = publicAssetUrl(pdfFile);
+  const url = new URL(path, window.location.origin).href;
+  embed.src = url;
+  embed.title = isRefill ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
+  if (sheet) {
+    sheet.setAttribute("aria-label", isRefill ? t.pdfRefillDialogAria : t.pdfDialogAria);
+  }
+  if (newTab) newTab.href = url;
+  modal.hidden = false;
+  modal.classList.add("pdf-modal--open");
 }
 
 function pdfManualModalHtml(lang: UiLang): string {
@@ -410,20 +428,6 @@ function unlockBodyScrollAfterPdfModal(): void {
   document.body.style.right = "";
   document.body.style.width = "";
   window.scrollTo({ top: pdfModalScrollY, left: 0, behavior: "auto" });
-}
-
-function openPdfManualModal(): void {
-  window.clearTimeout(pdfModalCloseTimer);
-  const modal = document.getElementById("pdf-manual-modal");
-  const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
-  const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
-  if (!modal || !embed) return;
-  lockBodyScrollForPdfModal();
-  const url = pdfManualAbsoluteUrl();
-  embed.src = url;
-  if (newTab) newTab.href = url;
-  modal.hidden = false;
-  modal.classList.add("pdf-modal--open");
 }
 
 function closePdfManualModal(immediate = false): void {
@@ -937,7 +941,10 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
             </section>`;
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
+              <div class="buy-sheet-howto-actions">
               <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
+              <button type="button" class="btn-howto" id="product-refill-open">${escapeHtml(t.howToRefillBottles)}</button>
+              </div>
             </div>`;
 
   const productHeroAside = isSubscription
@@ -1624,7 +1631,11 @@ function bindProduct(): void {
   });
 
   document.querySelector("#product-howto-open")?.addEventListener("click", () => {
-    openPdfManualModal();
+    openPdfManualModal(PDF_MANUAL_FILE);
+  });
+
+  document.querySelector("#product-refill-open")?.addEventListener("click", () => {
+    openPdfManualModal(PDF_REFILL_FILE);
   });
 
   document.querySelector("#pdf-manual-backdrop")?.addEventListener("click", () => {

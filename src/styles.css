@@ -228,7 +228,7 @@ body.subscription-view .product-hero__aside > .buy-sheet--howto {
   align-self: flex-start;
   margin-top: clamp(0.65rem, 1.8vw, 1rem);
   width: auto;
-  max-width: min(100%, 22rem);
+  max-width: min(100%, 28rem);
   padding: 0;
 }
 
@@ -2525,6 +2525,14 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 .btn-howto:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.38);
   outline-offset: 2px;
+}
+
+.buy-sheet-howto-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.45rem, 2.2vw, 0.7rem);
 }
 
 /* How-to manual: darkened site, native PDF in iframe; backdrop tap closes */

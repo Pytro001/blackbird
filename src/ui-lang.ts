@@ -27,6 +27,7 @@ const copy = {
     whatsappBlockLeadAfter: " us.",
 
     howToUse: "How to use blackbird",
+    howToRefillBottles: "How to refill bottles",
     sidebarAriaLabel: "Product details",
     dermatologistAriaLabel: "Dermatologist check via WhatsApp",
 
@@ -78,8 +79,10 @@ const copy = {
 
     pdfBackdropClose: "Close manual",
     pdfDialogAria: "blackbird user manual",
+    pdfRefillDialogAria: "How to refill blackbird bottles",
     pdfCloseBtn: "Close",
     pdfManualTitleEmbed: "blackbird user manual",
+    pdfRefillTitleEmbed: "How to refill blackbird bottles",
     pdfOpenNewTab: "Open manual in new tab",
 
     manualBack: "Back",
@@ -118,6 +121,7 @@ const copy = {
     whatsappBlockLeadAfter: " uns.",
 
     howToUse: "So verwendest du blackbird",
+    howToRefillBottles: "Flaschen nachfüllen",
     sidebarAriaLabel: "Produktdetails",
     dermatologistAriaLabel: "Hautärztlicher Check über WhatsApp",
 
@@ -170,8 +174,10 @@ const copy = {
 
     pdfBackdropClose: "Anleitung schließen",
     pdfDialogAria: "blackbird Gebrauchsanleitung",
+    pdfRefillDialogAria: "blackbird: Flaschen nachfüllen",
     pdfCloseBtn: "Schließen",
     pdfManualTitleEmbed: "blackbird Gebrauchsanleitung",
+    pdfRefillTitleEmbed: "blackbird: Flaschen nachfüllen",
     pdfOpenNewTab: "Anleitung in neuem Tab öffnen",
 
     manualBack: "Zurück",
