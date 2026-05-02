@@ -2948,7 +2948,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 /* —— Education (#education for keyboard / skip links) —— */
 .product-education {
-  max-width: min(800px, 100%);
+  max-width: min(43rem, 100%);
   margin: 0 auto;
   padding: max(0rem, env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
@@ -2980,11 +2980,13 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-education__lead {
-  margin: 0 0 1.25rem;
+  margin: 0 auto 1.25rem;
+  max-width: 62ch;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 400;
   line-height: 1.55;
   color: rgba(235, 235, 235, 0.92);
+  text-wrap: balance;
 }
 
 .product-education__grid {
@@ -3021,19 +3023,23 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   margin: 0;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.58;
   color: rgba(228, 228, 228, 0.94);
   text-wrap: pretty;
+  hyphens: auto;
 }
 
 .product-education__stats {
-  margin: 0;
+  margin: 0 auto;
   padding-top: clamp(0.65rem, 1.8vw, 0.95rem);
+  max-width: 62ch;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.58;
   color: rgba(225, 225, 225, 0.92);
   border-top: none;
+  text-wrap: pretty;
+  hyphens: auto;
 }
 
 /* Product title + price: one visual block; subscription tightens in body.subscription-view */
