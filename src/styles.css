@@ -1106,6 +1106,11 @@ body.subscription-view .cosmos-field__shoot {
   background: transparent;
 }
 
+/* Subscription: extra space above gallery + card so the hero “NOW” row clears the viewport */
+body.subscription-view .page-product {
+  padding-top: max(clamp(2.5rem, 7.5vw, 4rem), env(safe-area-inset-top));
+}
+
 #hair-analysis {
   scroll-margin-top: 1rem;
 }
@@ -1182,7 +1187,11 @@ body.subscription-view .cosmos-field__shoot {
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  scroll-margin-block: clamp(1rem, 4vh, 2.75rem);
+  scroll-margin-block: clamp(1.35rem, 5vh, 3.25rem);
+}
+
+body.subscription-view .product-hero--subscription {
+  scroll-margin-top: clamp(2.75rem, 9vh, 5rem);
 }
 
 @media (min-width: 840px) {
@@ -1562,7 +1571,7 @@ body:not(.subscription-view) .buy-sheet--howto .btn-howto:focus-visible {
 @media (min-width: 840px) {
   body.subscription-view .page-product {
     --product-inline-pad: clamp(1rem, 4vw, 2rem);
-    padding-top: max(1.75rem, 5.5vh);
+    padding-top: max(clamp(2.85rem, 6.5vh, 4.75rem), env(safe-area-inset-top));
     padding-bottom: max(2.75rem, 7vh);
   }
 
