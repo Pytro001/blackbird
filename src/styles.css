@@ -2894,12 +2894,14 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
     --pin-left: 17%;
   }
 
+  /* Upper row: move ~30% higher vs prior mobile tuning */
   .product-faq__spot[data-id="two-bottles"] {
-    --pin-top: 23%;
+    --pin-top: 16%;
+    --pin-left: 23%;
   }
 
   .product-faq__spot[data-id="why-spray"] {
-    --pin-top: 24%;
+    --pin-top: 17%;
   }
 
   .product-faq__pin {
