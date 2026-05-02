@@ -364,7 +364,8 @@ function educationCardTextHtml(text: string): string {
 
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
 const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
-const PDF_REFILL_FILE = "how-to-refill-bottles.pdf";
+/** One-pager PNG (not the generated PDF) — “How refill works” infographic. */
+const REFILL_ONE_PAGER_IMAGE = "how-refill-works.png";
 
 /** Chrome/Android rarely renders &lt;embed type="application/pdf"&gt; inline; iframe works more reliably. */
 function shouldUsePdfIframe(): boolean {
@@ -377,35 +378,57 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   const modal = document.getElementById("pdf-manual-modal");
   const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
   const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
+  const refillImg = document.querySelector<HTMLImageElement>("#pdf-manual-refill-img");
   const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
   const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
   if (!modal || !embed) return;
   const t = strings(detectUiLang());
-  const isRefill = pdfFile === PDF_REFILL_FILE;
+  const isRefillInfographic = pdfFile === REFILL_ONE_PAGER_IMAGE;
   lockBodyScrollForPdfModal();
   const path = publicAssetUrl(pdfFile);
   const url = new URL(path, window.location.origin).href;
-  const titleStr = isRefill ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
-  const useIframe = shouldUsePdfIframe() && !!iframe;
+  const titleStr = isRefillInfographic ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
 
-  modal.classList.toggle("pdf-modal--android-inline", useIframe);
-
-  if (useIframe && iframe) {
+  if (isRefillInfographic) {
+    modal.classList.remove("pdf-modal--android-inline");
     embed.removeAttribute("src");
-    iframe.hidden = false;
-    iframe.title = titleStr;
-    iframe.src = `${url}#toolbar=0`;
-  } else {
     iframe?.removeAttribute("src");
     iframe?.setAttribute("hidden", "");
-    embed.src = url;
-    embed.title = titleStr;
+    if (refillImg) {
+      refillImg.src = url;
+      refillImg.alt = t.refillInfographicAlt;
+      refillImg.title = titleStr;
+      refillImg.removeAttribute("hidden");
+    }
+    modal.classList.add("pdf-modal--refill-image");
+  } else {
+    modal.classList.remove("pdf-modal--refill-image");
+    if (refillImg) {
+      refillImg.removeAttribute("src");
+      refillImg.setAttribute("hidden", "");
+    }
+    const useIframe = shouldUsePdfIframe() && !!iframe;
+    modal.classList.toggle("pdf-modal--android-inline", useIframe);
+    if (useIframe && iframe) {
+      embed.removeAttribute("src");
+      iframe.hidden = false;
+      iframe.title = titleStr;
+      iframe.src = `${url}#toolbar=0`;
+    } else {
+      iframe?.removeAttribute("src");
+      iframe?.setAttribute("hidden", "");
+      embed.src = url;
+      embed.title = titleStr;
+    }
   }
 
   if (sheet) {
-    sheet.setAttribute("aria-label", isRefill ? t.pdfRefillDialogAria : t.pdfDialogAria);
+    sheet.setAttribute("aria-label", isRefillInfographic ? t.pdfRefillDialogAria : t.pdfDialogAria);
   }
-  if (newTab) newTab.href = url;
+  if (newTab) {
+    newTab.href = url;
+    newTab.textContent = isRefillInfographic ? t.refillOpenNewTab : t.pdfOpenNewTab;
+  }
   modal.hidden = false;
   modal.classList.add("pdf-modal--open");
 }
@@ -433,6 +456,15 @@ function pdfManualModalHtml(lang: UiLang): string {
           hidden
           title="${escapeHtml(t.pdfManualTitleEmbed)}"
         ></iframe>
+        <img
+          class="pdf-modal__refill-img"
+          id="pdf-manual-refill-img"
+          width="800"
+          height="1200"
+          hidden
+          decoding="async"
+          alt="${escapeHtml(t.refillInfographicAlt)}"
+        />
         <p class="pdf-modal__pdf-actions">
           <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
             >${escapeHtml(t.pdfOpenNewTab)}</a>
@@ -485,7 +517,12 @@ function closePdfManualModal(immediate = false): void {
       ifr.removeAttribute("src");
       ifr.setAttribute("hidden", "");
     }
-    modal?.classList.remove("pdf-modal--android-inline");
+    const rimg = document.querySelector<HTMLImageElement>("#pdf-manual-refill-img");
+    if (rimg) {
+      rimg.removeAttribute("src");
+      rimg.setAttribute("hidden", "");
+    }
+    modal?.classList.remove("pdf-modal--android-inline", "pdf-modal--refill-image");
     unlockBodyScrollAfterPdfModal();
   };
 
@@ -988,8 +1025,8 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
               <div class="buy-sheet-howto-actions">
-              <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
               <button type="button" class="btn-howto" id="product-refill-open">${escapeHtml(t.howToRefillBottles)}</button>
+              <button type="button" class="btn-howto" id="product-howto-open">${escapeHtml(t.howToUse)}</button>
               </div>
             </div>`;
 
@@ -1681,7 +1718,7 @@ function bindProduct(): void {
   });
 
   document.querySelector("#product-refill-open")?.addEventListener("click", () => {
-    openPdfManualModal(PDF_REFILL_FILE);
+    openPdfManualModal(REFILL_ONE_PAGER_IMAGE);
   });
 
   document.querySelector("#pdf-manual-backdrop")?.addEventListener("click", () => {

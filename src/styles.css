@@ -2542,7 +2542,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   gap: clamp(0.45rem, 2.2vw, 0.7rem);
   box-sizing: border-box;
@@ -2639,6 +2639,32 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 .pdf-modal--android-inline .pdf-modal__iframe {
   display: block;
+}
+
+.pdf-modal__refill-img {
+  display: none;
+  width: 100%;
+  max-width: min(720px, 100%);
+  height: auto;
+  max-height: min(88dvh, 1100px);
+  margin: 0 auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.pdf-modal__refill-img[hidden] {
+  display: none !important;
+}
+
+.pdf-modal--refill-image .pdf-modal__refill-img {
+  display: block;
+}
+
+.pdf-modal--refill-image .pdf-modal__embed,
+.pdf-modal--refill-image .pdf-modal__iframe {
+  display: none !important;
 }
 
 .pdf-modal__pdf-actions {
