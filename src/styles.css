@@ -2246,8 +2246,8 @@ body.subscription-view .product-gallery__thumb img {
     border-radius: 0;
     box-sizing: border-box;
     box-shadow: none;
-    /* Let vertical scroll pass to the page; horizontal swipes are handled in JS */
-    touch-action: pan-y;
+    /* Match purchase: allow horizontal + vertical so Pointer Events receive pans on Android Chrome */
+    touch-action: pan-x pan-y;
   }
 
   body.subscription-view .product-gallery__thumbs:not(.product-gallery__thumbs--subscription) {

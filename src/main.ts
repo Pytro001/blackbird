@@ -1873,12 +1873,19 @@ function bindProductShotsCarousel(): void {
   let dragPointerId: number | null = null;
   let dragStartX = 0;
   let dragStartY = 0;
+  /** Last pointer position (Android often fires pointercancel with unreliable coords). */
+  let lastDragClientX = 0;
+  let lastDragClientY = 0;
   /** Touch: wait for horizontal intent before moving the strip (avoids fighting vertical scroll). */
   let dragHorizLocked = false;
 
   const endDrag = (e: PointerEvent): void => {
     if (dragPointerId !== e.pointerId) return;
-    const dx = e.clientX - dragStartX;
+    /* pointercancel: use last move; pointerup: prefer event coordinates */
+    const endX = e.type === "pointercancel" ? lastDragClientX : e.clientX;
+    const endY = e.type === "pointercancel" ? lastDragClientY : e.clientY;
+    const dx = endX - dragStartX;
+    const dy = endY - dragStartY;
     dragPointerId = null;
     dragHorizLocked = false;
     try {
@@ -1898,9 +1905,9 @@ function bindProductShotsCarousel(): void {
     const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
     const minSwipe = mobile && touchLike ? PRODUCT_GALLERY_SWIPE_MIN_PX_MOBILE : PRODUCT_GALLERY_SWIPE_MIN_PX;
     if (Math.abs(dx) < minSwipe) return;
-    const dy = e.clientY - dragStartY;
+    /* Looser diagonal tolerance on phones — swipe-back reads more vertically on Android */
     if (mobile && touchLike) {
-      if (Math.abs(dx) <= Math.abs(dy) * 0.48) return;
+      if (Math.abs(dx) <= Math.abs(dy) * 0.32) return;
     } else if (Math.abs(dx) <= Math.abs(dy)) return;
     if (dx < 0) show(index + 1);
     else show(index - 1);
@@ -1912,6 +1919,8 @@ function bindProductShotsCarousel(): void {
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
+    lastDragClientX = e.clientX;
+    lastDragClientY = e.clientY;
     dragHorizLocked = false;
     if (useSmoothStrip && track && n >= 2) {
       track.classList.add("is-dragging");
@@ -1927,7 +1936,10 @@ function bindProductShotsCarousel(): void {
   stage.addEventListener(
     "pointermove",
     (e: PointerEvent) => {
-      if (dragPointerId !== e.pointerId || !useSmoothStrip || !track || n < 2) return;
+      if (dragPointerId !== e.pointerId) return;
+      lastDragClientX = e.clientX;
+      lastDragClientY = e.clientY;
+      if (!useSmoothStrip || !track || n < 2) return;
       const dx = e.clientX - dragStartX;
       const dy = e.clientY - dragStartY;
       const mobile = window.matchMedia("(max-width: 839px)").matches;
@@ -1936,8 +1948,10 @@ function bindProductShotsCarousel(): void {
       let px = dx;
       if (mobile && touchLike) {
         if (!dragHorizLocked) {
-          if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
-          dragHorizLocked = Math.abs(dx) >= Math.abs(dy) * 0.55;
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          dragHorizLocked =
+            Math.abs(dx) >= Math.abs(dy) * 0.42 ||
+            Math.abs(dx) > 14;
           if (!dragHorizLocked) return;
         }
         stage.classList.add("is-gallery-dragging");
