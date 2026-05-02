@@ -227,7 +227,7 @@ body.subscription-view .buy-stack--subscription .buy-sheet--offer-sub {
 body.subscription-view .product-hero__aside > .buy-sheet--howto {
   align-self: flex-start;
   margin-top: clamp(0.65rem, 1.8vw, 1rem);
-  width: auto;
+  width: 100%;
   max-width: min(100%, 28rem);
   padding: 0;
 }
@@ -1522,9 +1522,9 @@ body.subscription-view .cosmos-field__shoot {
 }
 
 body:not(.subscription-view) .buy-sheet--howto {
-  width: auto;
+  width: 100%;
   max-width: 100%;
-  align-self: flex-start;
+  align-self: stretch;
 }
 
 body:not(.subscription-view) .buy-sheet--howto .btn-howto {
@@ -2533,7 +2533,10 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
   gap: clamp(0.45rem, 2.2vw, 0.7rem);
+  box-sizing: border-box;
 }
 
 /* How-to manual: darkened site, native PDF in iframe; backdrop tap closes */
