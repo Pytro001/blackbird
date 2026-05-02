@@ -353,13 +353,20 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Newlines in copy become &lt;br /&gt; (for education card paragraphs). */
+/** Newlines in copy become &lt;br /&gt;; blank lines become paragraph gaps (education only). */
 function educationCardTextHtml(text: string): string {
   return text
-    .split("\n")
-    .map((line) => escapeHtml(line.trim()))
-    .filter((line) => line.length > 0)
-    .join("<br />");
+    .trim()
+    .split(/\n\n+/)
+    .map((para) =>
+      para
+        .split("\n")
+        .map((line) => escapeHtml(line.trim()))
+        .filter((line) => line.length > 0)
+        .join("<br />"),
+    )
+    .filter((para) => para.length > 0)
+    .join("<br /><br />");
 }
 
 /** Served from public/; opened in modal via embed (better PDF support than iframe, esp. Safari). */
@@ -947,7 +954,7 @@ function productEducationSectionHtml(lang: UiLang): string {
         </div>
       </div>
       <p class="product-education__stats">
-        ${escapeHtml(t.educationStats)}
+        ${educationCardTextHtml(t.educationStats)}
       </p>
     </section>`;
 }

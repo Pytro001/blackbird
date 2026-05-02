@@ -54,15 +54,15 @@ const copy = {
 
     educationHeading: "Education",
     educationLead:
-      "There are two types of dandruff: oily and dry. You need to know which type you have so you can choose the right products.",
+      "Dandruff is either oily or dry. Choose products that match your type.",
     educationOilyTitle: "Oily flakes",
     educationOilyText:
-      "These are yellowish, greasy, and sticky. They stay on your scalp and hair. Your scalp makes too much oil, and yeast can grow more than it should.",
+      "Yellowish, greasy flakes stick to your scalp and hair. Extra oil lets yeast grow faster than usual.",
     educationDryTitle: "Dry flakes",
     educationDryText:
-      "These are small white flakes that fall easily. Your scalp may feel tight and itchy. When it does not make enough oil, it becomes too dry.",
+      "Small white flakes fall off easily. Without enough oil your scalp can feel tight, itchy, and dry.",
     educationStats:
-      "Roughly 50% of adults experience dandruff at some point in their lives. In other words, one out of every two people you meet has likely dealt with it. Dandruff tends to appear after puberty and can persist throughout adulthood, often peaking between the ages of 20 and 40. The condition is slightly more common in men.",
+      "Roughly half of all adults get dandruff at some point.\n\nIt often starts after puberty, peaks between ages 20 and 40, and is a bit more common in men.",
 
     missionBubble:
       "Every purchase helps two German guys to build tech to help humanity explore the universe.",
@@ -147,15 +147,15 @@ const copy = {
 
     educationHeading: "Wissen",
     educationLead:
-      "Schuppen sind entweder fett oder trocken. Welche Art du hast, solltest du kennen, damit du die passenden Produkte wählst.",
+      "Schuppen sind entweder fett oder trocken. Wähle Produkte, die zu deinem Typ passen.",
     educationOilyTitle: "Fettige Schuppen",
     educationOilyText:
-      "Sie sind gelblich, klebrig und fettig und bleiben auf Kopfhaut und Haaren. Die Kopfhaut produziert zu viel Talg, sodass Hefe stärker wächst als üblich.",
+      "Gelblich und klebrig bleiben sie auf Kopfhaut und Haaren. Zu viel Talg lässt Hefe schneller wachsen.",
     educationDryTitle: "Trockene Schuppen",
     educationDryText:
-      "Kleine weiße Schuppen, die leicht fallen. Die Kopfhaut spannt oft und juckt. Wird zu wenig Öl gebildet, wird sie zu trocken.",
+      "Kleine weiße Schuppen fallen leicht ab. Zu wenig Öl: die Kopfhaut spannt, juckt und wirkt trocken.",
     educationStats:
-      "Etwa die Hälfte der Erwachsenen hat irgendwann Schuppen. Mit anderen Worten: Jede zweite Person, der du begegnest, kennt das vermutlich. Schuppen treten oft nach der Pubertät auf und können noch im Erwachsenenalter bestehen bleiben, häufig mit einem Höhepunkt zwischen 20 und 40 Jahren — bei Männern etwas häufiger.",
+      "Etwa die Hälfte der Menschen hat irgendwann Schuppen.\n\nSie treten oft nach der Pubertät auf, mit einem Höhepunkt zwischen 20 und 40 Jahren — bei Männern etwas häufiger.",
 
     missionBubble:
       "Jeder Kauf hilft zwei Deutschen beim Aufbau von Technik für die Erforschung des Universums.",

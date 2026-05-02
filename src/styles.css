@@ -2922,7 +2922,11 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 /* —— Education (#education for keyboard / skip links) —— */
 .product-education {
-  max-width: min(43rem, 100%);
+  --education-band: min(38rem, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: min(46rem, 100%);
   margin: 0 auto;
   padding: max(0rem, env(safe-area-inset-top))
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-right))
@@ -2930,6 +2934,11 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
     max(clamp(1rem, 4vw, 2rem), env(safe-area-inset-left));
   overflow-x: clip;
   outline: none;
+}
+
+.product-education > * {
+  width: 100%;
+  max-width: var(--education-band);
 }
 
 .product-education:focus:not(:focus-visible) {
@@ -2954,12 +2963,12 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-education__lead {
-  margin: 0 auto 1.25rem;
-  max-width: 62ch;
+  margin: 0 0 1.25rem;
   font-size: clamp(0.88rem, 2.2vw, 0.95rem);
   font-weight: 400;
   line-height: 1.55;
   color: rgba(235, 235, 235, 0.92);
+  text-align: center;
   text-wrap: balance;
 }
 
@@ -2968,12 +2977,14 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   grid-template-columns: 1fr;
   gap: clamp(1rem, 2.5vw, 1.25rem);
   margin-bottom: 1.25rem;
+  justify-items: stretch;
 }
 
 @media (min-width: 640px) {
   .product-education__grid {
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
+    gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: start;
   }
 }
 
@@ -2983,6 +2994,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   border: none;
   border-radius: 0;
   background: none;
+  text-align: center;
 }
 
 .product-education__sub {
@@ -2991,27 +3003,30 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   font-weight: 600;
   letter-spacing: 0.03em;
   color: var(--orange);
+  text-align: center;
 }
 
 .product-education__text {
-  margin: 0;
+  margin: 0 auto;
+  max-width: 34ch;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.58;
   color: rgba(228, 228, 228, 0.94);
+  text-align: start;
   text-wrap: pretty;
   hyphens: auto;
 }
 
 .product-education__stats {
-  margin: 0 auto;
+  margin: 0;
   padding-top: clamp(0.65rem, 1.8vw, 0.95rem);
-  max-width: 62ch;
   font-size: clamp(0.82rem, 2.1vw, 0.9rem);
   font-weight: 400;
   line-height: 1.58;
   color: rgba(225, 225, 225, 0.92);
   border-top: none;
+  text-align: center;
   text-wrap: pretty;
   hyphens: auto;
 }
