@@ -125,7 +125,7 @@ function faqHeroPictureHtml(lang: UiLang): string {
             height="${m.intrinsicHeight}"
             alt="${escapeHtml(t.faqImageAlt)}"
             decoding="async"
-            loading="lazy"
+            loading="eager"
           />
         </picture>`;
 }
@@ -685,10 +685,20 @@ function goLanding(): void {
   render();
 }
 
-/** Scroll commerce hero (gallery + price card) into view — not `#product` alone (min-height:100vh skews alignment). */
-/** Scroll so gallery + price block sits vertically centered in the viewport. */
+/** Scroll commerce hero into view; mobile aligns bottom of primary CTA with viewport bottom. */
 function scrollToProduct(behavior: ScrollBehavior = "smooth"): void {
   requestAnimationFrame(() => {
+    const narrow = window.matchMedia("(max-width: 839px)").matches;
+    const buyBtn = document.querySelector<HTMLElement>("#buy-btn");
+
+    if (narrow && buyBtn) {
+      const r = buyBtn.getBoundingClientRect();
+      const pad = 16;
+      const targetY = window.scrollY + r.bottom - window.innerHeight + pad;
+      window.scrollTo({ top: Math.max(0, targetY), behavior });
+      return;
+    }
+
     const el =
       document.querySelector<HTMLElement>(".page-product .product-hero") ??
       document.getElementById("product");

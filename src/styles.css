@@ -2703,6 +2703,18 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   overflow-x: clip;
 }
 
+@media (max-width: 639px) {
+  /* overflow-x: clip can clip/paint badly with absolute pins on some mobile WebKit builds */
+  .product-faq {
+    overflow-x: visible;
+    overflow-y: visible;
+  }
+
+  .product-faq__figure {
+    aspect-ratio: 3 / 2;
+  }
+}
+
 .product-faq__heading {
   margin: 0 auto clamp(1.25rem, 3vw, 1.75rem);
   max-width: min(960px, 100%);
@@ -2745,6 +2757,11 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   margin: 0 auto clamp(4.75rem, 13vw, 7rem);
   border-radius: var(--radius);
   overflow: visible;
+}
+
+.product-faq__figure picture {
+  display: block;
+  width: 100%;
 }
 
 .product-faq__img {
