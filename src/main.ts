@@ -357,10 +357,17 @@ function escapeHtml(s: string): string {
 const PDF_MANUAL_FILE = "how-to-use-blackbird.pdf";
 const PDF_REFILL_FILE = "how-to-refill-bottles.pdf";
 
+/** Chrome/Android rarely renders &lt;embed type="application/pdf"&gt; inline; iframe works more reliably. */
+function shouldUsePdfIframe(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return /Android/i.test(navigator.userAgent);
+}
+
 function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   window.clearTimeout(pdfModalCloseTimer);
   const modal = document.getElementById("pdf-manual-modal");
   const embed = document.querySelector<HTMLEmbedElement>("#pdf-manual-embed");
+  const iframe = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
   const newTab = document.querySelector<HTMLAnchorElement>("#pdf-manual-newtab");
   const sheet = modal?.querySelector<HTMLElement>(".pdf-modal__sheet");
   if (!modal || !embed) return;
@@ -369,8 +376,23 @@ function openPdfManualModal(pdfFile: string = PDF_MANUAL_FILE): void {
   lockBodyScrollForPdfModal();
   const path = publicAssetUrl(pdfFile);
   const url = new URL(path, window.location.origin).href;
-  embed.src = url;
-  embed.title = isRefill ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
+  const titleStr = isRefill ? t.pdfRefillTitleEmbed : t.pdfManualTitleEmbed;
+  const useIframe = shouldUsePdfIframe() && !!iframe;
+
+  modal.classList.toggle("pdf-modal--android-inline", useIframe);
+
+  if (useIframe && iframe) {
+    embed.removeAttribute("src");
+    iframe.hidden = false;
+    iframe.title = titleStr;
+    iframe.src = `${url}#toolbar=0`;
+  } else {
+    iframe?.removeAttribute("src");
+    iframe?.setAttribute("hidden", "");
+    embed.src = url;
+    embed.title = titleStr;
+  }
+
   if (sheet) {
     sheet.setAttribute("aria-label", isRefill ? t.pdfRefillDialogAria : t.pdfDialogAria);
   }
@@ -396,6 +418,12 @@ function pdfManualModalHtml(lang: UiLang): string {
           type="application/pdf"
           title="${escapeHtml(t.pdfManualTitleEmbed)}"
         />
+        <iframe
+          class="pdf-modal__iframe"
+          id="pdf-manual-iframe"
+          hidden
+          title="${escapeHtml(t.pdfManualTitleEmbed)}"
+        ></iframe>
         <p class="pdf-modal__pdf-actions">
           <a class="pdf-modal__newtab" id="pdf-manual-newtab" href="#" target="_blank" rel="noopener noreferrer"
             >${escapeHtml(t.pdfOpenNewTab)}</a>
@@ -443,6 +471,12 @@ function closePdfManualModal(immediate = false): void {
     if (emb) {
       emb.removeAttribute("src");
     }
+    const ifr = document.querySelector<HTMLIFrameElement>("#pdf-manual-iframe");
+    if (ifr) {
+      ifr.removeAttribute("src");
+      ifr.setAttribute("hidden", "");
+    }
+    modal?.classList.remove("pdf-modal--android-inline");
     unlockBodyScrollAfterPdfModal();
   };
 

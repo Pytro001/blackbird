@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/optimize-product-gallery.mjs && tsc && vite build",
+    "build": "node scripts/build-refill-pdf.mjs && node scripts/optimize-product-gallery.mjs && tsc && vite build",
     "preview": "vite preview",
     "optimize-gallery": "node scripts/optimize-product-gallery.mjs"
   },
   "devDependencies": {
+    "pdf-lib": "^1.17.1",
     "sharp": "^0.34.5",
     "typescript": "~5.7.2",
     "vite": "^6.0.3"

@@ -2606,6 +2606,29 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   background: #fff;
 }
 
+/* Android Chrome: inline PDF in <embed> often fails; use iframe (toggled in JS). */
+.pdf-modal__iframe {
+  display: block;
+  width: 100%;
+  height: min(88dvh, 1100px);
+  min-height: min(60dvh, 640px);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: #1a1a1a;
+}
+
+.pdf-modal__iframe[hidden] {
+  display: none !important;
+}
+
+.pdf-modal--android-inline .pdf-modal__embed {
+  display: none !important;
+}
+
+.pdf-modal--android-inline .pdf-modal__iframe {
+  display: block;
+}
+
 .pdf-modal__pdf-actions {
   margin: 0.5rem 0 0;
   padding: 0;
