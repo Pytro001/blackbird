@@ -1971,9 +1971,9 @@ function bindProductShotsCarousel(): void {
     const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
     const minSwipe = mobile && touchLike ? PRODUCT_GALLERY_SWIPE_MIN_PX_MOBILE : PRODUCT_GALLERY_SWIPE_MIN_PX;
     if (Math.abs(dx) < minSwipe) return;
-    /* Looser diagonal tolerance on phones — swipe-back reads more vertically on Android */
+    /* Looser diagonal tolerance on phones — batched touch + thumb arc */
     if (mobile && touchLike) {
-      if (Math.abs(dx) <= Math.abs(dy) * 0.32) return;
+      if (Math.abs(dx) <= Math.abs(dy) * 0.28) return;
     } else if (Math.abs(dx) <= Math.abs(dy)) return;
     if (dx < 0) show(index + 1);
     else show(index - 1);
@@ -2003,21 +2003,28 @@ function bindProductShotsCarousel(): void {
     "pointermove",
     (e: PointerEvent) => {
       if (dragPointerId !== e.pointerId) return;
-      lastDragClientX = e.clientX;
-      lastDragClientY = e.clientY;
+      const coalesced =
+        typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : [];
+      const samples: PointerEvent[] = coalesced.length > 0 ? coalesced : [e];
+      const lastSample = samples[samples.length - 1]!;
+      for (const ev of samples) {
+        lastDragClientX = ev.clientX;
+        lastDragClientY = ev.clientY;
+      }
       if (!useSmoothStrip || !track || n < 2) return;
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
+      const dx = lastSample.clientX - dragStartX;
+      const dy = lastSample.clientY - dragStartY;
       const mobile = window.matchMedia("(max-width: 839px)").matches;
       const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
 
       let px = dx;
       if (mobile && touchLike) {
         if (!dragHorizLocked) {
-          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+          /* Easier horizontal lock on Android (batched moves + vertical scroll competition) */
           dragHorizLocked =
-            Math.abs(dx) >= Math.abs(dy) * 0.42 ||
-            Math.abs(dx) > 14;
+            Math.abs(dx) >= Math.abs(dy) * 0.35 ||
+            Math.abs(dx) > 10;
           if (!dragHorizLocked) return;
         }
         stage.classList.add("is-gallery-dragging");

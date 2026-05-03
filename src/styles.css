@@ -1897,6 +1897,31 @@ body.subscription-view .product-gallery {
     /* Reduce browser/history horizontal overscroll eating swipe-right (previous slide) on Android */
     overscroll-behavior-x: contain;
   }
+
+  /*
+   * JS drives translateX (not native overflow scroll). Android still needs explicit horizontal
+   * touch-action on the hit-tested subtree — default `touch-action: auto` on images can let the
+   * browser classify the gesture before pointer capture wins.
+   */
+  #product-gallery-stage .product-gallery__aspect--smooth,
+  #product-gallery-stage .product-gallery__track-shell,
+  #product-gallery-stage .product-gallery__track--smooth {
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+  }
+
+  #product-gallery-stage .product-gallery__track-shell {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #product-gallery-stage .product-gallery__slide-figure,
+  #product-gallery-stage .product-gallery__slide-img.image-zoomable {
+    touch-action: pan-x pan-y;
+  }
+
+  #product-gallery-stage .product-gallery__slide-figure {
+    flex-shrink: 0;
+  }
 }
 
 /* Top-left thumb stack — same on purchase landing (both use .product-gallery__thumbs--purchase) */
