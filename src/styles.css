@@ -1892,21 +1892,20 @@ body.subscription-view .product-gallery {
 }
 
 @media (max-width: 839px) {
+  /*
+   * pan-y: browser keeps vertical page scroll; horizontal is NOT a native pan on this subtree,
+   * so Pointer Events + our translateX keep both swipe directions. pan-x pan-y lets Chrome
+   * claim horizontal movement before JS (broken on many Android builds).
+   */
   .product-gallery__stage {
-    touch-action: pan-x pan-y;
-    /* Reduce browser/history horizontal overscroll eating swipe-right (previous slide) on Android */
+    touch-action: pan-y;
     overscroll-behavior-x: contain;
   }
 
-  /*
-   * JS drives translateX (not native overflow scroll). Android still needs explicit horizontal
-   * touch-action on the hit-tested subtree — default `touch-action: auto` on images can let the
-   * browser classify the gesture before pointer capture wins.
-   */
   #product-gallery-stage .product-gallery__aspect--smooth,
   #product-gallery-stage .product-gallery__track-shell,
   #product-gallery-stage .product-gallery__track--smooth {
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
     overscroll-behavior-x: contain;
   }
 
@@ -1916,7 +1915,7 @@ body.subscription-view .product-gallery {
 
   #product-gallery-stage .product-gallery__slide-figure,
   #product-gallery-stage .product-gallery__slide-img.image-zoomable {
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
   }
 
   #product-gallery-stage .product-gallery__slide-figure {
@@ -2284,8 +2283,8 @@ body.subscription-view .product-gallery__thumb img {
     border-radius: 0;
     box-sizing: border-box;
     box-shadow: none;
-    /* Match purchase: allow horizontal + vertical so Pointer Events receive pans on Android Chrome */
-    touch-action: pan-x pan-y;
+    /* pan-y only — horizontal pans are for carousel JS (same as purchase mobile). */
+    touch-action: pan-y;
   }
 
   body.subscription-view .product-gallery__thumbs:not(.product-gallery__thumbs--subscription) {

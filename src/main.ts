@@ -1944,9 +1944,28 @@ function bindProductShotsCarousel(): void {
   let lastDragClientY = 0;
   /** Touch: wait for horizontal intent before moving the strip (avoids fighting vertical scroll). */
   let dragHorizLocked = false;
+  /** Window listeners: capture moves after finger leaves img/stage (Android often loses in-target tracking). */
+  let galleryWindowDragBound = false;
+
+  const unbindGalleryWindowDrag = (): void => {
+    if (!galleryWindowDragBound) return;
+    galleryWindowDragBound = false;
+    window.removeEventListener("pointermove", onGalleryWindowPointerMove, true);
+    window.removeEventListener("pointerup", onGalleryWindowPointerEnd, true);
+    window.removeEventListener("pointercancel", onGalleryWindowPointerEnd, true);
+  };
+
+  const bindGalleryWindowDrag = (): void => {
+    if (galleryWindowDragBound) return;
+    galleryWindowDragBound = true;
+    window.addEventListener("pointermove", onGalleryWindowPointerMove, true);
+    window.addEventListener("pointerup", onGalleryWindowPointerEnd, true);
+    window.addEventListener("pointercancel", onGalleryWindowPointerEnd, true);
+  };
 
   const endDrag = (e: PointerEvent): void => {
     if (dragPointerId !== e.pointerId) return;
+    unbindGalleryWindowDrag();
     /* pointercancel: use last move; pointerup: prefer event coordinates */
     const endX = e.type === "pointercancel" ? lastDragClientX : e.clientX;
     const endY = e.type === "pointercancel" ? lastDragClientY : e.clientY;
@@ -1979,9 +1998,49 @@ function bindProductShotsCarousel(): void {
     else show(index - 1);
   };
 
+  function onGalleryWindowPointerMove(e: PointerEvent): void {
+    if (dragPointerId !== e.pointerId) return;
+    const coalesced =
+      typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : [];
+    const samples: PointerEvent[] = coalesced.length > 0 ? coalesced : [e];
+    const lastSample = samples[samples.length - 1]!;
+    for (const ev of samples) {
+      lastDragClientX = ev.clientX;
+      lastDragClientY = ev.clientY;
+    }
+    if (!useSmoothStrip || !track || n < 2) return;
+    const dx = lastSample.clientX - dragStartX;
+    const dy = lastSample.clientY - dragStartY;
+    const mobile = window.matchMedia("(max-width: 839px)").matches;
+    const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
+
+    let px = dx;
+    if (mobile && touchLike) {
+      if (!dragHorizLocked) {
+        if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        dragHorizLocked =
+          Math.abs(dx) >= Math.abs(dy) * 0.35 ||
+          Math.abs(dx) > 10;
+        if (!dragHorizLocked) return;
+      }
+      stage!.classList.add("is-gallery-dragging");
+      e.preventDefault();
+    }
+
+    if (index <= 0 && px > 0) px = Math.min(px * 0.35, 56);
+    else if (index >= n - 1 && px < 0) px = Math.max(px * 0.35, -56);
+
+    track.style.setProperty("--gallery-drag-px", `${px}px`);
+  }
+
+  function onGalleryWindowPointerEnd(e: PointerEvent): void {
+    endDrag(e);
+  }
+
   stage.addEventListener("pointerdown", (e: PointerEvent) => {
     if ((e.target as HTMLElement).closest(".product-gallery__thumb")) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (dragPointerId !== null) return;
     dragPointerId = e.pointerId;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
@@ -1997,50 +2056,8 @@ function bindProductShotsCarousel(): void {
     } catch {
       /* ignore */
     }
+    bindGalleryWindowDrag();
   });
-
-  stage.addEventListener(
-    "pointermove",
-    (e: PointerEvent) => {
-      if (dragPointerId !== e.pointerId) return;
-      const coalesced =
-        typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : [];
-      const samples: PointerEvent[] = coalesced.length > 0 ? coalesced : [e];
-      const lastSample = samples[samples.length - 1]!;
-      for (const ev of samples) {
-        lastDragClientX = ev.clientX;
-        lastDragClientY = ev.clientY;
-      }
-      if (!useSmoothStrip || !track || n < 2) return;
-      const dx = lastSample.clientX - dragStartX;
-      const dy = lastSample.clientY - dragStartY;
-      const mobile = window.matchMedia("(max-width: 839px)").matches;
-      const touchLike = e.pointerType === "touch" || e.pointerType === "pen";
-
-      let px = dx;
-      if (mobile && touchLike) {
-        if (!dragHorizLocked) {
-          if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
-          /* Easier horizontal lock on Android (batched moves + vertical scroll competition) */
-          dragHorizLocked =
-            Math.abs(dx) >= Math.abs(dy) * 0.35 ||
-            Math.abs(dx) > 10;
-          if (!dragHorizLocked) return;
-        }
-        stage.classList.add("is-gallery-dragging");
-        e.preventDefault();
-      }
-
-      if (index <= 0 && px > 0) px = Math.min(px * 0.35, 56);
-      else if (index >= n - 1 && px < 0) px = Math.max(px * 0.35, -56);
-
-      track.style.setProperty("--gallery-drag-px", `${px}px`);
-    },
-    { passive: false },
-  );
-
-  stage.addEventListener("pointerup", endDrag);
-  stage.addEventListener("pointercancel", endDrag);
 
   /** Two-finger trackpad / horizontal mouse wheel (deltaX). */
   let wheelAccumX = 0;
