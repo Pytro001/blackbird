@@ -2423,7 +2423,7 @@ body:not(.subscription-view) .product-side {
 }
 
 body:not(.subscription-view) .buy-sheet:not(.buy-sheet--howto) {
-  gap: clamp(1rem, 2.6vw, 1.35rem);
+  gap: clamp(0.6rem, 1.6vw, 0.85rem);
   padding: clamp(1.45rem, 3.3vw, 1.95rem);
   border-radius: var(--buy-card-radius-inner);
   border-color: rgba(255, 255, 255, 0.075);
@@ -2449,7 +2449,7 @@ body:not(.subscription-view) .buy-sheet .product-buy-lede {
 }
 
 body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
-  margin-bottom: clamp(1rem, 2.6vw, 1.35rem);
+  margin-bottom: clamp(0.6rem, 1.6vw, 0.85rem);
 }
 
 body:not(.subscription-view) .buy-sheet .product-buy-lede .product-cancel-anytime {
@@ -2527,7 +2527,7 @@ body:not(.subscription-view) .buy-sheet .product-cancel-anytime {
 
 @media (max-width: 839px) {
   body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
-    margin-bottom: clamp(0.9rem, 3.5vw, 1.2rem);
+    margin-bottom: clamp(0.55rem, 2vw, 0.8rem);
   }
 }
 
