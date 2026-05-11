@@ -3135,7 +3135,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 .product-price {
   margin: 0;
   font-size: clamp(1.65rem, 5vw, 2.15rem);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: 0.02em;
   color: var(--white);
   line-height: 1.15;
