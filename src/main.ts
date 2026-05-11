@@ -318,17 +318,7 @@ function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
-/** Subscription + landing monthly price; keep in sync with Stripe subscription price. */
-const SUBSCRIPTION_PRICE_EUR = 5.99;
-const subscriptionPriceDisplay = new Intl.NumberFormat("de-DE", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-  .format(SUBSCRIPTION_PRICE_EUR)
-  // de-DE uses NBSP before €; keep "5,99 €" for display
-  .replace(/[\s\u00a0\u202f]+€/g, " €");
+const subscriptionPriceDisplay = "42€";
 
 type LandingMode = "purchase" | "subscription";
 
@@ -973,8 +963,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const buyLabel = isSubscription ? t.checkout : t.subscribe;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
-    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>
-              <p class="product-subscription-refill">${t.purchaseRefillLineHtml}</p>`
+    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>`
     : "";
 
   const productBuyPanel = isSubscription
@@ -987,17 +976,14 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <div class="product-shipping product-shipping--subscription">
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
-              <p class="product-subscription-cancel">${escapeHtml(t.subscriptionCancelAnytime)}</p>
               </div>
               <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
             </section>`
     : `          <section class="buy-sheet">
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <div class="product-buy-lede">
-              <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}<span class="product-price__period">${escapeHtml(t.monthlyPriceSuffix)}</span></p>
-              <p class="product-cancel-anytime">${escapeHtml(t.subscriptionCancelAnytime)}</p>
+              <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}</p>
               <div class="product-offer-detail">
-              <p class="product-purchase-refill">${t.purchaseRefillLineHtml}</p>
               <div class="product-shipping">
                 <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               </div>
