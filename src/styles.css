@@ -2449,7 +2449,7 @@ body:not(.subscription-view) .buy-sheet .product-buy-lede {
 }
 
 body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
-  margin-bottom: clamp(0.17rem, 0.55vw, 0.31rem);
+  margin-bottom: clamp(1rem, 2.6vw, 1.35rem);
 }
 
 body:not(.subscription-view) .buy-sheet .product-buy-lede .product-cancel-anytime {
@@ -2527,7 +2527,7 @@ body:not(.subscription-view) .buy-sheet .product-cancel-anytime {
 
 @media (max-width: 839px) {
   body:not(.subscription-view) .buy-sheet .product-buy-lede .product-price--monthly {
-    margin-bottom: clamp(0.32rem, 1.35vw, 0.48rem);
+    margin-bottom: clamp(0.9rem, 3.5vw, 1.2rem);
   }
 }
 
@@ -3132,8 +3132,8 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 
 .product-price {
   margin: 0;
-  font-size: clamp(1.4rem, 4.2vw, 1.85rem);
-  font-weight: 600;
+  font-size: clamp(1.65rem, 5vw, 2.15rem);
+  font-weight: 300;
   letter-spacing: 0.02em;
   color: var(--white);
   line-height: 1.15;
