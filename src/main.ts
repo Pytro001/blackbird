@@ -291,10 +291,6 @@ function cosmosFieldPlusSparklesHtml(): string {
   return `${sparks}\n${shooting}`;
 }
 
-let orderModalScrollY = 0;
-let orderModalBodyLocked = false;
-let orderModalCloseTimer: number | undefined;
-
 let manualPageFlip: PageFlip | null = null;
 
 /** Scroll position before PDF modal body lock; restored on animated close. */
@@ -312,6 +308,14 @@ let imageZoomReturnFocusEl: HTMLElement | null = null;
 
 function isImageZoomMobileViewport(): boolean {
   return window.matchMedia("(max-width: 839px)").matches;
+}
+
+/** Default Stripe subscription / subscribe CTA (overridable via `VITE_STRIPE_SUBSCRIPTION_LINK`). */
+const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
+  "https://buy.stripe.com/fZudRad9h7dkdHq2ndfbq04";
+
+function stripeSubscriptionLinkUrl(): string {
+  return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
 const subscriptionPriceDisplay = "42€";
@@ -952,179 +956,10 @@ function productEducationSectionHtml(lang: UiLang): string {
     </section>`;
 }
 
-function orderModalHtml(lang: UiLang): string {
-  const t = strings(lang);
-  return `
-    <div class="order-modal" id="order-modal" hidden role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
-      <button type="button" class="order-modal__backdrop" id="order-modal-backdrop" aria-label="${escapeHtml(t.orderFormClose)}"></button>
-      <div class="order-modal__sheet">
-        <button type="button" class="order-modal__close" id="order-modal-close" aria-label="${escapeHtml(t.orderFormClose)}">
-          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-            <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5 5l10 10M15 5l-10 10"/>
-          </svg>
-        </button>
-        <h2 class="order-modal__title" id="order-modal-title">${escapeHtml(t.orderModalTitle)}</h2>
-        <form class="order-form" id="order-form" novalidate>
-          <div class="order-form__field">
-            <label class="order-form__label" for="order-name">${escapeHtml(t.orderFormName)}</label>
-            <input class="order-form__input" type="text" id="order-name" name="name" required autocomplete="name" />
-          </div>
-          <div class="order-form__field">
-            <label class="order-form__label" for="order-email">${escapeHtml(t.orderFormEmail)}</label>
-            <input class="order-form__input" type="email" id="order-email" name="email" required autocomplete="email" />
-          </div>
-          <div class="order-form__field">
-            <label class="order-form__label" for="order-phone">${escapeHtml(t.orderFormPhone)}</label>
-            <input class="order-form__input" type="tel" id="order-phone" name="phone" autocomplete="tel" />
-          </div>
-          <div class="order-form__field">
-            <label class="order-form__label" for="order-street">${escapeHtml(t.orderFormStreet)}</label>
-            <input class="order-form__input" type="text" id="order-street" name="street" required autocomplete="address-line1" />
-          </div>
-          <div class="order-form__row">
-            <div class="order-form__field">
-              <label class="order-form__label" for="order-city">${escapeHtml(t.orderFormCity)}</label>
-              <input class="order-form__input" type="text" id="order-city" name="city" required autocomplete="address-level2" />
-            </div>
-            <div class="order-form__field order-form__field--narrow">
-              <label class="order-form__label" for="order-postcode">${escapeHtml(t.orderFormPostcode)}</label>
-              <input class="order-form__input" type="text" id="order-postcode" name="postcode" required autocomplete="postal-code" />
-            </div>
-          </div>
-          <div class="order-form__field">
-            <label class="order-form__label" for="order-country">${escapeHtml(t.orderFormCountry)}</label>
-            <select class="order-form__input order-form__select" id="order-country" name="country" autocomplete="country">
-              <option value="DE">${escapeHtml(t.orderFormCountryDE)}</option>
-              <option value="AT">${escapeHtml(t.orderFormCountryAT)}</option>
-              <option value="CH">${escapeHtml(t.orderFormCountryCH)}</option>
-              <option value="GB">${escapeHtml(t.orderFormCountryGB)}</option>
-              <option value="NL">${escapeHtml(t.orderFormCountryNL)}</option>
-            </select>
-          </div>
-          <p class="order-form__error" id="order-form-error" hidden></p>
-          <button type="submit" class="btn-buy order-form__submit" id="order-form-submit">
-            ${escapeHtml(t.orderFormSubmit)}
-          </button>
-        </form>
-      </div>
-    </div>`;
-}
-
-function openOrderModal(): void {
-  window.clearTimeout(orderModalCloseTimer);
-  const modal = document.getElementById("order-modal");
-  if (!modal) return;
-  orderModalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-  document.body.style.overflow = "hidden";
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${orderModalScrollY}px`;
-  document.body.style.left = "0";
-  document.body.style.right = "0";
-  document.body.style.width = "100%";
-  orderModalBodyLocked = true;
-  modal.removeAttribute("hidden");
-  requestAnimationFrame(() => modal.classList.add("order-modal--open"));
-  (modal.querySelector("#order-name") as HTMLElement | null)?.focus();
-}
-
-function closeOrderModal(immediate = false): void {
-  window.clearTimeout(orderModalCloseTimer);
-  const modal = document.getElementById("order-modal");
-
-  const doClose = (): void => {
-    if (modal) {
-      modal.setAttribute("hidden", "");
-      modal.classList.remove("order-modal--open");
-    }
-    if (!orderModalBodyLocked) return;
-    orderModalBodyLocked = false;
-    document.body.style.overflow = "";
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.left = "";
-    document.body.style.right = "";
-    document.body.style.width = "";
-    window.scrollTo({ top: orderModalScrollY, left: 0, behavior: "auto" });
-  };
-
-  if (!modal || immediate || !modal.classList.contains("order-modal--open")) {
-    doClose();
-    return;
-  }
-
-  modal.classList.remove("order-modal--open");
-  orderModalCloseTimer = window.setTimeout(doClose, 280);
-}
-
-async function handleOrderFormSubmit(e: Event): Promise<void> {
-  e.preventDefault();
-  const form = document.getElementById("order-form") as HTMLFormElement | null;
-  const submitBtn = document.getElementById("order-form-submit") as HTMLButtonElement | null;
-  const errorEl = document.getElementById("order-form-error") as HTMLElement | null;
-  if (!form || !submitBtn) return;
-
-  const data = new FormData(form);
-  const name = ((data.get("name") as string) ?? "").trim();
-  const email = ((data.get("email") as string) ?? "").trim();
-  const phone = ((data.get("phone") as string) ?? "").trim();
-  const street = ((data.get("street") as string) ?? "").trim();
-  const city = ((data.get("city") as string) ?? "").trim();
-  const postcode = ((data.get("postcode") as string) ?? "").trim();
-  const country = ((data.get("country") as string) ?? "DE");
-
-  const t = strings(detectUiLang());
-
-  if (!name || !email || !street || !city || !postcode) {
-    if (errorEl) {
-      errorEl.textContent = t.orderFormRequired;
-      errorEl.removeAttribute("hidden");
-    }
-    return;
-  }
-
-  const origLabel = submitBtn.textContent ?? t.orderFormSubmit;
-  submitBtn.disabled = true;
-  submitBtn.textContent = t.orderFormLoading;
-  if (errorEl) errorEl.setAttribute("hidden", "");
-
-  try {
-    const res = await fetch("/api/create-checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, street, city, postcode, country }),
-    });
-    const json = (await res.json()) as { url?: string; error?: string };
-    if (!res.ok || !json.url) throw new Error(json.error ?? "No checkout URL");
-    window.location.href = json.url;
-  } catch (err) {
-    console.error("Checkout error:", err);
-    if (errorEl) {
-      errorEl.textContent = t.orderFormError;
-      errorEl.removeAttribute("hidden");
-    }
-    submitBtn.disabled = false;
-    submitBtn.textContent = origLabel;
-  }
-}
-
-function bindOrderModal(): void {
-  document.getElementById("order-modal-backdrop")?.addEventListener("click", () => {
-    closeOrderModal();
-  });
-  document.getElementById("order-modal-close")?.addEventListener("click", () => {
-    closeOrderModal();
-  });
-  document.getElementById("order-form")?.addEventListener("submit", (e: Event) => {
-    void handleOrderFormSubmit(e);
-  });
-  document.getElementById("order-modal")?.addEventListener("keydown", (e: Event) => {
-    if ((e as KeyboardEvent).key === "Escape") closeOrderModal();
-  });
-}
-
 function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const t = strings(lang);
   const isSubscription = mode === "subscription";
+  const checkoutHref = stripeSubscriptionLinkUrl();
   const buyLabel = isSubscription ? t.checkout : t.subscribe;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
   const subscriptionPriceOnCard = isSubscription
@@ -1142,7 +977,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
                 <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               </div>
-              <button type="button" class="btn-buy" id="buy-btn">${escapeHtml(buyLabel)}</button>
+              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
             </section>`
     : `          <section class="buy-sheet">
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
@@ -1154,7 +989,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               </div>
               </div>
               </div>
-              <button type="button" class="btn-buy" id="buy-btn">${escapeHtml(buyLabel)}</button>
+              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
               ${whatsAppBlockHtml(lang)}
             </section>`;
 
@@ -1230,7 +1065,6 @@ ${productHeroAside}
     ${productEducationSectionHtml(lang)}
     ${siteLegalFooterHtml(lang)}
     ${pdfManualModalHtml(lang)}
-    ${orderModalHtml(lang)}
     <div class="mission-star-dock" id="mission-star-dock">
       <div
         class="mission-star-bubble"
@@ -1664,7 +1498,6 @@ function render(): void {
   productGalleryAsideHeightCleanup?.();
   productGalleryAsideHeightCleanup = undefined;
   closePdfManualModal(true);
-  closeOrderModal(true);
   destroyManualPageFlip();
   removeManualEndTap();
   missionStarDocumentClickUnbind?.();
@@ -1866,8 +1699,6 @@ function bindProduct(): void {
     closePdfManualModal();
   });
 
-  document.getElementById("buy-btn")?.addEventListener("click", openOrderModal);
-  bindOrderModal();
   bindProductShotsCarousel();
   bindProductGalleryAsideHeight();
   bindImageZoomLightbox();
