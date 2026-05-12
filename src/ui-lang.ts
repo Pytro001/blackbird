@@ -105,7 +105,7 @@ const copy = {
     purchaseRefillLineHtml:
       '<span class="product-shipping__free">Kostenlose</span> Nachfüllflasche bei leer',
     subscriptionCancelAnytime: "Sie können Ihr Abonnement jederzeit kündigen.",
-    subscribe: "Kaufen",
+    subscribe: "Jetzt einkaufen",
     refillAfterPrefix: "Jede Nachfüllung ab",
     buy: "Kaufen",
     checkout: "Zur Kasse",
