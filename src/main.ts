@@ -310,6 +310,14 @@ function isImageZoomMobileViewport(): boolean {
   return window.matchMedia("(max-width: 839px)").matches;
 }
 
+/** Default Stripe one-time purchase CTA (overridable via `VITE_STRIPE_PURCHASE_LINK`). */
+const DEFAULT_STRIPE_PURCHASE_LINK =
+  "https://buy.stripe.com/fZudRad9h7dkdHq2ndfbq04";
+
+function stripePurchaseLinkUrl(): string {
+  return import.meta.env.VITE_STRIPE_PURCHASE_LINK?.trim() || DEFAULT_STRIPE_PURCHASE_LINK;
+}
+
 /** Default Stripe subscription / subscribe CTA (overridable via `VITE_STRIPE_SUBSCRIPTION_LINK`). */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
   "https://buy.stripe.com/fZudRad9h7dkdHq2ndfbq04";
@@ -318,7 +326,8 @@ function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
 }
 
-const subscriptionPriceDisplay = "42€";
+const purchasePriceDisplay = "42€";
+const subscriptionPlanPriceDisplay = "14,99€";
 
 type LandingMode = "purchase" | "subscription";
 
@@ -609,9 +618,11 @@ function formatShippingArrivalLineHtml(lang: UiLang, nowMs: number = Date.now())
 }
 
 function updateProductShippingEta(): void {
+  const lang = detectUiLang();
   const el = document.querySelector("#product-shipping-eta");
-  if (!el) return;
-  el.innerHTML = formatShippingArrivalLineHtml(detectUiLang());
+  if (el) el.innerHTML = formatShippingArrivalLineHtml(lang);
+  const elSub = document.querySelector("#product-shipping-eta-sub");
+  if (elSub) elSub.innerHTML = formatShippingArrivalLineHtml(lang);
 }
 
 function whatsAppBlockHtml(lang: UiLang): string {
@@ -959,38 +970,41 @@ function productEducationSectionHtml(lang: UiLang): string {
 function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const t = strings(lang);
   const isSubscription = mode === "subscription";
-  const checkoutHref = stripeSubscriptionLinkUrl();
-  const buyLabel = isSubscription ? t.checkout : t.subscribe;
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
-  const subscriptionPriceOnCard = isSubscription
-    ? `<p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPriceDisplay)}</span></p>`
-    : "";
 
-  const productBuyPanel = isSubscription
-    ? `          <section class="buy-sheet buy-sheet--offer-sub">
-              <div class="product-identity product-identity--subscription">
-                <h2 class="product-name product-name--subscription">${escapeHtml(t.productName)}</h2>
-                ${subscriptionPriceOnCard}
-              </div>
-              <div class="product-subscription-copy">
-              <div class="product-shipping product-shipping--subscription">
-                <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta" aria-live="polite"></p>
-              </div>
-              </div>
-              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
-            </section>`
-    : `          <section class="buy-sheet">
+  const purchasePanel = `          <section class="buy-sheet buy-panel-purchase" id="buy-panel-purchase"${isSubscription ? ' hidden' : ''}>
+              <button type="button" class="buy-panel-toggle-btn" id="buy-toggle-to-sub" aria-label="${escapeHtml(t.toggleToSubscriptionAria)}">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5A5.5 5.5 0 1 1 2.34 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 7V10H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <div class="product-buy-lede">
-              <p class="product-price product-price--monthly">${escapeHtml(subscriptionPriceDisplay)}</p>
+              <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
               <div class="product-offer-detail">
               <div class="product-shipping">
                 <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               </div>
               </div>
               </div>
-              <a class="btn-buy" id="buy-btn" href="${escapeHtml(checkoutHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
+              <a class="btn-buy" id="buy-btn" href="${escapeHtml(stripePurchaseLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribe)}</a>
               ${whatsAppBlockHtml(lang)}
+            </section>`;
+
+  const subscriptionPanel = `          <section class="buy-sheet buy-sheet--offer-sub buy-panel-subscription" id="buy-panel-subscription"${!isSubscription ? ' hidden' : ''}>
+              <button type="button" class="buy-panel-toggle-btn buy-panel-toggle-btn--back" id="buy-toggle-to-purchase" aria-label="${escapeHtml(t.toggleToPurchaseAria)}">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="product-identity product-identity--subscription">
+                <h2 class="product-name product-name--subscription">${escapeHtml(t.productName)}</h2>
+                <p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPlanPriceDisplay)}</span><span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
+              </div>
+              <div class="product-subscription-copy">
+                <p class="product-subscription-refill-line">${escapeHtml(t.subscriptionRefillCopy)}</p>
+                <p class="product-subscription-cancel-line">${escapeHtml(t.subscriptionCancelCopy)}</p>
+              <div class="product-shipping product-shipping--subscription">
+                <p class="product-shipping__eta product-shipping__eta--arrival" id="product-shipping-eta-sub" aria-live="polite"></p>
+              </div>
+              </div>
+              <a class="btn-buy btn-buy--subscribe" id="buy-btn-sub" href="${escapeHtml(stripeSubscriptionLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribeNow)}</a>
             </section>`;
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
@@ -1000,16 +1014,9 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               </div>
             </div>`;
 
-  const productHeroAside = isSubscription
-    ? `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
-          <div class="buy-stack buy-stack--subscription">
-${productBuyPanel}
-            ${whatsAppBlockHtml(lang)}
-          </div>
-${howtoBlock}
-        </aside>`
-    : `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
-${productBuyPanel}
+  const productHeroAside = `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
+${purchasePanel}
+${subscriptionPanel}
 ${howtoBlock}
         </aside>`;
 
@@ -1704,8 +1711,26 @@ function bindProduct(): void {
   bindImageZoomLightbox();
   bindProductFaq();
   bindMissionStar();
+  bindPanelToggle();
   updateProductShippingEta();
   shippingEtaRefreshTimer = window.setInterval(updateProductShippingEta, 60_000);
+}
+
+function bindPanelToggle(): void {
+  const purchasePanel = document.getElementById("buy-panel-purchase");
+  const subPanel = document.getElementById("buy-panel-subscription");
+  const toSub = document.getElementById("buy-toggle-to-sub");
+  const toPurchase = document.getElementById("buy-toggle-to-purchase");
+
+  toSub?.addEventListener("click", () => {
+    purchasePanel?.setAttribute("hidden", "");
+    subPanel?.removeAttribute("hidden");
+  });
+
+  toPurchase?.addEventListener("click", () => {
+    subPanel?.setAttribute("hidden", "");
+    purchasePanel?.removeAttribute("hidden");
+  });
 }
 
 /** Desktop: gallery = same outer size as .product-side (buy + WhatsApp + how-to panels). */

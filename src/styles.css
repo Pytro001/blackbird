@@ -2401,6 +2401,7 @@ body:not(.subscription-view) .product-side {
 }
 
 .buy-sheet {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -2409,6 +2410,63 @@ body:not(.subscription-view) .product-side {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(26, 26, 26, 0.55);
   backdrop-filter: blur(8px);
+}
+
+/* Small square toggle button: top-right corner of the buy panel */
+.buy-panel-toggle-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  z-index: 2;
+}
+
+.buy-panel-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.buy-panel-toggle-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Subscription panel inline copy lines */
+.product-subscription-refill-line {
+  margin: 0;
+  font-size: clamp(0.88rem, 2.5vw, 0.98rem);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(245, 245, 245, 0.88);
+}
+
+.product-subscription-cancel-line {
+  margin: 0;
+  font-size: clamp(0.82rem, 2.3vw, 0.92rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(245, 245, 245, 0.55);
+}
+
+/* Subscription price frequency suffix */
+.product-price__frequency {
+  font-size: 0.7em;
+  font-weight: 400;
+  opacity: 0.7;
+  letter-spacing: 0.01em;
 }
 
 /* No outer panel border on how-to strip */
@@ -2539,6 +2597,64 @@ body:not(.subscription-view) .buy-sheet .product-wa-desc {
 
 body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(235, 235, 235, 0.95);
+}
+
+/* Inline subscription panel (shown via toggle, not full subscription page) */
+body:not(.subscription-view) .buy-panel-subscription {
+  gap: clamp(1rem, 2.6vw, 1.35rem);
+  padding: clamp(1.45rem, 3.3vw, 1.95rem);
+  border-radius: var(--buy-card-radius-inner);
+  border-color: rgba(255, 255, 255, 0.075);
+  background: rgba(12, 12, 12, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-identity--subscription {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-name--subscription {
+  font-size: clamp(1.1rem, 3.05vw, 1.32rem);
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--white);
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-price--subscription-on-card {
+  margin: 0;
+  font-size: clamp(1.45rem, 3.8vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  color: var(--white);
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-subscription-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-shipping--subscription {
+  margin: 0.2rem 0 0;
+}
+
+body:not(.subscription-view) .buy-panel-subscription > .btn-buy--subscribe {
+  width: 100%;
+  justify-content: center;
+  align-self: stretch;
+  margin-top: clamp(0.35rem, 1.2vw, 0.65rem);
 }
 
 .btn-howto {
