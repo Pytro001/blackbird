@@ -2469,6 +2469,12 @@ body:not(.subscription-view) .product-side {
   letter-spacing: 0.01em;
 }
 
+/* Ensure hidden attribute wins over display:flex from .buy-sheet */
+#buy-panel-purchase[hidden],
+#buy-panel-subscription[hidden] {
+  display: none !important;
+}
+
 /* No outer panel border on how-to strip */
 .buy-sheet--howto {
   padding: 0;
