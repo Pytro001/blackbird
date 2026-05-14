@@ -988,7 +988,6 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
                 <div class="buy-content-subscription${!startSub ? ' is-hidden' : ''}" id="buy-content-subscription">
                   <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
                   <div class="product-subscription-copy">
-                    <p class="product-subscription-refill-line">${escapeHtml(t.subscriptionRefillCopy)}</p>
                     <p class="product-subscription-cancel-line">${escapeHtml(t.subscriptionCancelCopy)}</p>
                   </div>
                   <p class="product-shipping__eta buy-content-eta" id="product-shipping-eta-sub" aria-live="polite"></p>

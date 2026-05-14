@@ -2478,6 +2478,7 @@ body:not(.subscription-view) .product-side {
   min-width: 0;
   display: flex;
   flex-direction: column;
+  align-self: stretch;
 }
 
 /* Inactive content: invisible but still holds its space */
