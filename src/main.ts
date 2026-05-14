@@ -320,7 +320,7 @@ function stripePurchaseLinkUrl(): string {
 
 /** Default Stripe subscription / subscribe CTA (overridable via `VITE_STRIPE_SUBSCRIPTION_LINK`). */
 const DEFAULT_STRIPE_SUBSCRIPTION_LINK =
-  "https://buy.stripe.com/fZudRad9h7dkdHq2ndfbq04";
+  "https://buy.stripe.com/7sY14o2uDdBI0UE6Dtfbq02";
 
 function stripeSubscriptionLinkUrl(): string {
   return import.meta.env.VITE_STRIPE_SUBSCRIPTION_LINK?.trim() || DEFAULT_STRIPE_SUBSCRIPTION_LINK;
@@ -1005,6 +1005,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               </div>
               </div>
               <a class="btn-buy btn-buy--subscribe" id="buy-btn-sub" href="${escapeHtml(stripeSubscriptionLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribeNow)}</a>
+              ${whatsAppBlockHtml(lang)}
             </section>`;
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">

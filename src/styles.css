@@ -2605,16 +2605,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(235, 235, 235, 0.95);
 }
 
-/* Inline subscription panel (shown via toggle, not full subscription page) */
-body:not(.subscription-view) .buy-panel-subscription {
-  gap: clamp(1rem, 2.6vw, 1.35rem);
-  padding: clamp(1.45rem, 3.3vw, 1.95rem);
-  border-radius: var(--buy-card-radius-inner);
-  border-color: rgba(255, 255, 255, 0.075);
-  background: rgba(12, 12, 12, 0.94);
-  backdrop-filter: blur(12px);
-}
-
+/* Inline subscription panel — inherits size/padding from .buy-sheet:not(.buy-sheet--howto) */
 body:not(.subscription-view) .buy-panel-subscription .product-identity--subscription {
   display: flex;
   flex-direction: column;
@@ -2660,7 +2651,35 @@ body:not(.subscription-view) .buy-panel-subscription > .btn-buy--subscribe {
   width: 100%;
   justify-content: center;
   align-self: stretch;
-  margin-top: clamp(0.35rem, 1.2vw, 0.65rem);
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-wa-block {
+  margin-top: clamp(0.25rem, 1.2vw, 0.55rem);
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-wa-qr__img {
+  border: none;
+  border-radius: clamp(8px, 1.2vw, 12px);
+  background: var(--white);
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-wa-headline {
+  color: rgba(252, 252, 252, 0.94);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-wa-desc {
+  color: rgba(200, 200, 200, 0.82);
+}
+
+body:not(.subscription-view) .buy-panel-subscription .product-wa-link {
+  color: rgba(235, 235, 235, 0.95);
 }
 
 .btn-howto {
