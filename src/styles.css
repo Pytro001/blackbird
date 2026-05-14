@@ -2466,29 +2466,33 @@ body:not(.subscription-view) .product-side {
   letter-spacing: 0.01em;
 }
 
-/* Grid switcher: both content blocks share the same cell so height never changes on toggle */
+/* Switcher: subscription div stays in flow and sets the container height.
+   Purchase div is absolutely positioned to fill that exact same space,
+   so its flex column gets a real height and margin-top:auto works. */
 .buy-content-switcher {
-  display: grid;
+  position: relative;
   width: 100%;
 }
 
-.buy-content-switcher > div {
-  grid-row: 1;
-  grid-column: 1;
-  min-width: 0;
+#buy-content-subscription {
   display: flex;
   flex-direction: column;
-  align-self: stretch;
-  height: 100%;
+  width: 100%;
 }
 
-/* Inactive content: invisible but still holds its space */
+#buy-content-purchase {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .buy-content-switcher > div.is-hidden {
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Shipping ETA always at the bottom of its content block, just above the button */
+/* ETA pins to the bottom of its flex column */
 .buy-content-eta {
   margin-top: auto;
   padding-top: 0.5rem;
