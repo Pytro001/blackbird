@@ -2629,7 +2629,7 @@ body:not(.subscription-view) .buy-sheet .product-wa-link {
 }
 
 .product-subscription-copy {
-  margin: 0;
+  margin: clamp(0.6rem, 1.8vw, 0.9rem) 0 0;
   font-size: clamp(0.78rem, 2.1vw, 0.86rem);
   font-weight: 400;
   line-height: 1.4;
