@@ -980,6 +980,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <div class="buy-content-switcher">
                 <div class="buy-content-purchase${startSub ? ' is-hidden' : ''}" id="buy-content-purchase">
                   <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
+                  <p class="product-subscription-copy">${escapeHtml(t.purchaseDeliveryCopy)}</p>
                 </div>
                 <div class="buy-content-subscription${!startSub ? ' is-hidden' : ''}" id="buy-content-subscription">
                   <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
