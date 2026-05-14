@@ -973,9 +973,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
   const purchasePanel = `          <section class="buy-sheet buy-panel-purchase" id="buy-panel-purchase"${isSubscription ? ' hidden' : ''}>
-              <button type="button" class="buy-panel-toggle-btn" id="buy-toggle-to-sub" aria-label="${escapeHtml(t.toggleToSubscriptionAria)}">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5A5.5 5.5 0 1 1 2.34 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M2 7V10H5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <button type="button" class="buy-panel-toggle-btn" id="buy-toggle-to-sub">Subscription</button>
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <div class="product-buy-lede">
               <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
@@ -990,9 +988,7 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
             </section>`;
 
   const subscriptionPanel = `          <section class="buy-sheet buy-sheet--offer-sub buy-panel-subscription" id="buy-panel-subscription"${!isSubscription ? ' hidden' : ''}>
-              <button type="button" class="buy-panel-toggle-btn buy-panel-toggle-btn--back" id="buy-toggle-to-purchase" aria-label="${escapeHtml(t.toggleToPurchaseAria)}">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <button type="button" class="buy-panel-toggle-btn buy-panel-toggle-btn--back" id="buy-toggle-to-purchase">One time</button>
               <div class="product-identity product-identity--subscription">
                 <h2 class="product-name product-name--subscription">${escapeHtml(t.productName)}</h2>
                 <p class="product-price product-price--subscription-on-card"><span class="product-price__amount">${escapeHtml(subscriptionPlanPriceDisplay)}</span><span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
