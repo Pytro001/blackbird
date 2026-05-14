@@ -619,8 +619,10 @@ function formatShippingArrivalLineHtml(lang: UiLang, nowMs: number = Date.now())
 
 function updateProductShippingEta(): void {
   const lang = detectUiLang();
-  const el = document.querySelector("#product-shipping-eta");
-  if (el) el.innerHTML = formatShippingArrivalLineHtml(lang);
+  const html = formatShippingArrivalLineHtml(lang);
+  document.querySelectorAll(".buy-content-eta").forEach((el) => {
+    el.innerHTML = html;
+  });
 }
 
 function whatsAppBlockHtml(lang: UiLang): string {
@@ -980,23 +982,16 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <h2 class="product-name">${escapeHtml(t.productName)}</h2>
               <div class="buy-content-switcher">
                 <div class="buy-content-purchase${startSub ? ' is-hidden' : ''}" id="buy-content-purchase">
-                  <div class="product-buy-lede">
                   <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
-                  <div class="product-offer-detail">
-                  <div class="product-shipping">
-                    <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
-                  </div>
-                  </div>
-                  </div>
+                  <p class="product-shipping__eta buy-content-eta" id="product-shipping-eta" aria-live="polite"></p>
                 </div>
                 <div class="buy-content-subscription${!startSub ? ' is-hidden' : ''}" id="buy-content-subscription">
-                  <div class="product-buy-lede">
                   <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
                   <div class="product-subscription-copy">
                     <p class="product-subscription-refill-line">${escapeHtml(t.subscriptionRefillCopy)}</p>
                     <p class="product-subscription-cancel-line">${escapeHtml(t.subscriptionCancelCopy)}</p>
                   </div>
-                  </div>
+                  <p class="product-shipping__eta buy-content-eta" id="product-shipping-eta-sub" aria-live="polite"></p>
                 </div>
               </div>
               <a class="btn-buy" id="buy-btn" href="${escapeHtml(buyHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
