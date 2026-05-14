@@ -2466,20 +2466,20 @@ body:not(.subscription-view) .product-side {
   letter-spacing: 0.01em;
 }
 
-/* Grid switcher: both panels share the same cell so the taller one always sets the height */
-.buy-panel-switcher {
+/* Grid switcher: both content blocks share the same cell so height never changes on toggle */
+.buy-content-switcher {
   display: grid;
   width: 100%;
 }
 
-.buy-panel-switcher > .buy-sheet {
+.buy-content-switcher > div {
   grid-row: 1;
   grid-column: 1;
   min-width: 0;
 }
 
-/* Inactive panel: invisible but still occupies its grid cell */
-.buy-panel-switcher > .buy-sheet.is-hidden {
+/* Inactive content: invisible but still holds its space */
+.buy-content-switcher > div.is-hidden {
   visibility: hidden;
   pointer-events: none;
 }
@@ -2612,13 +2612,6 @@ body:not(.subscription-view) .buy-sheet .product-wa-desc {
 
 body:not(.subscription-view) .buy-sheet .product-wa-link {
   color: rgba(235, 235, 235, 0.95);
-}
-
-/* Subscription panel — same structure as purchase, inherits all .buy-sheet rules */
-body:not(.subscription-view) .buy-panel-subscription > .btn-buy--subscribe {
-  width: 100%;
-  justify-content: center;
-  align-self: stretch;
 }
 
 .product-subscription-copy {
