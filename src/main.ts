@@ -970,34 +970,34 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
   const isSubscription = mode === "subscription";
   const shellClass = isSubscription ? "home-shell home-shell--subscription" : "home-shell";
 
-  const purchasePanel = `          <section class="buy-sheet buy-panel-purchase" id="buy-panel-purchase"${isSubscription ? ' hidden' : ''}>
-              <button type="button" class="buy-panel-toggle-btn" id="buy-toggle-to-sub">Subscription</button>
-              <h2 class="product-name">${escapeHtml(t.productName)}</h2>
-              <div class="product-buy-lede">
-              <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
-              <div class="product-offer-detail">
-              <div class="product-shipping">
-                <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
-              </div>
-              </div>
-              </div>
-              <a class="btn-buy" id="buy-btn" href="${escapeHtml(stripePurchaseLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribe)}</a>
-              ${whatsAppBlockHtml(lang)}
-            </section>`;
+  const purchasePanel = `              <section class="buy-sheet buy-panel-purchase${isSubscription ? ' is-hidden' : ''}" id="buy-panel-purchase">
+                <button type="button" class="buy-panel-toggle-btn" id="buy-toggle-to-sub">Subscription</button>
+                <h2 class="product-name">${escapeHtml(t.productName)}</h2>
+                <div class="product-buy-lede">
+                <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
+                <div class="product-offer-detail">
+                <div class="product-shipping">
+                  <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
+                </div>
+                </div>
+                </div>
+                <a class="btn-buy" id="buy-btn" href="${escapeHtml(stripePurchaseLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribe)}</a>
+                ${whatsAppBlockHtml(lang)}
+              </section>`;
 
-  const subscriptionPanel = `          <section class="buy-sheet buy-panel-subscription" id="buy-panel-subscription"${!isSubscription ? ' hidden' : ''}>
-              <button type="button" class="buy-panel-toggle-btn buy-panel-toggle-btn--back" id="buy-toggle-to-purchase">One time</button>
-              <h2 class="product-name">${escapeHtml(t.productName)}</h2>
-              <div class="product-buy-lede">
-              <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
-              <div class="product-subscription-copy">
-                <p class="product-subscription-refill-line">${escapeHtml(t.subscriptionRefillCopy)}</p>
-                <p class="product-subscription-cancel-line">${escapeHtml(t.subscriptionCancelCopy)}</p>
-              </div>
-              </div>
-              <a class="btn-buy btn-buy--subscribe" id="buy-btn-sub" href="${escapeHtml(stripeSubscriptionLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribeNow)}</a>
-              ${whatsAppBlockHtml(lang)}
-            </section>`;
+  const subscriptionPanel = `              <section class="buy-sheet buy-panel-subscription${!isSubscription ? ' is-hidden' : ''}" id="buy-panel-subscription">
+                <button type="button" class="buy-panel-toggle-btn buy-panel-toggle-btn--back" id="buy-toggle-to-purchase">One time</button>
+                <h2 class="product-name">${escapeHtml(t.productName)}</h2>
+                <div class="product-buy-lede">
+                <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
+                <div class="product-subscription-copy">
+                  <p class="product-subscription-refill-line">${escapeHtml(t.subscriptionRefillCopy)}</p>
+                  <p class="product-subscription-cancel-line">${escapeHtml(t.subscriptionCancelCopy)}</p>
+                </div>
+                </div>
+                <a class="btn-buy btn-buy--subscribe" id="buy-btn-sub" href="${escapeHtml(stripeSubscriptionLinkUrl())}" rel="noopener noreferrer">${escapeHtml(t.subscribeNow)}</a>
+                ${whatsAppBlockHtml(lang)}
+              </section>`;
 
   const howtoBlock = `          <div class="buy-sheet buy-sheet--howto">
               <div class="buy-sheet-howto-actions">
@@ -1007,8 +1007,10 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
             </div>`;
 
   const productHeroAside = `        <aside class="product-side product-hero__aside" aria-label="${escapeHtml(t.sidebarAriaLabel)}">
+          <div class="buy-panel-switcher">
 ${purchasePanel}
 ${subscriptionPanel}
+          </div>
 ${howtoBlock}
         </aside>`;
 
@@ -1715,13 +1717,13 @@ function bindPanelToggle(): void {
   const toPurchase = document.getElementById("buy-toggle-to-purchase");
 
   toSub?.addEventListener("click", () => {
-    purchasePanel?.setAttribute("hidden", "");
-    subPanel?.removeAttribute("hidden");
+    purchasePanel?.classList.add("is-hidden");
+    subPanel?.classList.remove("is-hidden");
   });
 
   toPurchase?.addEventListener("click", () => {
-    subPanel?.setAttribute("hidden", "");
-    purchasePanel?.removeAttribute("hidden");
+    subPanel?.classList.add("is-hidden");
+    purchasePanel?.classList.remove("is-hidden");
   });
 }
 

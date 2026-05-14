@@ -2466,10 +2466,22 @@ body:not(.subscription-view) .product-side {
   letter-spacing: 0.01em;
 }
 
-/* Ensure hidden attribute wins over display:flex from .buy-sheet */
-#buy-panel-purchase[hidden],
-#buy-panel-subscription[hidden] {
-  display: none !important;
+/* Grid switcher: both panels share the same cell so the taller one always sets the height */
+.buy-panel-switcher {
+  display: grid;
+  width: 100%;
+}
+
+.buy-panel-switcher > .buy-sheet {
+  grid-row: 1;
+  grid-column: 1;
+  min-width: 0;
+}
+
+/* Inactive panel: invisible but still occupies its grid cell */
+.buy-panel-switcher > .buy-sheet.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* No outer panel border on how-to strip */
