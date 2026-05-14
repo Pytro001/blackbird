@@ -618,11 +618,8 @@ function formatShippingArrivalLineHtml(lang: UiLang, nowMs: number = Date.now())
 }
 
 function updateProductShippingEta(): void {
-  const lang = detectUiLang();
-  const html = formatShippingArrivalLineHtml(lang);
-  document.querySelectorAll(".buy-content-eta").forEach((el) => {
-    el.innerHTML = html;
-  });
+  const el = document.querySelector("#product-shipping-eta");
+  if (el) el.innerHTML = formatShippingArrivalLineHtml(detectUiLang());
 }
 
 function whatsAppBlockHtml(lang: UiLang): string {
@@ -983,14 +980,13 @@ function homeHtml(lang: UiLang, mode: LandingMode = "purchase"): string {
               <div class="buy-content-switcher">
                 <div class="buy-content-purchase${startSub ? ' is-hidden' : ''}" id="buy-content-purchase">
                   <p class="product-price product-price--monthly">${escapeHtml(purchasePriceDisplay)}</p>
-                  <p class="product-shipping__eta buy-content-eta" id="product-shipping-eta" aria-live="polite"></p>
                 </div>
                 <div class="buy-content-subscription${!startSub ? ' is-hidden' : ''}" id="buy-content-subscription">
                   <p class="product-price product-price--monthly">${escapeHtml(subscriptionPlanPriceDisplay)}<span class="product-price__frequency"> ${escapeHtml(t.subscriptionPriceFrequency)}</span></p>
                   <p class="product-subscription-copy">${escapeHtml(t.subscriptionCancelCopy)} ${escapeHtml(t.subscriptionRefillCopy)}</p>
-                  <p class="product-shipping__eta buy-content-eta" id="product-shipping-eta-sub" aria-live="polite"></p>
                 </div>
               </div>
+              <p class="product-shipping__eta" id="product-shipping-eta" aria-live="polite"></p>
               <a class="btn-buy" id="buy-btn" href="${escapeHtml(buyHref)}" rel="noopener noreferrer">${escapeHtml(buyLabel)}</a>
               ${whatsAppBlockHtml(lang)}
             </section>`;
